@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  alpha2_code: MyString
+  alpha3_code: MyString
+  numeric_code: 1
+
+two:
+  name: MyString
+  alpha2_code: MyString
+  alpha3_code: MyString
+  numeric_code: 1

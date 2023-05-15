@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  alphabetic_code: MyString
+  numeric_code{3}: 1
+  minor_unit: 1
+  entity: MyString
+  country: one
+  historical: false
+
+two:
+  alphabetic_code: MyString
+  numeric_code{3}: 1
+  minor_unit: 1
+  entity: MyString
+  country: two
+  historical: false
