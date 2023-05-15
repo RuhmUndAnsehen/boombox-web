@@ -28,3 +28,14 @@ def read_csv_to_attributes(file, col_transforms: {})
   data.each { |row| row.transform_keys!(&key_transform_proc) }
   data.map! { |row| row.to_h(&col_transform_proc(**col_transforms)) }
 end
+
+# Seed country data.
+begin
+  countries = read_csv_to_attributes('iso-3166.csv',
+                                     col_transforms: { numeric_code: :to_i })
+  Country.create(countries)
+rescue Errno::ENOENT => error
+  warn('#' * 80)
+  warn "Country seeding failed: #{error}"
+  warn('#' * 80)
+end
