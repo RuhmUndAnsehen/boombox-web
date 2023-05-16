@@ -39,3 +39,30 @@ rescue Errno::ENOENT => error
   warn "Country seeding failed: #{error}"
   warn('#' * 80)
 end
+
+# Seed currency data.
+begin
+  currencies = read_csv_to_attributes('iso-4217.csv',
+                                      col_transforms: {
+                                                       numeric_code: :to_i,
+                                                       minor_unit: :to_i
+                                                      })
+  # Group data entries by currency.
+  # Then rebuild the Hash, using entities from the groups as keys, and the rest of
+  # the data as values.
+  currencies =
+      currencies.group_by { |c| c[:alphabetic_code] }
+                .to_h do |_, cs|
+                  [
+                    cs.map { |c| c[:entity] },
+                    cs.first.slice(:currency, :alphabetic_code, :numeric_code, :minor_unit)
+                  ]
+                end
+  currencies.each do |entities, currency|
+    Currency.create(countries: Country.where(name: entities), **currency)
+  end
+rescue Errno::ENOENT => error
+  warn('#' * 80)
+  warn "Currency seeding failed: #{error}"
+  warn('#' * 80)
+end
