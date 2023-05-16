@@ -60,7 +60,7 @@ class CountriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_country
-      @country = Country.find(params[:id])
+      @country = Country.find_by_abc(params[:alpha3_code])
     end
 
     # Only allow a list of trusted parameters through.
