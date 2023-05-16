@@ -31,4 +31,6 @@ class Currency < ApplicationRecord
   alias_attribute :num_code, :numeric_code
   alias_attribute :number,   :numeric_code
   alias_attribute :numeric,  :numeric_code
+
+  def to_param = alpha3_code
 end
