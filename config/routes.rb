@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Countries and currencies should be indexed by their 3-letter alphabetic
+  # codes instead of internal IDs. Plus, since they are pretty static and there
+  # shouldn't be much editing required, they are restricted to #index and #show.
   scope abc: /[[:upper:]]{3}/, only: %i[index show] do
     resources :countries, param: :abc
     resources :currencies, param: :abc
