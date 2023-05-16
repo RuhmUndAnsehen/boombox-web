@@ -60,7 +60,7 @@ class CurrenciesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_currency
-      @currency = Currency.find_by_abc(params[:alphabetic_code])
+      @currency = Currency.find_by_abc(params.delete(:abc))
     end
 
     # Only allow a list of trusted parameters through.
