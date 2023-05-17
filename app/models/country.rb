@@ -1,4 +1,6 @@
 class Country < ApplicationRecord
+  include Alpha3Indexable
+
   has_and_belongs_to_many :currencies
 
   with_options presence: true,
@@ -29,6 +31,4 @@ class Country < ApplicationRecord
   alias_attribute :num_code, :numeric_code
   alias_attribute :number,   :numeric_code
   alias_attribute :numeric,  :numeric_code
-
-  def to_param = alpha3_code
 end
