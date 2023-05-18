@@ -1,5 +1,6 @@
 class Currency < ApplicationRecord
   include Alpha3Indexable
+  include Asset
 
   has_and_belongs_to_many :countries
 
