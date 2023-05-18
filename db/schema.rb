@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_18_172146) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_224616) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -21,10 +21,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_172146) do
     t.datetime "observed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["base_asset_id", "base_asset_type"], name: "index_asset_pairs_on_base_asset_id_and_base_asset_type"
     t.index ["base_asset_type", "base_asset_id"], name: "index_asset_pairs_on_base_asset"
     t.index ["counter_asset_id", "counter_asset_type", "base_asset_id", "base_asset_type", "observed_at"], name: "index_asset_pairs_on_all_columns"
-    t.index ["counter_asset_id", "counter_asset_type"], name: "index_asset_pairs_on_counter_asset_id_and_counter_asset_type"
     t.index ["counter_asset_type", "counter_asset_id"], name: "index_asset_pairs_on_counter_asset"
     t.index ["observed_at"], name: "index_asset_pairs_on_observed_at"
   end
