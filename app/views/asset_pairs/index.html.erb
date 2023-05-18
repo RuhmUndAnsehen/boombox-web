@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Asset pairs</h1>
+
+<div id="asset_pairs">
+  <% @asset_pairs.each do |asset_pair| %>
+    <%= render asset_pair %>
+    <p>
+      <%= link_to "Show this asset pair", asset_pair %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New asset pair", new_asset_pair_path %>

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :asset_pairs
+
   # Countries and currencies should be indexed by their 3-letter alphabetic
   # codes instead of internal IDs. Plus, since they are pretty static and there
   # shouldn't be much editing required, they are restricted to #index and #show.

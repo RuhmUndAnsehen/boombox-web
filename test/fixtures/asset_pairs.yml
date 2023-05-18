@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  base_asset: one
+  base_asset_type: Base asset
+  counter_asset: one
+  counter_asset_type: Counter asset
+  base_rate: 1
+  counter_rate: 1
+  observed_at: 2023-05-16 22:45:12
+
+two:
+  base_asset: two
+  base_asset_type: Base asset
+  counter_asset: two
+  counter_asset_type: Counter asset
+  base_rate: 1
+  counter_rate: 1
+  observed_at: 2023-05-16 22:45:12

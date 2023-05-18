@@ -1,0 +1,42 @@
+<%= form_with(model: asset_pair) do |form| %>
+  <% if asset_pair.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(asset_pair.errors.count, "error") %> prohibited this asset_pair from being saved:</h2>
+
+      <ul>
+        <% asset_pair.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :base_asset_id, style: "display: block" %>
+    <%= form.text_field :base_asset_id %>
+  </div>
+
+  <div>
+    <%= form.label :counter_asset_id, style: "display: block" %>
+    <%= form.text_field :counter_asset_id %>
+  </div>
+
+  <div>
+    <%= form.label :base_rate, style: "display: block" %>
+    <%= form.number_field :base_rate %>
+  </div>
+
+  <div>
+    <%= form.label :counter_rate, style: "display: block" %>
+    <%= form.number_field :counter_rate %>
+  </div>
+
+  <div>
+    <%= form.label :observed_at, style: "display: block" %>
+    <%= form.datetime_field :observed_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
