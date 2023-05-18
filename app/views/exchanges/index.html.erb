@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Exchanges</h1>
+
+<div id="exchanges">
+  <% @exchanges.each do |exchange| %>
+    <%= render exchange %>
+    <p>
+      <%= link_to "Show this exchange", exchange %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New exchange", new_exchange_path %>

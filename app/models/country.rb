@@ -2,6 +2,7 @@ class Country < ApplicationRecord
   include Alpha3Indexable
 
   has_and_belongs_to_many :currencies
+  has_many :exchanges
 
   with_options presence: true,
                uniqueness: true do |unique|

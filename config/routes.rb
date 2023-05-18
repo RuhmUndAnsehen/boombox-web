@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :exchanges
   resources :asset_pairs
 
   # Countries and currencies should be indexed by their 3-letter alphabetic
