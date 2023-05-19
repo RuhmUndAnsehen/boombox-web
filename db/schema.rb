@@ -10,21 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_18_224616) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_230549) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
     t.string "counter_asset_type", null: false
     t.integer "counter_asset_id", null: false
-    t.integer "base_rate", null: false
-    t.integer "counter_rate", null: false
-    t.datetime "observed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["base_asset_type", "base_asset_id"], name: "index_asset_pairs_on_base_asset"
-    t.index ["counter_asset_id", "counter_asset_type", "base_asset_id", "base_asset_type", "observed_at"], name: "index_asset_pairs_on_all_columns"
+    t.index ["counter_asset_type", "counter_asset_id", "base_asset_type", "base_asset_id"], name: "index_asset_pairs_on_all_columns"
     t.index ["counter_asset_type", "counter_asset_id"], name: "index_asset_pairs_on_counter_asset"
-    t.index ["observed_at"], name: "index_asset_pairs_on_observed_at"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -58,6 +54,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_224616) do
     t.index ["numeric_code"], name: "index_currencies_on_numeric_code"
   end
 
+  create_table "exchange_rates", force: :cascade do |t|
+    t.integer "asset_pair_id", null: false
+    t.integer "base_rate", null: false
+    t.integer "counter_rate", null: false
+    t.datetime "observed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_pair_id", "observed_at"], name: "index_exchange_rates_on_asset_pair_id_and_observed_at"
+    t.index ["asset_pair_id"], name: "index_exchange_rates_on_asset_pair_id"
+    t.index ["observed_at"], name: "index_exchange_rates_on_observed_at"
+  end
+
   create_table "exchanges", force: :cascade do |t|
     t.integer "country_id", null: false
     t.string "symbol", null: false
@@ -68,5 +76,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_224616) do
     t.index ["symbol"], name: "index_exchanges_on_symbol", unique: true
   end
 
+  add_foreign_key "exchange_rates", "asset_pairs"
   add_foreign_key "exchanges", "countries"
 end
