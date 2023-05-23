@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  asset_pair: one
+  base_rate: 1
+  counter_rate: 1
+  observed_at: 2023-05-19 01:05:49
+
+two:
+  asset_pair: two
+  base_rate: 1
+  counter_rate: 1
+  observed_at: 2023-05-19 01:05:49

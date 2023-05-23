@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :exchange_rates
   resources :exchanges
   resources :asset_pairs
 

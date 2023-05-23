@@ -1,0 +1,37 @@
+<%= form_with(model: exchange_rate) do |form| %>
+  <% if exchange_rate.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(exchange_rate.errors.count, "error") %> prohibited this exchange_rate from being saved:</h2>
+
+      <ul>
+        <% exchange_rate.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :asset_pair_id, style: "display: block" %>
+    <%= form.text_field :asset_pair_id %>
+  </div>
+
+  <div>
+    <%= form.label :base_rate, style: "display: block" %>
+    <%= form.number_field :base_rate %>
+  </div>
+
+  <div>
+    <%= form.label :counter_rate, style: "display: block" %>
+    <%= form.number_field :counter_rate %>
+  </div>
+
+  <div>
+    <%= form.label :observed_at, style: "display: block" %>
+    <%= form.datetime_field :observed_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
