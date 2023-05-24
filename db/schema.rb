@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_22_045950) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_23_145251) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -52,6 +52,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_045950) do
     t.datetime "updated_at", null: false
     t.index ["alphabetic_code"], name: "index_currencies_on_alphabetic_code"
     t.index ["numeric_code"], name: "index_currencies_on_numeric_code"
+  end
+
+  create_table "equities", force: :cascade do |t|
+    t.string "symbol", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["symbol"], name: "index_equities_on_symbol"
   end
 
   create_table "exchange_rates", force: :cascade do |t|
