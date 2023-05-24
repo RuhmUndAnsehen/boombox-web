@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_23_145251) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_24_134630) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -91,6 +91,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_145251) do
     t.index ["symbol"], name: "index_exchanges_on_symbol", unique: true
   end
 
+  create_table "security_listings", force: :cascade do |t|
+    t.string "security_type", null: false
+    t.integer "security_id", null: false
+    t.integer "exchange_id", null: false
+    t.index ["exchange_id"], name: "index_security_listings_on_exchange_id"
+    t.index ["security_type", "security_id"], name: "index_security_listings_on_security"
+  end
+
   add_foreign_key "exchange_rates", "asset_pairs"
   add_foreign_key "exchanges", "countries"
+  add_foreign_key "security_listings", "exchanges"
 end
