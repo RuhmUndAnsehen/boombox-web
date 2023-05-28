@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
 
   # Redirect country and currency alphabetic codes that aren't written in
-  # entirely lowercase to the uppercase equivalent.
+  # entirely uppercase to the uppercase equivalent.
   # TODO: Determine if the redirect can be done in a way that feels less hacky.
   scope abc: /[[:alpha:]]{3}/,
         to: redirect { |p, r| "#{r.fullpath.match(/\A\/[^\/]*/)}/#{p[:abc].upcase}" } do
