@@ -60,7 +60,10 @@ class ExchangesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_exchange
-      @exchange = Exchange.find(params[:id])
+      @exchange = Exchange.smart_find!(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      exchange = Exchange.find_by_symbol_case_insensitive!(params[:id])
+      redirect_to request.parameters.merge(id: exchange.symbol)
     end
 
     # Only allow a list of trusted parameters through.
