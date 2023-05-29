@@ -12,7 +12,7 @@ class Currency < ApplicationRecord
                              numericality: { only_integer: true }
   end
 
-  default_scope { active }
+  default_scope { active.order(alpha3_code: :asc) }
 
   scope :active, -> { where(active: true) }
   scope :historical, -> { rewhere(active: [nil, false]) }
@@ -34,4 +34,6 @@ class Currency < ApplicationRecord
   alias_attribute :num_code, :numeric_code
   alias_attribute :number,   :numeric_code
   alias_attribute :numeric,  :numeric_code
+
+  def to_param = active ? super : id
 end

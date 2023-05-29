@@ -4,21 +4,22 @@ Rails.application.routes.draw do
   resources :exchanges
   resources :asset_pairs
 
-  # Countries and currencies should be indexed by their 3-letter alphabetic
-  # codes instead of internal IDs. Plus, since they are pretty static and there
-  # shouldn't be much editing required, they are restricted to #index and #show.
-  scope abc: /[[:upper:]]{3}/, only: %i[index show] do
-    resources :countries, param: :abc
-    resources :currencies, param: :abc
+  # The Country and Currency models return the 3-letter alphabetic code instead
+  # of their internal ID (except for historic currencies) in their #to_param
+  # methods. We restrict the routing :id parameter to values that could be
+  # internal ID, numeric code or alphabetic code.
+  # We also restrict to the actions #index and #show.
+  scope only: %i[index show] do
+    resources :countries, id: /[[:upper:]]{2,3}|[[:digit:]]+{/
+    resources :currencies, id: /[[:upper:]]{3}|[[:digit:]]+/
   end
 
   # Redirect country and currency alphabetic codes that aren't written in
   # entirely uppercase to the uppercase equivalent.
   # TODO: Determine if the redirect can be done in a way that feels less hacky.
-  scope abc: /[[:alpha:]]{3}/,
-        to: redirect { |p, r| "#{r.fullpath.match(/\A\/[^\/]*/)}/#{p[:abc].upcase}" } do
-    get '/countries/:abc'
-    get '/currencies/:abc'
+  scope to: redirect { |p, r| "#{r.fullpath.match(/\A\/[^\/]*/)}/#{p[:id].upcase}" } do
+    get '/countries/:id', id: /[[:alpha:]]{2,3}/
+    get '/currencies/:id', id: /[[:alpha:]]{3}/
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

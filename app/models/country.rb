@@ -16,6 +16,12 @@ class Country < ApplicationRecord
     validates :numeric_code, length: { in: 1..3 }, numericality: true
   end
 
+  class << self
+    def smart_lookup(id) = super.or(where(alpha2_code: id))
+  end
+
+  default_scope { order(alpha3_code: :asc) }
+
   alias_attribute :currency, :currencies
 
   alias_attribute :ab,      :alpha2_code
