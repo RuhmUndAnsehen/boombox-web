@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @equity %>
+
+<div>
+  <%= link_to "Edit this equity", edit_equity_path(@equity) %> |
+  <%= link_to "Back to equities", equities_path %>
+
+  <%= button_to "Destroy this equity", @equity, method: :delete %>
+</div>

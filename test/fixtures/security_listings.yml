@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  security: one
+  security_type: Security
+  exchange: one
+
+two:
+  security: two
+  security_type: Security
+  exchange: two
