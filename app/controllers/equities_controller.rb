@@ -71,8 +71,12 @@ class EquitiesController < ApplicationController
   def set_equity
     exchange, equity, id =
         *params[:id].match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
-                    .values_at(:exchange, :equity, :id)
+                    &.values_at(:exchange, :equity, :id)
 
+    # We don't technically need this, but catching these cases here reduces DB
+    # usage.
+    raise ActionController::RoutingError,
+          "invalid id: #{params[:id]}" unless id || equity
 
     if id
       @equity = Equity.find(id)
@@ -80,19 +84,29 @@ class EquitiesController < ApplicationController
       @equity = Equity.find_by_compound_symbol!(exchange:, equity:)
     elsif equity
       @equity = Equity.find_by_symbol!(equity)
-    else
-      raise RoutingError
     end
   rescue ActiveRecord::RecordNotFound
-    raise unless equity
-    raise unless exchange&.upcase! || equity.upcase!
+    raise unless set_exchange(exchange) || equity.upcase!
 
-    if exchange && equity
-      redirect_to request.parameters.merge(id: "#{exchange}:#{equity}"),
+    if @exchange && equity
+      redirect_to request.parameters
+                         .merge(id: "#{@exchange.symbol}:#{equity}"),
                   status: 302
     else
       redirect_to request.parameters.merge(id: equity), status: 302
     end
+  end
+
+  ##
+  # Initializes the @exchange instance variable and returns +true+ if the
+  # record was found via case insensitive search.
+  def set_exchange(exchange)
+    @exchange = Exchange.find_by_symbol!(exchange) if exchange
+
+    false
+  rescue ActiveRecord::RecordNotFound
+    @exchange = Exchange.find_by_symbol_case_insensitive!(exchange)
+    true
   end
 
   # Only allow a list of trusted parameters through.
