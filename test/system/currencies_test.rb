@@ -19,7 +19,7 @@ class CurrenciesTest < ApplicationSystemTestCase
     fill_in "Entity", with: @currency.entity
     check "Historical" if @currency.historical
     fill_in "Minor unit", with: @currency.minor_unit
-    fill_in "Numeric code{3}", with: @currency.numeric_code{3}
+    fill_in "Numeric code", with: @currency.numeric_code
     click_on "Create Currency"
 
     assert_text "Currency was successfully created"
@@ -35,7 +35,7 @@ class CurrenciesTest < ApplicationSystemTestCase
     fill_in "Entity", with: @currency.entity
     check "Historical" if @currency.historical
     fill_in "Minor unit", with: @currency.minor_unit
-    fill_in "Numeric code{3}", with: @currency.numeric_code{3}
+    fill_in "Numeric code", with: @currency.numeric_code
     click_on "Update Currency"
 
     assert_text "Currency was successfully updated"

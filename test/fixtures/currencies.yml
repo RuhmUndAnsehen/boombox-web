@@ -2,7 +2,7 @@
 
 one:
   alphabetic_code: MyString
-  numeric_code{3}: 1
+  numeric_code: 1
   minor_unit: 1
   entity: MyString
   country: one
@@ -10,7 +10,7 @@ one:
 
 two:
   alphabetic_code: MyString
-  numeric_code{3}: 1
+  numeric_code: 1
   minor_unit: 1
   entity: MyString
   country: two
