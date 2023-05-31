@@ -6,6 +6,7 @@ class Exchange < ApplicationRecord
            source_type: 'Equity'
 
   validates :symbol, format: { without: /:/ }, uniqueness: true, presence: true
+  validates :timezone, timezone: true
 
   class << self
     ##
