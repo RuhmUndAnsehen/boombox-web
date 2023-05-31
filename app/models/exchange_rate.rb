@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'sti_preload/exchange_rate'
 
 class ExchangeRate < ApplicationRecord
   include StiPreload::ExchangeRate
 
-  before_save { write_attribute(:exchange_rate, exchange_rate.to_f) }
+  before_save { self[:exchange_rate] = exchange_rate.to_f }
 
   belongs_to :asset_pair
 
@@ -25,20 +27,20 @@ class ExchangeRate < ApplicationRecord
 
   ##
   # Returns the records that were observed after the specified `time`.
-  scope :after, ->(time, strict: false) {
+  scope :after, lambda { |time, strict: false|
                   where("observed_at #{strict ? '>' : '>='} ?", time)
                 }
 
   ##
   # Returns the records that were observed before the specified `time`.
-  scope :before, ->(time, strict: false) {
-                   where("observed_at #{strict ? '<' : '<='} ?", time)
+  scope :before, lambda { |time, strict: false|
+    where("observed_at #{strict ? '<' : '<='} ?", time)
   }
 
   ##
   # Returns the records that were observed during the given time period.
   scope :during,
-        ->(range, time = nil) {
+        lambda { |range, time = nil|
           range = range...time if time.present?
 
           where(observed_at: range)
@@ -49,7 +51,7 @@ class ExchangeRate < ApplicationRecord
   # Returns the record that was observed at the latest point in time, per
   # AssetPair.
   scope :latest,
-        -> {
+        lambda {
           group(:asset_pair)
             .having('MAX(observed_at)')
             .order(observed_at: :desc)
@@ -58,7 +60,7 @@ class ExchangeRate < ApplicationRecord
   ##
   # Returns the records that were observed the closest to each of the specified # `times`, per AssetPair.
   scope :observed_near,
-        -> (*times) {
+        lambda { |*times|
           unless times.map(&:class)
                       .all?(&[Date, Time, DateTime].method(:include?))
             raise TypeError, 'all objects must be of temporal type'
@@ -70,12 +72,12 @@ class ExchangeRate < ApplicationRecord
           timetable = Arel.sql(timetable.join(' UNION '))
 
           abs_date_diff = 'ABS(UNIXEPOCH(observed_at) - UNIXEPOCH(sampled_at))'
-          min_abs_date_diff   = "MIN(#{abs_date_diff})"
-          order_abs_date_diff = Arel.sql("#{abs_date_diff} ASC")
+          min_abs_date_diff = "MIN(#{abs_date_diff})"
+          Arel.sql("#{abs_date_diff} ASC")
 
           joins("CROSS JOIN (#{timetable})").select('*')
-            .group(:asset_pair).group(:sampled_at)
-            .having(min_abs_date_diff)
+                                            .group(:asset_pair).group(:sampled_at)
+                                            .having(min_abs_date_diff)
         }
   singleton_class.send(:alias_method, :at, :observed_near)
 
@@ -86,7 +88,7 @@ class ExchangeRate < ApplicationRecord
 
   # :section: Attributes
 
-  attribute :observed_at, default: -> { Time.now }
+  attribute :observed_at, default: -> { Time.zone.now }
 
   ##
   # Returns a singular (Rational) value for the exchange rate.
@@ -98,7 +100,9 @@ class ExchangeRate < ApplicationRecord
     rate = Rational(rate)
     self.counter_rate = rate.numerator
     self.base_rate = rate.denominator
+    # rubocop:disable Lint/Void
     rate
+    # rubocop:enable  Lint/Void
   end
 
   alias_attribute :exchange_value, :exchange_rate
@@ -115,7 +119,7 @@ class ExchangeRate < ApplicationRecord
   def mirror
     attrs = attributes.reject { |key| key.in?(%w[id created_at updated_at]) }
     attrs[:base_rate], attrs[:counter_rate] =
-        *attrs.values_at(:counter_rate, :base_rate)
+      *attrs.values_at(:counter_rate, :base_rate)
 
     self.class.new(**attrs)
   end

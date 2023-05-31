@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Alpha3Indexable
   extend ActiveSupport::Concern
 
@@ -37,7 +39,7 @@ module Alpha3Indexable
 
   included do
     scope :smart_lookup_helper,
-          ->(id) {
+          lambda { |id|
             where(alpha3_code: id).or(where(id:)).or(where(numeric_code: id))
           }
   end

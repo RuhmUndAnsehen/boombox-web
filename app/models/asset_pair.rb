@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssetPair < ApplicationRecord
   belongs_to :base_asset, polymorphic: true
   belongs_to :counter_asset, polymorphic: true

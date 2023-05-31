@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Country < ApplicationRecord
   include Alpha3Indexable
 
@@ -5,7 +7,7 @@ class Country < ApplicationRecord
   has_many :exchanges
 
   with_options presence: true,
-               uniqueness: true do |unique|
+               uniqueness: true do
     validates :name, format: { without: /[[:lower:]]/ }
 
     with_options format: { with: /\A[[:upper:]]{2,3}\z/ } do

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Exchange < ApplicationRecord
   belongs_to :country
 
   has_many :security_listings, dependent: :destroy
   has_many :equities, through: :security_listings, source: :security,
-           source_type: 'Equity'
+                      source_type: 'Equity'
 
   validates :symbol, format: { without: /:/ }, uniqueness: true, presence: true
   validates :timezone, timezone: true
@@ -22,7 +24,7 @@ class Exchange < ApplicationRecord
     ##
     # Like #find_by_symbol_case_insensitive!, but returns +nil+ if not found.
     def find_by_symbol_case_insensitive(symbol)
-      find_by_symbol_case_insensitive!(symbol)
+      find_by!(symbol_case_insensitive: symbol)
     rescue ActiveRecord::RecordNotFound
       nil
     end

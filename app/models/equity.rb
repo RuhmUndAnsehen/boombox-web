@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Equity < ApplicationRecord
   include Asset
 
@@ -51,10 +53,10 @@ class Equity < ApplicationRecord
   #
   # Selects all of Equity's columns, plus Exchange#symbol.
   scope :with_exchange_symbol,
-        -> {
-            select("#{table_name}.*",
-                   "#{Exchange.table_name}.symbol AS #{exchange_key}")
-              .left_outer_joins(:exchange)
+        lambda {
+          select("#{table_name}.*",
+                 "#{Exchange.table_name}.symbol AS #{exchange_key}")
+            .left_outer_joins(:exchange)
         }
 
   ##

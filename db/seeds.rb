@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
@@ -34,9 +36,9 @@ begin
   countries = read_csv_to_attributes('iso-3166.csv',
                                      col_transforms: { numeric_code: :to_i })
   Country.create(countries)
-rescue Errno::ENOENT => error
+rescue Errno::ENOENT => e
   warn('#' * 80)
-  warn "Country seeding failed: #{error}"
+  warn "Country seeding failed: #{e}"
   warn('#' * 80)
 end
 
@@ -44,25 +46,26 @@ end
 begin
   currencies = read_csv_to_attributes('iso-4217.csv',
                                       col_transforms: {
-                                                       numeric_code: :to_i,
-                                                       minor_unit: :to_i
-                                                      })
+                                        numeric_code: :to_i,
+                                        minor_unit: :to_i
+                                      })
   # Group data entries by currency.
   # Then rebuild the Hash, using entities from the groups as keys, and the rest of
   # the data as values.
   currencies =
-      currencies.group_by { |c| c[:alphabetic_code] }
-                .to_h do |_, cs|
-                  [
-                    cs.map { |c| c[:entity] },
-                    cs.first.slice(:currency, :alphabetic_code, :numeric_code, :minor_unit)
-                  ]
-                end
+    currencies.group_by { |c| c[:alphabetic_code] }
+              .to_h do |_, cs|
+                [
+                  cs.map { |c| c[:entity] },
+                  cs.first.slice(:currency, :alphabetic_code, :numeric_code,
+                                 :minor_unit)
+                ]
+              end
   currencies.each do |entities, currency|
     Currency.create(countries: Country.where(name: entities), **currency)
   end
-rescue Errno::ENOENT => error
+rescue Errno::ENOENT => e
   warn('#' * 80)
-  warn "Currency seeding failed: #{error}"
+  warn "Currency seeding failed: #{e}"
   warn('#' * 80)
 end

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ExchangeRatesController < ApplicationController
-  before_action :set_exchange_rate, only: %i[ show edit update destroy ]
+  before_action :set_exchange_rate, only: %i[show edit update destroy]
 
   # GET /exchange_rates or /exchange_rates.json
   def index
@@ -7,8 +9,7 @@ class ExchangeRatesController < ApplicationController
   end
 
   # GET /exchange_rates/1 or /exchange_rates/1.json
-  def show
-  end
+  def show; end
 
   # GET /exchange_rates/new
   def new
@@ -16,8 +17,7 @@ class ExchangeRatesController < ApplicationController
   end
 
   # GET /exchange_rates/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /exchange_rates or /exchange_rates.json
   def create
@@ -25,11 +25,16 @@ class ExchangeRatesController < ApplicationController
 
     respond_to do |format|
       if @exchange_rate.save
-        format.html { redirect_to exchange_rate_url(@exchange_rate), notice: "Exchange rate was successfully created." }
+        format.html do
+          redirect_to exchange_rate_url(@exchange_rate),
+                      notice: 'Exchange rate was successfully created.'
+        end
         format.json { render :show, status: :created, location: @exchange_rate }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @exchange_rate.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @exchange_rate.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -38,11 +43,16 @@ class ExchangeRatesController < ApplicationController
   def update
     respond_to do |format|
       if @exchange_rate.update(exchange_rate_params)
-        format.html { redirect_to exchange_rate_url(@exchange_rate), notice: "Exchange rate was successfully updated." }
+        format.html do
+          redirect_to exchange_rate_url(@exchange_rate),
+                      notice: 'Exchange rate was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @exchange_rate }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @exchange_rate.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @exchange_rate.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -52,19 +62,24 @@ class ExchangeRatesController < ApplicationController
     @exchange_rate.destroy
 
     respond_to do |format|
-      format.html { redirect_to exchange_rates_url, notice: "Exchange rate was successfully destroyed." }
+      format.html do
+        redirect_to exchange_rates_url,
+                    notice: 'Exchange rate was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_exchange_rate
-      @exchange_rate = ExchangeRate.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def exchange_rate_params
-      params.require(:exchange_rate).permit(:asset_pair_id, :base_rate, :counter_rate, :observed_at)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_exchange_rate
+    @exchange_rate = ExchangeRate.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def exchange_rate_params
+    params.require(:exchange_rate).permit(:asset_pair_id, :base_rate,
+                                          :counter_rate, :observed_at)
+  end
 end

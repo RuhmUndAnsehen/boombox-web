@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ExchangesController < ApplicationController
-  before_action :set_exchange, only: %i[ show edit update destroy ]
+  before_action :set_exchange, only: %i[show edit update destroy]
 
   # GET /exchanges or /exchanges.json
   def index
@@ -7,8 +9,7 @@ class ExchangesController < ApplicationController
   end
 
   # GET /exchanges/1 or /exchanges/1.json
-  def show
-  end
+  def show; end
 
   # GET /exchanges/new
   def new
@@ -16,8 +17,7 @@ class ExchangesController < ApplicationController
   end
 
   # GET /exchanges/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /exchanges or /exchanges.json
   def create
@@ -25,11 +25,16 @@ class ExchangesController < ApplicationController
 
     respond_to do |format|
       if @exchange.save
-        format.html { redirect_to exchange_url(@exchange), notice: "Exchange was successfully created." }
+        format.html do
+          redirect_to exchange_url(@exchange),
+                      notice: 'Exchange was successfully created.'
+        end
         format.json { render :show, status: :created, location: @exchange }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @exchange.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @exchange.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -38,11 +43,16 @@ class ExchangesController < ApplicationController
   def update
     respond_to do |format|
       if @exchange.update(exchange_params)
-        format.html { redirect_to exchange_url(@exchange), notice: "Exchange was successfully updated." }
+        format.html do
+          redirect_to exchange_url(@exchange),
+                      notice: 'Exchange was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @exchange }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @exchange.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @exchange.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -52,22 +62,26 @@ class ExchangesController < ApplicationController
     @exchange.destroy
 
     respond_to do |format|
-      format.html { redirect_to exchanges_url, notice: "Exchange was successfully destroyed." }
+      format.html do
+        redirect_to exchanges_url,
+                    notice: 'Exchange was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_exchange
-      @exchange = Exchange.smart_find!(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      exchange = Exchange.find_by_symbol_case_insensitive!(params[:id])
-      redirect_to request.parameters.merge(id: exchange.symbol)
-    end
 
-    # Only allow a list of trusted parameters through.
-    def exchange_params
-      params.require(:exchange).permit(:country_id, :symbol, :name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_exchange
+    @exchange = Exchange.smart_find!(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    exchange = Exchange.find_by!(symbol_case_insensitive: params[:id])
+    redirect_to request.parameters.merge(id: exchange.symbol)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def exchange_params
+    params.require(:exchange).permit(:country_id, :symbol, :name)
+  end
 end

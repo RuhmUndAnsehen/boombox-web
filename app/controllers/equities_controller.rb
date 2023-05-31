@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class EquitiesController < ApplicationController
-  before_action :set_equity, only: %i[ show edit update destroy ]
+  before_action :set_equity, only: %i[show edit update destroy]
 
   # GET /equities or /equities.json
   def index
@@ -7,8 +9,7 @@ class EquitiesController < ApplicationController
   end
 
   # GET /equities/1 or /equities/1.json
-  def show
-  end
+  def show; end
 
   # GET /equities/new
   def new
@@ -16,8 +17,7 @@ class EquitiesController < ApplicationController
   end
 
   # GET /equities/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /equities or /equities.json
   def create
@@ -25,11 +25,16 @@ class EquitiesController < ApplicationController
 
     respond_to do |format|
       if @equity.save
-        format.html { redirect_to equity_url(@equity), notice: "Equity was successfully created." }
+        format.html do
+          redirect_to equity_url(@equity),
+                      notice: 'Equity was successfully created.'
+        end
         format.json { render :show, status: :created, location: @equity }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @equity.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @equity.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -38,11 +43,16 @@ class EquitiesController < ApplicationController
   def update
     respond_to do |format|
       if @equity.update(equity_params)
-        format.html { redirect_to equity_url(@equity), notice: "Equity was successfully updated." }
+        format.html do
+          redirect_to equity_url(@equity),
+                      notice: 'Equity was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @equity }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @equity.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @equity.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -52,7 +62,9 @@ class EquitiesController < ApplicationController
     @equity.destroy
 
     respond_to do |format|
-      format.html { redirect_to equities_url, notice: "Equity was successfully destroyed." }
+      format.html do
+        redirect_to equities_url, notice: 'Equity was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
@@ -70,20 +82,22 @@ class EquitiesController < ApplicationController
   # * equities/aapl
   def set_equity
     exchange, equity, id =
-        *params[:id].match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
-                    &.values_at(:exchange, :equity, :id)
+      *params[:id].match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
+                  &.values_at(:exchange, :equity, :id)
 
     # We don't technically need this, but catching these cases here reduces DB
     # usage.
-    raise ActionController::RoutingError,
-          "invalid id: #{params[:id]}" unless id || equity
+    unless id || equity
+      raise ActionController::RoutingError,
+            "invalid id: #{params[:id]}"
+    end
 
     if id
       @equity = Equity.find(id)
     elsif exchange && equity
       @equity = Equity.find_by_compound_symbol!(exchange:, equity:)
     elsif equity
-      @equity = Equity.find_by_symbol!(equity)
+      @equity = Equity.find_by!(symbol: equity)
     end
   rescue ActiveRecord::RecordNotFound
     raise unless set_exchange(exchange) || equity.upcase!
@@ -91,9 +105,9 @@ class EquitiesController < ApplicationController
     if @exchange && equity
       redirect_to request.parameters
                          .merge(id: "#{@exchange.symbol}:#{equity}"),
-                  status: 302
+                  status: :found
     else
-      redirect_to request.parameters.merge(id: equity), status: 302
+      redirect_to request.parameters.merge(id: equity), status: :found
     end
   end
 
@@ -101,11 +115,11 @@ class EquitiesController < ApplicationController
   # Initializes the @exchange instance variable and returns +true+ if the
   # record was found via case insensitive search.
   def set_exchange(exchange)
-    @exchange = Exchange.find_by_symbol!(exchange) if exchange
+    @exchange = Exchange.find_by!(symbol: exchange) if exchange
 
     false
   rescue ActiveRecord::RecordNotFound
-    @exchange = Exchange.find_by_symbol_case_insensitive!(exchange)
+    @exchange = Exchange.find_by!(symbol_case_insensitive: exchange)
     true
   end
 
