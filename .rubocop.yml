@@ -12,6 +12,12 @@ AllCops:
   SuggestExtensions: false
   TargetRubyVersion: 3.2
 
+Layout/LineLength:
+  Max: 80
+
 Metrics/BlockLength:
   Exclude:
     - 'test/**/*.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
