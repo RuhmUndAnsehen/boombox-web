@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nodoc:
 class EquitiesController < ApplicationController
   before_action :set_equity, only: %i[show edit update destroy]
 
@@ -81,15 +82,33 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    exchange, equity, id =
-      *params[:id].match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
-                  &.values_at(:exchange, :equity, :id)
+    exchange, equity, id = *_parse_compound_symbol(params[:id])
 
+    _set_equity_helper(exchange:, equity:, id:)
+  rescue ActiveRecord::RecordNotFound
+    raise unless set_exchange(exchange) || equity.upcase!
+
+    id_hash = if @exchange && equity
+                { id: "#{@exchange.symbol}:#{equity}" }
+              else
+                { id: equity }
+              end
+    redirect_to request.parameters.merge(id_hash), status: :found
+  end
+
+  # :nodoc:
+  def _parse_compound_symbol(symbol)
+    symbol
+      .match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
+      &.values_at(:exchange, :equity, :id)
+  end
+
+  # :nodoc:
+  def _set_equity_helper(exchange:, equity:, id:)
     # We don't technically need this, but catching these cases here reduces DB
     # usage.
     unless id || equity
-      raise ActionController::RoutingError,
-            "invalid id: #{params[:id]}"
+      raise ActionController::RoutingError, "invalid id: #{params[:id]}"
     end
 
     if id
@@ -99,27 +118,19 @@ class EquitiesController < ApplicationController
     elsif equity
       @equity = Equity.find_by!(symbol: equity)
     end
-  rescue ActiveRecord::RecordNotFound
-    raise unless set_exchange(exchange) || equity.upcase!
-
-    if @exchange && equity
-      redirect_to request.parameters
-                         .merge(id: "#{@exchange.symbol}:#{equity}"),
-                  status: :found
-    else
-      redirect_to request.parameters.merge(id: equity), status: :found
-    end
   end
 
   ##
   # Initializes the @exchange instance variable and returns +true+ if the
   # record was found via case insensitive search.
-  def set_exchange(exchange)
+  def set_exchange(exchange) # rubocop:disable Naming/AccessorMethodName
     @exchange = Exchange.find_by!(symbol: exchange) if exchange
 
     false
   rescue ActiveRecord::RecordNotFound
-    @exchange = Exchange.find_by!(symbol_case_insensitive: exchange)
+    # rubocop:disable Rails/DynamicFindBy
+    @exchange = Exchange.find_by_symbol_case_insensitive!(exchange)
+    # rubocop:enable  Rails/DynamicFindBy
     true
   end
 

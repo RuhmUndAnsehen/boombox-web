@@ -2,6 +2,11 @@
 
 require 'sti_preload/exchange_rate'
 
+##
+# For most assets, this simply represents the value of the asset (#base_asset)
+# in a currency (#counter_asset).
+# The value is processed as Rational and stored as #counter_rate (numerator) and
+# #base_rate (denominator) in the database.
 class ExchangeRate < ApplicationRecord
   include StiPreload::ExchangeRate
 
@@ -58,7 +63,8 @@ class ExchangeRate < ApplicationRecord
         }
 
   ##
-  # Returns the records that were observed the closest to each of the specified # `times`, per AssetPair.
+  # Returns the records that were observed the closest to each of the specified
+  # `times`, per AssetPair.
   scope :observed_near,
         lambda { |*times|
           unless times.map(&:class)
@@ -76,7 +82,8 @@ class ExchangeRate < ApplicationRecord
           Arel.sql("#{abs_date_diff} ASC")
 
           joins("CROSS JOIN (#{timetable})").select('*')
-                                            .group(:asset_pair).group(:sampled_at)
+                                            .group(:asset_pair)
+                                            .group(:sampled_at)
                                             .having(min_abs_date_diff)
         }
   singleton_class.send(:alias_method, :at, :observed_near)
@@ -100,9 +107,8 @@ class ExchangeRate < ApplicationRecord
     rate = Rational(rate)
     self.counter_rate = rate.numerator
     self.base_rate = rate.denominator
-    # rubocop:disable Lint/Void
-    rate
-    # rubocop:enable  Lint/Void
+
+    rate # rubocop:disable Lint/Void
   end
 
   alias_attribute :exchange_value, :exchange_rate

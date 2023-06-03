@@ -20,7 +20,9 @@ class CountriesControllerTest < ActionDispatch::IntegrationTest
   test 'should create country' do
     assert_difference('Country.count') do
       post countries_url,
-           params: { country: { alpha2_code: @country.alpha2_code, alpha3_code: @country.alpha3_code, name: @country.name,
+           params: { country: { alpha2_code: @country.alpha2_code,
+                                alpha3_code: @country.alpha3_code,
+                                name: @country.name,
                                 numeric_code: @country.numeric_code } }
     end
 
@@ -39,7 +41,9 @@ class CountriesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update country' do
     patch country_url(@country),
-          params: { country: { alpha2_code: @country.alpha2_code, alpha3_code: @country.alpha3_code, name: @country.name,
+          params: { country: { alpha2_code: @country.alpha2_code,
+                               alpha3_code: @country.alpha3_code,
+                               name: @country.name,
                                numeric_code: @country.numeric_code } }
     assert_redirected_to country_url(@country)
   end

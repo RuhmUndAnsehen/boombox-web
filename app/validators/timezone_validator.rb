@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Validator for TZInfo::Timezone identifiers.
 class TimezoneValidator < ActiveModel::EachValidator
   ##
   # Validates if +value+ identifies a Timezone.

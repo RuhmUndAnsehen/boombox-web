@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-
 require 'csv'
 
 # Proc that transforms human readable CSV column names into Model columns.
@@ -50,8 +47,8 @@ begin
                                         minor_unit: :to_i
                                       })
   # Group data entries by currency.
-  # Then rebuild the Hash, using entities from the groups as keys, and the rest of
-  # the data as values.
+  # Then rebuild the Hash, using entities from the groups as keys, and the rest
+  # of the data as values.
   currencies =
     currencies.group_by { |c| c[:alphabetic_code] }
               .to_h do |_, cs|

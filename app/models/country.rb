@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+##
+# Country data in conformance with ISO-4217.
 class Country < ApplicationRecord
   include Alpha3Indexable
 
-  has_and_belongs_to_many :currencies
-  has_many :exchanges
+  has_many :countries_currencies, class_name: 'CountriesCurrencies',
+                                  dependent: :delete_all
+  has_many :currencies, through: :countries_currencies
+  has_many :exchanges, dependent: :destroy
 
   with_options presence: true,
                uniqueness: true do

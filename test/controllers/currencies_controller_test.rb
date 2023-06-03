@@ -20,8 +20,12 @@ class CurrenciesControllerTest < ActionDispatch::IntegrationTest
   test 'should create currency' do
     assert_difference('Currency.count') do
       post currencies_url,
-           params: { currency: { alphabetic_code: @currency.alphabetic_code, country_id: @currency.country_id,
-                                 entity: @currency.entity, historical: @currency.historical, minor_unit: @currency.minor_unit, numeric_code: @currency.numeric_code } }
+           params: { currency: { alphabetic_code: @currency.alphabetic_code,
+                                 country_id: @currency.country_id,
+                                 entity: @currency.entity,
+                                 historical: @currency.historical,
+                                 minor_unit: @currency.minor_unit,
+                                 numeric_code: @currency.numeric_code } }
     end
 
     assert_redirected_to currency_url(Currency.last)
@@ -39,8 +43,12 @@ class CurrenciesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update currency' do
     patch currency_url(@currency),
-          params: { currency: { alphabetic_code: @currency.alphabetic_code, country_id: @currency.country_id,
-                                entity: @currency.entity, historical: @currency.historical, minor_unit: @currency.minor_unit, numeric_code: @currency.numeric_code } }
+          params: { currency: { alphabetic_code: @currency.alphabetic_code,
+                                country_id: @currency.country_id,
+                                entity: @currency.entity,
+                                historical: @currency.historical,
+                                minor_unit: @currency.minor_unit,
+                                numeric_code: @currency.numeric_code } }
     assert_redirected_to currency_url(@currency)
   end
 

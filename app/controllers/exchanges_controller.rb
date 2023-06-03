@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nodoc:
 class ExchangesController < ApplicationController
   before_action :set_exchange, only: %i[show edit update destroy]
 

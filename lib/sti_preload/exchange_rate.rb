@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module StiPreload
+  ##
+  # Provides eager loading for the ExchangeRate model, to combat issues
+  # relating to STI.
   module ExchangeRate
     extend ActiveSupport::Concern
 

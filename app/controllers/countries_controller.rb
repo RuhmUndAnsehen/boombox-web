@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nodoc:
 class CountriesController < ApplicationController
   before_action :set_country, only: %i[show edit update destroy]
 

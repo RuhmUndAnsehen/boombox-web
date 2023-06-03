@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
+##
+# Currency data in conformance with ISO-3166, with an additional column that
+# marks currencies as active.
+# This allows keeping data of defunct currencies around.
 class Currency < ApplicationRecord
   include Alpha3Indexable
   include Asset
 
-  has_and_belongs_to_many :countries
+  has_many :countries_currencies, class_name: 'CountriesCurrencies',
+                                  dependent: :delete_all
+  has_many :countries, through: :countries_currencies
 
   validates :currency, presence: true
   with_options uniqueness: { scope: :active }, if: :active do

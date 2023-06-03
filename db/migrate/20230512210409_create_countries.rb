@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+##
+# Create table countries for ISO-4217 data, with columns for country name,
+# alphanumeric 2- and 3-letter codes, and an integer column for the numeric
+# code.
+# Uniquely indexed on all columns except the name.
 class CreateCountries < ActiveRecord::Migration[7.0]
   def change
     create_table :countries do |t|

@@ -20,8 +20,10 @@ class ExchangesControllerTest < ActionDispatch::IntegrationTest
   test 'should create exchange' do
     assert_difference('Exchange.count') do
       post exchanges_url,
-           params: { exchange: { country_id: @exchange.country_id,
-                                 name: @exchange.name, symbol: @exchange.symbol } }
+           params: { exchange: {
+             country_id: @exchange.country_id,
+             name: @exchange.name, symbol: @exchange.symbol
+           } }
     end
 
     assert_redirected_to exchange_url(Exchange.last)
@@ -40,7 +42,8 @@ class ExchangesControllerTest < ActionDispatch::IntegrationTest
   test 'should update exchange' do
     patch exchange_url(@exchange),
           params: { exchange: { country_id: @exchange.country_id,
-                                name: @exchange.name, symbol: @exchange.symbol } }
+                                name: @exchange.name,
+                                symbol: @exchange.symbol } }
     assert_redirected_to exchange_url(@exchange)
   end
 

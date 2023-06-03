@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+##
+# When included, this concern sets up an Asset to Asset many to many association
+# through AssetPair.
 module Asset
   extend ActiveSupport::Concern
 

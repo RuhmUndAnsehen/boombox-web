@@ -20,8 +20,15 @@ class AssetPairsControllerTest < ActionDispatch::IntegrationTest
   test 'should create asset_pair' do
     assert_difference('AssetPair.count') do
       post asset_pairs_url,
-           params: { asset_pair: { base_asset_id: @asset_pair.base_asset_id, base_asset_type: @asset_pair.base_asset_type,
-                                   base_rate: @asset_pair.base_rate, counter_asset_id: @asset_pair.counter_asset_id, counter_asset_type: @asset_pair.counter_asset_type, counter_rate: @asset_pair.counter_rate, observed_at: @asset_pair.observed_at } }
+           params: { asset_pair: {
+             base_asset_id: @asset_pair.base_asset_id,
+             base_asset_type: @asset_pair.base_asset_type,
+             base_rate: @asset_pair.base_rate,
+             counter_asset_id: @asset_pair.counter_asset_id,
+             counter_asset_type: @asset_pair.counter_asset_type,
+             counter_rate: @asset_pair.counter_rate,
+             observed_at: @asset_pair.observed_at
+           } }
     end
 
     assert_redirected_to asset_pair_url(AssetPair.last)
@@ -39,8 +46,15 @@ class AssetPairsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update asset_pair' do
     patch asset_pair_url(@asset_pair),
-          params: { asset_pair: { base_asset_id: @asset_pair.base_asset_id, base_asset_type: @asset_pair.base_asset_type,
-                                  base_rate: @asset_pair.base_rate, counter_asset_id: @asset_pair.counter_asset_id, counter_asset_type: @asset_pair.counter_asset_type, counter_rate: @asset_pair.counter_rate, observed_at: @asset_pair.observed_at } }
+          params: { asset_pair: {
+            base_asset_id: @asset_pair.base_asset_id,
+            base_asset_type: @asset_pair.base_asset_type,
+            base_rate: @asset_pair.base_rate,
+            counter_asset_id: @asset_pair.counter_asset_id,
+            counter_asset_type: @asset_pair.counter_asset_type,
+            counter_rate: @asset_pair.counter_rate,
+            observed_at: @asset_pair.observed_at
+          } }
     assert_redirected_to asset_pair_url(@asset_pair)
   end
 

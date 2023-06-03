@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nodoc:
 class AssetPairsController < ApplicationController
   before_action :set_asset_pair, only: %i[show edit update destroy]
 
@@ -79,7 +80,7 @@ class AssetPairsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def asset_pair_params
-    params.require(:asset_pair).permit(:base_asset_id, :base_asset_type, :counter_asset_id, :counter_asset_type,
-                                       :base_rate, :counter_rate, :observed_at)
+    params.require(:asset_pair).permit(:base_asset_id, :base_asset_type,
+                                       :counter_asset_id, :counter_asset_type)
   end
 end

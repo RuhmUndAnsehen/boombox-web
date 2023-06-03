@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+##
+# Adds a few convenience methods to the including class, provided that it
+# defines an #alpha3_code attribute.
+# Notably, enables quick retrieval of records through a class method. Example:
+# `Country.USA # retrieves the record for the USA from the countries table`
 module Alpha3Indexable
   extend ActiveSupport::Concern
 
@@ -23,7 +28,7 @@ module Alpha3Indexable
     # respective record from the database.
     def method_missing(name, *, **, &)
       if name.match?(/\A[[:upper:]]{3}\z/)
-        record = find_by_abc(name)
+        record = find_by_alpha3_code(name)
         return record if record
       end
 
@@ -35,6 +40,13 @@ module Alpha3Indexable
     #
     # The default columns are (in that order): #alpha3_code, #id, #numeric_code
     def smart_lookup(id) = smart_lookup_helper(id)
+
+    private
+
+    def respond_to_missing?(name, _)
+      super || name.match?(/\A[[:upper:]]{3}\z/) &&
+        where(alpha3_code: name).count.positive?
+    end
   end
 
   included do

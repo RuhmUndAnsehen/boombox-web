@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+##
+# A securities exchange.
 class Exchange < ApplicationRecord
   belongs_to :country
 
-  has_many :security_listings, dependent: :destroy
+  has_many :security_listings, dependent: :delete_all
   has_many :equities, through: :security_listings, source: :security,
                       source_type: 'Equity'
 
@@ -16,6 +18,8 @@ class Exchange < ApplicationRecord
     # the #symbol column.
     #
     # Raises an error if not found.
+    # TODO: Reconsider method naming so we dont have to disable Rubocop for
+    #       calls to it.
     def find_by_symbol_case_insensitive!(symbol)
       symbol_like_id = arel_table[:symbol].matches(sanitize_sql_like(symbol))
       where(symbol_like_id).first!

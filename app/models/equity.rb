@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+##
+# Equity, typically company stock.
 class Equity < ApplicationRecord
   include Asset
 
-  has_one :security_listing, as: :security, dependent: :destroy
+  has_one :security_listing, as: :security, dependent: :delete
   has_one :exchange, through: :security_listing
 
   validates :symbol, format: { without: /:/ }, presence: true
@@ -19,31 +21,19 @@ class Equity < ApplicationRecord
     # Returns the record corresponding to the given Equity and Exchange symbols,
     # +nil+ if not found.
     #
-    # :call-seq: find_by_compound_symbol(exchange, equity) => ...
     # :call-seq: find_by_compound_symbol(exchange:, equity:) => ...
-    def find_by_compound_symbol(*, **) = _find_by_compound_symbol(*, **).first
+    def find_by_compound_symbol(**) = _find_by_compound_symbol(**).first
 
     ##
     # Like #find_by_compound_symbol, but raises an Error if no record can be
     # found.
-    def find_by_compound_symbol!(*, **) = _find_by_compound_symbol(*, **).first!
+    def find_by_compound_symbol!(**) = _find_by_compound_symbol(**).first!
 
     private
 
-    def _find_by_compound_symbol(*args, exchange: nil, equity: nil)
-      exch = exchange || args.shift
-      eqty = equity || args.shift
-
-      unless args.empty?
-        given_kw = [exchange, equity].compact.size
-        expected = 2 - given_kw
-        given = args.size + expected
-        raise ArgumentError,
-              "wrong number of arguments (given #{given} and #{given_kw} keywords, expected #{expected})"
-      end
-
-      with_exchange_symbol.where(exchanges: Exchange.where(symbol: exch),
-                                 symbol: eqty)
+    def _find_by_compound_symbol(exchange: nil, equity: nil)
+      with_exchange_symbol.where(symbol: equity)
+                          .merge(Exchange.where(symbol: exchange))
     end
   end
 

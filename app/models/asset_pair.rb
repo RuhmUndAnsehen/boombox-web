@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+##
+# Associates two polymorphic assets into one asset pair. Typically, this would
+# be with an Equity, Option (tbd) or Currency as #base_asset, and a(nother)
+# Currency as #counter_asset.
+# AssetPairs have many #exchange_rates, which represent prices or quotes on the
+# AssetPair.
 class AssetPair < ApplicationRecord
   belongs_to :base_asset, polymorphic: true
   belongs_to :counter_asset, polymorphic: true

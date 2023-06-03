@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+##
+# Create table asset_pairs with polymorphic references base_asset and
+# counter_asset, corresponding integer columns base_rate and counter_rate,
+# and datetime observed_at.
+# Adds lots of indices, too.
 class CreateAssetPairs < ActiveRecord::Migration[7.0]
   def change
     create_table :asset_pairs do |t|

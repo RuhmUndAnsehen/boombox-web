@@ -13,11 +13,18 @@ AllCops:
   TargetRubyVersion: 3.2
 
 Layout/LineLength:
+  Exclude:
+    - 'Gemfile'
   Max: 80
 
 Metrics/BlockLength:
   Exclude:
     - 'test/**/*.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/**/*_controller.rb'
+    - 'db/migrate/**/*.rb'
 
 Style/ClassAndModuleChildren:
   Enabled: false

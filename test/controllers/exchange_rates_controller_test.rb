@@ -20,8 +20,12 @@ class ExchangeRatesControllerTest < ActionDispatch::IntegrationTest
   test 'should create exchange_rate' do
     assert_difference('ExchangeRate.count') do
       post exchange_rates_url,
-           params: { exchange_rate: { asset_pair_id: @exchange_rate.asset_pair_id, base_rate: @exchange_rate.base_rate,
-                                      counter_rate: @exchange_rate.counter_rate, observed_at: @exchange_rate.observed_at } }
+           params: { exchange_rate: {
+             asset_pair_id: @exchange_rate.asset_pair_id,
+             base_rate: @exchange_rate.base_rate,
+             counter_rate: @exchange_rate.counter_rate,
+             observed_at: @exchange_rate.observed_at
+           } }
     end
 
     assert_redirected_to exchange_rate_url(ExchangeRate.last)
@@ -39,8 +43,12 @@ class ExchangeRatesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update exchange_rate' do
     patch exchange_rate_url(@exchange_rate),
-          params: { exchange_rate: { asset_pair_id: @exchange_rate.asset_pair_id, base_rate: @exchange_rate.base_rate,
-                                     counter_rate: @exchange_rate.counter_rate, observed_at: @exchange_rate.observed_at } }
+          params: { exchange_rate: {
+            asset_pair_id: @exchange_rate.asset_pair_id,
+            base_rate: @exchange_rate.base_rate,
+            counter_rate: @exchange_rate.counter_rate,
+            observed_at: @exchange_rate.observed_at
+          } }
     assert_redirected_to exchange_rate_url(@exchange_rate)
   end
 
