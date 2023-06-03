@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/RuhmUndAnsehen/boombox-derivatives.git
+  revision: e18a07eed79eba7c6b4e1e29ea718505adcb85a0
+  specs:
+    boombox-derivatives (0.1.0)
+      activesupport
+      torch-rb
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -171,6 +179,7 @@ GEM
     reline (0.3.3)
       io-console (~> 0.5)
     rexml (3.2.5)
+    rice (4.1.0)
     rubocop (1.51.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -205,6 +214,8 @@ GEM
       railties (>= 6.0.0)
     thor (1.2.1)
     timeout (0.3.2)
+    torch-rb (0.13.2)
+      rice (>= 4.1.0)
     turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -233,6 +244,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  boombox-derivatives!
   bootsnap
   capybara
   debug
