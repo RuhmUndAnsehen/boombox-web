@@ -72,20 +72,15 @@ class ExchangeRate < ApplicationRecord
 
   ##
   # Returns the records that were observed the closest to each of the specified
-  # `times`, per AssetPair.
+  # +times+, per AssetPair.
   scope :observed_near,
         lambda { |*times|
-          unless times.map(&:class)
-                      .all?(&[Date, Time, DateTime].method(:include?))
-            raise TypeError, 'all objects must be of temporal type'
-          end
-
-          timetable = times.map do |time|
-            sanitize_sql_array(['SELECT ? AS sampled_at', time])
+          timetable = times.map(&:to_i).map! do |time|
+            sanitize_sql(['SELECT ? AS sampled_at', time])
           end
           timetable = Arel.sql(timetable.join(' UNION '))
 
-          abs_date_diff = 'ABS(UNIXEPOCH(observed_at) - UNIXEPOCH(sampled_at))'
+          abs_date_diff = 'ABS(UNIXEPOCH(observed_at) - sampled_at)'
           min_abs_date_diff = "MIN(#{abs_date_diff})"
           Arel.sql("#{abs_date_diff} ASC")
 
