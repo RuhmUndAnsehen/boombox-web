@@ -36,10 +36,6 @@ class ExchangeRate < ApplicationRecord
   # Returns the records that have certain type.
   scope :of_type, ->(type) { where(type: type.to_s) }
 
-  descendants.each do |type|
-    scope :"of_type_#{type.to_s.tableize}", -> { of_type(type) }
-  end
-
   # :section: Time selectors ################################################
 
   ##
