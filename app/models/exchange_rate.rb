@@ -10,7 +10,19 @@ require 'sti_preload/exchange_rate'
 class ExchangeRate < ApplicationRecord
   include StiPreload::ExchangeRate
 
-  before_save { self[:exchange_rate] = exchange_rate.to_f }
+  class << self
+    def denominator_column_name(name)
+      return 'base_rate' if name == 'exchange_rate'
+
+      super
+    end
+
+    def numerator_column_name(name)
+      return 'counter_rate' if name == 'exchange_rate'
+
+      super
+    end
+  end
 
   belongs_to :asset_pair
 
@@ -97,20 +109,6 @@ class ExchangeRate < ApplicationRecord
 
   attribute :observed_at, default: -> { Time.zone.now }
 
-  ##
-  # Returns a singular (Rational) value for the exchange rate.
-  def exchange_rate = Rational(counter_rate, base_rate)
-
-  ##
-  # Writer for #exchange_rate.
-  def exchange_rate=(rate)
-    rate = Rational(rate)
-    self.counter_rate = rate.numerator
-    self.base_rate = rate.denominator
-
-    rate # rubocop:disable Lint/Void
-  end
-
   alias_attribute :exchange_value, :exchange_rate
   alias_attribute :fx_rate,        :exchange_rate
   alias_attribute :price,          :exchange_rate
@@ -128,21 +126,5 @@ class ExchangeRate < ApplicationRecord
       *attrs.values_at(:counter_rate, :base_rate)
 
     self.class.new(**attrs)
-  end
-
-  private
-
-  # :nodoc:
-  # Overrides the default behavior to delete the #exchange_rate attribute if
-  # #base_rate or #counter_rate are present. This is for data integrity reasons.
-  # The user is not supposed to modify #exchange_rate directly, it merely exists
-  # to optimize DB queries. The actual value is in the rational number given by
-  # `Rational(counter_rate / base_rate)`. This precision would be lost if we
-  # were to infer them from a floating point number.
-  def sanitize_for_mass_assignment(attributes)
-    attributes.delete(:exchange_rate) if attributes.key?(:base_rate) ||
-                                         attributes.key?(:counter_rate)
-
-    super(attributes)
   end
 end
