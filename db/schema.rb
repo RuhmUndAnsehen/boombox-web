@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_29_230211) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -92,6 +92,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_230211) do
     t.index ["symbol"], name: "index_exchanges_on_symbol", unique: true
   end
 
+  create_table "options", force: :cascade do |t|
+    t.integer "underlying_id", null: false
+    t.datetime "expires_at", null: false
+    t.integer "type", limit: 1, null: false
+    t.integer "style", limit: 1, null: false
+    t.float "strike", null: false
+    t.integer "strike_denominator", null: false
+    t.integer "strike_numerator", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_options_on_expires_at"
+    t.index ["strike", "expires_at", "type", "underlying_id"], name: "index_options_on_major_columns"
+    t.index ["underlying_id"], name: "index_options_on_underlying_id"
+  end
+
   create_table "security_listings", force: :cascade do |t|
     t.string "security_type", null: false
     t.integer "security_id", null: false
@@ -102,5 +117,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_230211) do
 
   add_foreign_key "exchange_rates", "asset_pairs"
   add_foreign_key "exchanges", "countries"
+  add_foreign_key "options", "asset_pairs", column: "underlying_id"
   add_foreign_key "security_listings", "exchanges"
 end
