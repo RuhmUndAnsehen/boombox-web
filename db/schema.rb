@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_18_160512) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -38,8 +38,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
   create_table "countries_currencies", id: false, force: :cascade do |t|
     t.integer "country_id", null: false
     t.integer "currency_id", null: false
-    t.index ["country_id"], name: "index_countries_currencies_on_country_id"
-    t.index ["currency_id"], name: "index_countries_currencies_on_currency_id"
+    t.index ["country_id", "currency_id"], name: "index_countries_currencies_on_country_id_and_currency_id"
+    t.index ["currency_id", "country_id"], name: "index_countries_currencies_on_currency_id_and_country_id"
   end
 
   create_table "currencies", force: :cascade do |t|
@@ -50,8 +50,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["alphabetic_code"], name: "index_currencies_on_alphabetic_code"
-    t.index ["numeric_code"], name: "index_currencies_on_numeric_code"
+    t.index ["alphabetic_code", "active"], name: "index_currencies_on_alphabetic_code_and_active"
+    t.index ["numeric_code", "active"], name: "index_currencies_on_numeric_code_and_active"
   end
 
   create_table "equities", force: :cascade do |t|
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_equities_on_name"
     t.index ["symbol"], name: "index_equities_on_symbol"
   end
 
@@ -71,13 +72,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
     t.datetime "updated_at", null: false
     t.string "type", null: false
     t.float "exchange_rate", null: false
-    t.index ["asset_pair_id", "observed_at"], name: "index_exchange_rates_on_asset_pair_id_and_observed_at"
-    t.index ["asset_pair_id", "type", "observed_at", "exchange_rate"], name: "index_exchange_rates_on_all_columns"
-    t.index ["asset_pair_id", "type", "observed_at"], name: "index_exchange_rates_on_asset_pair_id_and_type_and_observed_at"
     t.index ["asset_pair_id"], name: "index_exchange_rates_on_asset_pair_id"
-    t.index ["exchange_rate"], name: "index_exchange_rates_on_exchange_rate"
-    t.index ["observed_at"], name: "index_exchange_rates_on_observed_at"
-    t.index ["type", "observed_at"], name: "index_exchange_rates_on_type_and_observed_at"
+    t.index ["exchange_rate", "type", "asset_pair_id"], name: "index_exchange_rates_on_exchange_rate_and_type_and_asset_pair_id"
+    t.index ["observed_at", "exchange_rate", "type", "asset_pair_id"], name: "index_exchange_rates_on_all_columns"
+    t.index ["observed_at", "type", "asset_pair_id"], name: "index_exchange_rates_on_observed_at_and_type_and_asset_pair_id"
+    t.index ["type", "observed_at", "asset_pair_id"], name: "index_exchange_rates_on_type_and_observed_at_and_asset_pair_id"
     t.index ["type"], name: "index_exchange_rates_on_type"
   end
 
@@ -89,7 +88,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
     t.datetime "updated_at", null: false
     t.string "timezone"
     t.index ["country_id"], name: "index_exchanges_on_country_id"
-    t.index ["symbol"], name: "index_exchanges_on_symbol", unique: true
+    t.index ["name", "country_id"], name: "index_exchanges_on_name_and_country_id"
+    t.index ["symbol", "country_id"], name: "index_exchanges_on_symbol_and_country_id", unique: true
   end
 
   create_table "options", force: :cascade do |t|
@@ -111,8 +111,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_10_132055) do
     t.string "security_type", null: false
     t.integer "security_id", null: false
     t.integer "exchange_id", null: false
-    t.index ["exchange_id"], name: "index_security_listings_on_exchange_id"
-    t.index ["security_type", "security_id"], name: "index_security_listings_on_security"
+    t.index ["exchange_id", "security_type", "security_id"], name: "index_security_listings_on_exchange_and_security"
+    t.index ["security_type", "security_id", "exchange_id"], name: "index_security_listings_on_security_and_exchange"
   end
 
   add_foreign_key "exchange_rates", "asset_pairs"
