@@ -17,6 +17,10 @@ Layout/LineLength:
     - 'Gemfile'
   Max: 80
 
+Metrics/AbcSize:
+  Exclude:
+    - 'db/migrate/**/*.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'test/**/*.rb'
