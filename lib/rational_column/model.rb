@@ -47,9 +47,10 @@ module RationalColumn
         before_validation { self[name] = __send__(name) }
 
         define_method("#{name}=") do |value|
-          value = Rational(value) if value
-          __send__(self.class.__rational_nwriter__(name), value&.numerator)
-          __send__(self.class.__rational_dwriter__(name), value&.denominator)
+          value = Rational(value) if value.present?
+          __send__(self.class.__rational_nwriter__(name), value.try(:numerator))
+          __send__(self.class.__rational_dwriter__(name),
+                   value.try(:denominator))
 
           value
         end
