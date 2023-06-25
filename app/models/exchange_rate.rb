@@ -65,7 +65,7 @@ class ExchangeRate < ApplicationRecord
   # AssetPair.
   scope :latest,
         lambda {
-          group(:asset_pair)
+          group(:asset_pair_id)
             .having('MAX(observed_at)')
             .order(observed_at: :desc)
         }
@@ -85,7 +85,7 @@ class ExchangeRate < ApplicationRecord
           Arel.sql("#{abs_date_diff} ASC")
 
           joins("CROSS JOIN (#{timetable})").select('*')
-                                            .group(:asset_pair)
+                                            .group(:asset_pair_id)
                                             .group(:sampled_at)
                                             .having(min_abs_date_diff)
         }
@@ -93,8 +93,8 @@ class ExchangeRate < ApplicationRecord
 
   # :section: Rate selectors ################################################
 
-  scope :high, -> { group(:asset_pair).having('MAX(exchange_rate)') }
-  scope :low, -> { group(:asset_pair).having('MIN(exchange_rate)') }
+  scope :high, -> { group(:asset_pair_id).having('MAX(exchange_rate)') }
+  scope :low, -> { group(:asset_pair_id).having('MIN(exchange_rate)') }
 
   # :section: Attributes
 
