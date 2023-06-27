@@ -22,5 +22,12 @@ module BoomboxWeb
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Apply Rubocop's unsafe autocorrect to newly generated files.
+    config.generators.after_generate do |files|
+      rb_files = files.select(&/\.(?:rb|jbuilder)\z/.method(:match?))
+      system("bundle exec rubocop -A --fail-level=E #{rb_files.shelljoin}",
+             exception: true)
+    end
   end
 end
