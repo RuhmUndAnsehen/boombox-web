@@ -70,18 +70,16 @@ class ExchangeRate < ApplicationRecord
   # +times+, per AssetPair.
   scope :observed_near,
         lambda { |*times|
+          # Map the times to their Unix timestamps and interpolate them into
+          # constant rows of a "sampled_at" column.
           timetable = times.map(&:to_i).map! do |time|
             sanitize_sql(['SELECT ? AS sampled_at', time])
           end
           timetable = Arel.sql(timetable.join(' UNION '))
 
-          abs_date_diff = 'ABS(UNIXEPOCH(observed_at) - sampled_at)'
-          min_abs_date_diff = "MIN(#{abs_date_diff})"
-
-          joins("CROSS JOIN (#{timetable})").select('*')
-                                            .group(:asset_pair_id)
-                                            .group(:sampled_at)
-                                            .having(min_abs_date_diff)
+          select('*').joins("CROSS JOIN (#{timetable})")
+                     .group(:asset_pair_id, :sampled_at)
+                     .having('MIN(ABS(UNIXEPOCH(observed_at) - sampled_at))')
         }
   singleton_class.send(:alias_method, :at, :observed_near)
 
