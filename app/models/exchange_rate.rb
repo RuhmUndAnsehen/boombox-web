@@ -33,25 +33,31 @@ class ExchangeRate < ApplicationRecord
   # :section: Type selectors ################################################
 
   ##
-  # Returns the records that have certain type.
+  # Returns a relation where the records are of #type +type+.
   scope :of_type, ->(type) { where(type: type.to_s) }
 
   # :section: Time selectors ################################################
 
   ##
-  # Returns the records that were observed after the specified `time`.
+  # Returns a relation where the records were observed after the specified
+  # +time+.
   scope :after, lambda { |time, strict: false|
                   where("observed_at #{strict ? '>' : '>='} ?", time)
                 }
 
   ##
-  # Returns the records that were observed before the specified `time`.
+  # Returns a relation where the records were observed before the specified
+  # +time+.
   scope :before, lambda { |time, strict: false|
     where("observed_at #{strict ? '<' : '<='} ?", time)
   }
 
   ##
-  # Returns the records that were observed during the given time period.
+  # Returns a relation where the records were observed during the given time
+  # period.
+  # :call-seq:
+  #   ExchangeRate.during(range) => ...
+  #   ExchangeRate.during(start_time, end_time) => ...
   scope :during,
         lambda { |range, time = nil|
           range = range...time if time.present?
@@ -85,7 +91,14 @@ class ExchangeRate < ApplicationRecord
 
   # :section: Rate selectors ################################################
 
+  ##
+  # Returns a relation with records having the highest #exchange_rate per
+  # #asset_pair.
   scope :high, -> { group(:asset_pair_id).having('MAX(exchange_rate)') }
+
+  ##
+  # Returns a relation with records having the lowest #exchange_rate per
+  # #asset_pair.
   scope :low, -> { group(:asset_pair_id).having('MIN(exchange_rate)') }
 
   # :section: Attributes
