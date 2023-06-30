@@ -63,12 +63,7 @@ class ExchangeRate < ApplicationRecord
   ##
   # Returns the record that was observed at the latest point in time, per
   # AssetPair.
-  scope :latest,
-        lambda {
-          group(:asset_pair_id)
-            .having('MAX(observed_at)')
-            .order(observed_at: :desc)
-        }
+  scope :latest, -> { group(:asset_pair_id).having('MAX(observed_at)') }
 
   ##
   # Returns the records that were observed the closest to each of the specified
