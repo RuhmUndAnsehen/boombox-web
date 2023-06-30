@@ -77,7 +77,6 @@ class ExchangeRate < ApplicationRecord
 
           abs_date_diff = 'ABS(UNIXEPOCH(observed_at) - sampled_at)'
           min_abs_date_diff = "MIN(#{abs_date_diff})"
-          Arel.sql("#{abs_date_diff} ASC")
 
           joins("CROSS JOIN (#{timetable})").select('*')
                                             .group(:asset_pair_id)
