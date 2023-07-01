@@ -28,4 +28,12 @@ class AssetPair < ApplicationRecord
     scope type.to_s[14..].remove('::').tableize.to_sym,
           -> { exchange_rates.of_type(type) }
   end
+
+  def to_human_s(*args, **opts)
+    base_asset = self.base_asset.to_human_s
+    counter_asset = self.counter_asset.to_human_s
+
+    super(*args, **opts.merge(base_asset:, counter_asset:,
+                              default: "#{base_asset} (#{counter_asset})"))
+  end
 end

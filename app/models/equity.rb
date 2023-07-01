@@ -62,4 +62,10 @@ class Equity < ApplicationRecord
 
     "#{exchange_symbol}:#{symbol}"
   end
+
+  def to_human_s(*, **opts)
+    default = attributes.key?(exchange_key) ? to_param : symbol
+
+    super(*, **opts.merge(default:))
+  end
 end

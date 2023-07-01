@@ -44,4 +44,6 @@ class Currency < ApplicationRecord
   alias_attribute :numeric,  :numeric_code
 
   def to_param = active ? super : id
+
+  def to_human_s(*, **opts) = super(*, **opts.merge(default: abc))
 end
