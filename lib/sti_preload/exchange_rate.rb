@@ -8,14 +8,16 @@ module StiPreload
     extend ActiveSupport::Concern
 
     DESCENDANTS = %w[
-      ExchangeRate::Chart
-      ExchangeRate::Chart::Adjusted
+      ExchangeRate::Chart::AdjustedRate
       ExchangeRate::Chart::Other
-      ExchangeRate::Chart::Plain
+      ExchangeRate::Chart::Rate
       ExchangeRate::NetAssetValue
       ExchangeRate::Other
-      ExchangeRate::Settlement
+      ExchangeRate::SettlementRate
       ExchangeRate::Trade
+      ExchangeRate::Quote::Ask
+      ExchangeRate::Quote::Bid
+      ExchangeRate::Quote::Mid
     ].freeze
 
     included do
