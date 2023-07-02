@@ -23,8 +23,8 @@ class ApplicationRecord < ActiveRecord::Base
 
   ##
   # Returns a human-readable String representation of this object.
-  def to_s_human(*keys, **opts)
-    *scope, key = :activerecord, :to_s_human, model_name.i18n_key, *keys
+  def to_human_s(*keys, **opts)
+    *scope, key = :activerecord, :to_human_s, model_name.i18n_key, *keys
     I18n.t(key, scope:, **{ default: to_s }.merge(attributes, opts))
   end
 end
