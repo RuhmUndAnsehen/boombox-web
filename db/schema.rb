@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_18_160512) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_01_221254) do
   create_table "asset_pairs", force: :cascade do |t|
     t.string "base_asset_type", null: false
     t.integer "base_asset_id", null: false
@@ -89,7 +89,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_160512) do
     t.string "timezone"
     t.index ["country_id"], name: "index_exchanges_on_country_id"
     t.index ["name", "country_id"], name: "index_exchanges_on_name_and_country_id"
-    t.index ["symbol", "country_id"], name: "index_exchanges_on_symbol_and_country_id", unique: true
+    t.index ["symbol"], name: "index_exchanges_on_symbol", unique: true
   end
 
   create_table "options", force: :cascade do |t|
