@@ -7,6 +7,15 @@
 # AssetPairs have many #exchange_rates, which represent prices or quotes on the
 # AssetPair.
 class AssetPair < ApplicationRecord
+  class << self
+    def includes_exchange_rates
+      query = includes(:exchange_rates).references(:exchange_rates)
+      return query unless block_given?
+
+      query.merge(yield(ExchangeRate))
+    end
+  end
+
   belongs_to :base_asset, polymorphic: true
   belongs_to :counter_asset, polymorphic: true
 
