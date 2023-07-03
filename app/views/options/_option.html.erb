@@ -1,0 +1,27 @@
+<div id="<%= dom_id option %>">
+  <p>
+    <strong><%= option.t(:underlying) %>:</strong>
+    <%= option.underlying.to_human_s %>
+  </p>
+
+  <p>
+    <strong><%= option.t(:strike) %>:</strong>
+    <%= option.strike %>
+  </p>
+
+  <p>
+    <strong><%= option.t(:expires_at) %>:</strong>
+    <%= option.expires_at %>
+  </p>
+
+  <p>
+    <strong><%= option.t(:type) %>:</strong>
+    <%= option.type %>
+  </p>
+
+  <p>
+    <strong><%= option.t(:style) %>:</strong>
+    <%= option.style %>
+  </p>
+
+</div>

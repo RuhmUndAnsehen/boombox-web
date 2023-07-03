@@ -11,6 +11,7 @@ class AssetPair < ApplicationRecord
   belongs_to :counter_asset, polymorphic: true
 
   has_many :exchange_rates, dependent: :destroy
+  has_many :options, dependent: :destroy
 
   validates_associated :base_asset
   validates_associated :counter_asset

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Options</h1>
+
+<div id="options">
+  <% @options.each do |option| %>
+    <%= render option %>
+    <p>
+      <%= link_to "Show this option", option %>
+    </p>
+  <% end %>
+</div>
+
+<% if @underlying %>
+  <%= link_to "New option", new_asset_pair_option_path %>
+<% end %>

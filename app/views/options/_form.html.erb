@@ -1,0 +1,43 @@
+<%= form_with(model: [@underlying, option]) do |form| %>
+  <% if option.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(option.errors.count, "error") %> prohibited this option from being saved:</h2>
+
+      <ul>
+        <% option.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <span><%= option.t(:underlying_id) %>:</span>
+    <span><%= option.underlying.to_human_s %></span>
+    <%= form.hidden_field :underlying_id %>
+  </div>
+
+  <div>
+    <%= form.label :strike %>
+    <%= form.rational_field :strike %>
+  </div>
+
+  <div>
+    <%= form.label :expires_at %>
+    <%= form.datetime_field :expires_at %>
+  </div>
+
+  <div>
+    <%= form.label :type %>
+    <%= form.enum_radio_buttons :type %>
+  </div>
+
+  <div>
+    <%= form.label :style %>
+    <%= form.enum_select :style %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

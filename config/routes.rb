@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   resources :equities
   resources :exchange_rates
   resources :exchanges
-  resources :asset_pairs
+
+  resources :asset_pairs do
+    resources :options, shallow: true do
+      post 'compute', on: :member
+    end
+  end
+  get 'options', to: 'options#index'
 
   # The Country and Currency models return the 3-letter alphabetic code instead
   # of their internal ID (except for historic currencies) in their #to_param
