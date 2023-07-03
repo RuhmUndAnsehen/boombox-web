@@ -8,7 +8,7 @@ ruby '>= 3.2'
 gem 'boombox-derivatives', github: 'RuhmUndAnsehen/boombox-derivatives'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.0.4', '>= 7.0.4.3'
+gem 'rails', '~> 7.0.6', '>= 7.0.6'
 
 # The original asset pipeline for Rails
 # [https://github.com/rails/sprockets-rails]
