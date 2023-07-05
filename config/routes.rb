@@ -2,10 +2,10 @@
 
 Rails.application.routes.draw do
   resources :equities
-  resources :exchange_rates
   resources :exchanges
 
   resources :asset_pairs do
+    resources :exchange_rates, shallow: true
     resources :options, shallow: true do
       post 'compute', on: :member
     end

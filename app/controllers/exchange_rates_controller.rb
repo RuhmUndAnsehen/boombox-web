@@ -2,11 +2,12 @@
 
 # :nodoc:
 class ExchangeRatesController < ApplicationController
+  before_action :set_asset_pair, only: %i[index show new destroy]
   before_action :set_exchange_rate, only: %i[show edit update destroy]
 
   # GET /exchange_rates or /exchange_rates.json
   def index
-    @exchange_rates = ExchangeRate.all
+    @exchange_rates = ExchangeRate.where(asset_pair: @asset_pair)
   end
 
   # GET /exchange_rates/1 or /exchange_rates/1.json
@@ -14,7 +15,7 @@ class ExchangeRatesController < ApplicationController
 
   # GET /exchange_rates/new
   def new
-    @exchange_rate = ExchangeRate.new
+    @exchange_rate = ExchangeRate.new(asset_pair: @asset_pair)
   end
 
   # GET /exchange_rates/1/edit
@@ -27,7 +28,9 @@ class ExchangeRatesController < ApplicationController
     respond_to do |format|
       if @exchange_rate.save
         format.html do
-          redirect_to exchange_rate_url(@exchange_rate),
+          redirect_to asset_pair_url(@exchange_rate.asset_pair,
+                                     exchange_rate_id: @exchange_rate,
+                                     exchange_rate_type: @exchange_rate.type),
                       notice: 'Exchange rate was successfully created.'
         end
         format.json { render :show, status: :created, location: @exchange_rate }
@@ -45,7 +48,8 @@ class ExchangeRatesController < ApplicationController
     respond_to do |format|
       if @exchange_rate.update(exchange_rate_params)
         format.html do
-          redirect_to exchange_rate_url(@exchange_rate),
+          redirect_to asset_pair_url(@exchange_rate.asset_pair,
+                                     highlight: @exchange_rate),
                       notice: 'Exchange rate was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @exchange_rate }
@@ -64,7 +68,7 @@ class ExchangeRatesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to exchange_rates_url,
+        redirect_to asset_pair_url(@asset_pair),
                     notice: 'Exchange rate was successfully destroyed.'
       end
       format.json { head :no_content }
@@ -76,6 +80,10 @@ class ExchangeRatesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_exchange_rate
     @exchange_rate = ExchangeRate.find(params[:id])
+  end
+
+  def set_asset_pair
+    @asset_pair = AssetPair.find(params[:asset_pair_id])
   end
 
   # Only allow a list of trusted parameters through.
