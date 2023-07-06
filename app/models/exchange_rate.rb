@@ -123,4 +123,10 @@ class ExchangeRate < ApplicationRecord
 
     self.class.new(**attrs)
   end
+
+  def to_human_s(...)
+    precision = exchange_rate >= 2 ? 2 : 4
+    ActionController::Base.helpers.number_with_precision(exchange_rate,
+                                                         precision:)
+  end
 end
