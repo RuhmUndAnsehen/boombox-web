@@ -6,7 +6,7 @@ class AssetPairsController < ApplicationController
 
   # GET /asset_pairs or /asset_pairs.json
   def index
-    @asset_pairs = AssetPair.all
+    @asset_pairs = AssetPair.preload_all(&:latest)
   end
 
   # GET /asset_pairs/1 or /asset_pairs/1.json
