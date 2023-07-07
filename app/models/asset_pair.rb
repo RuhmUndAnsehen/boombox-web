@@ -14,6 +14,10 @@ class AssetPair < ApplicationRecord
 
       query.merge(yield(ExchangeRate))
     end
+
+    def preload_all(&)
+      preload(:base_asset, :counter_asset).includes_exchange_rates(&)
+    end
   end
 
   belongs_to :base_asset, polymorphic: true
