@@ -1,27 +1,26 @@
 <div id="<%= dom_id asset_pair %>">
-  <p>
-    <strong>Base asset:</strong>
-    <%= asset_pair.base_asset_id %>
-  </p>
+  <% if local_assigns[:show] %>
+    <%= render asset_pair.base_asset, link: true %>
 
-  <p>
-    <strong>Counter asset:</strong>
-    <%= asset_pair.counter_asset_id %>
-  </p>
+    <h3>
+      <%= link_to asset_pair.counter_asset do %>
+        <%= asset_pair.t(:counter_asset) %>:
+        <%= asset_pair.counter_asset.to_human_s %>
+      <% end %>
+    </h3>
 
-  <p>
-    <strong>Base rate:</strong>
-    <%= asset_pair.base_rate %>
-  </p>
-
-  <p>
-    <strong>Counter rate:</strong>
-    <%= asset_pair.counter_rate %>
-  </p>
-
-  <p>
-    <strong>Observed at:</strong>
-    <%= asset_pair.observed_at %>
-  </p>
-
+    <%= line_chart chart_data(asset_pair.exchange_rates) { |r| [r.observed_at, r.to_human_s ] } %>
+  <% else %>
+    <div>
+      <%= link_to asset_pair.to_human_s, asset_pair %>
+    </div>
+    <div>
+      <strong><%= asset_pair.exchange_rates.first.t(:exchange_rate) %>:</strong>
+      <span><%= asset_pair.exchange_rates.first.to_human_s %></span>
+    </div>
+    <div>
+      <strong><%= asset_pair.exchange_rates.first.t(:observed_at) %>:</strong>
+      <span><%= asset_pair.exchange_rates.first.observed_at %></span>
+    </div>
+  <% end %>
 </div>
