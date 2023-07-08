@@ -1,12 +1,9 @@
 <div id="<%= dom_id equity %>">
-  <p>
-    <strong>Symbol:</strong>
-    <%= equity.symbol %>
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    <%= equity.name %>
-  </p>
-
+  <%= content_tag local_assigns.fetch(:tag, :h2) do %>
+    <% if local_assigns[:link] %>
+      <%= link_to "#{equity.name} (#{equity.symbol})", equity %>
+    <% else %>
+      <%= equity.name %> (<%= equity.symbol %>)
+    <% end %>
+  <% end %>
 </div>
