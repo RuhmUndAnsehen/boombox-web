@@ -3,6 +3,8 @@
 ##
 # A financial option.
 class Option < ApplicationRecord
+  include Asset
+
   # The table has a +type+ column, so we're disabling STI by setting the
   # inheritance_column to some bogus value.
   self.inheritance_column = 'foo'
