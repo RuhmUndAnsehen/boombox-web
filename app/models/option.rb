@@ -174,4 +174,15 @@ class Option < ApplicationRecord
   def time_to_expiry(now = Time.zone.now)
     (expires_at.to_datetime - now.to_datetime).days
   end
+
+  def to_asset_pair_params
+    {
+      asset_pair: {
+        base_asset_id: id,
+        base_asset_type: self.class,
+        counter_asset_id: underlying.counter_asset_id,
+        counter_asset_type: underlying.counter_asset_type
+      }
+    }
+  end
 end
