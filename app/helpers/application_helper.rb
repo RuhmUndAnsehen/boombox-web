@@ -5,6 +5,25 @@ require 'enhanced/form_builder'
 # :nodoc:
 module ApplicationHelper
   ##
+  # Generates a form with a single button that submits to a controller create
+  # action.
+  #
+  # +params+ is a hash where the key is the singular model name, and the value
+  # is a hash containing the model attributes.
+  def button_to_create(params, *args, **opts)
+    unless params.size == 1
+      raise ArgumentError, "expected params.size == 1, got: #{params.size}"
+    end
+
+    model, params = params.flatten
+    params.transform_keys! { |key| "#{model}[#{key}]" }
+    controller = opts.delete(:controller) || model.to_s.pluralize
+
+    button_to(tl(controller, :create), { controller:, action: :create }, *args,
+              method: :post, params:, **opts)
+  end
+
+  ##
   # Decorates the built-in #form_with by switching the default form builder with
   # Enhanced::FormBuilder.
   def form_with(*, **opts, &)
