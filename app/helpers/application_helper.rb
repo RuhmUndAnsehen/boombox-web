@@ -41,4 +41,39 @@ module ApplicationHelper
       records.map(&block)
     end
   end
+
+  ##
+  # Provides translations for controller actions.
+  #
+  # It resolves in I18n like so: +"links.#{controller}.#{action}+
+  #
+  # :call-seq:
+  #     t_link(controller, action, default: nil) => "..."
+  #     t_link(action, default: nil) => "..."
+  #     t_link(model, action, default: nil) => "..."
+  def t_link(controller, action = nil, default: nil)
+    controller, action = action, controller unless action
+
+    controller ||= controller_name
+    if controller.respond_to?(:model_name)
+      model_name = controller.model_name
+      controller = model_name.i18n_key
+
+      default ||= t_link_default(action, model_name.singular, model_name.plural)
+    else
+      default ||= t_link_default(action, controller)
+    end
+
+    t(action, default:, scope: [:links, controller])
+  end
+  alias tl t_link
+
+  def t_link_default(action, singular, plural = nil)
+    unless plural
+      plural = singular.to_s.pluralize
+      singular = singular.to_s.singularize
+    end
+
+    (action.to_sym == :action ? plural : "#{action}_#{singular}").titleize
+  end
 end
