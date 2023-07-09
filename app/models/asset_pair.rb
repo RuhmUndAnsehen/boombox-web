@@ -26,8 +26,12 @@ class AssetPair < ApplicationRecord
   has_many :exchange_rates, dependent: :destroy
   has_many :options, dependent: :destroy
 
-  validates_associated :base_asset
-  validates_associated :counter_asset
+  # TODO: The default error message is referring to this attribute, but the
+  #       constraint actually prevents creation of duplicate AssetPairs.
+  validates :counter_asset_type,
+            uniqueness: {
+              scope: %i[counter_asset_id base_asset_type base_asset_id]
+            }
 
   # :section: Asset based selectors
 
