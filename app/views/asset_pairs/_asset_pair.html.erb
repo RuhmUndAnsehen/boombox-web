@@ -14,13 +14,20 @@
     <div>
       <%= link_to asset_pair.to_human_s, asset_pair %>
     </div>
-    <div>
-      <strong><%= asset_pair.exchange_rates.first.t(:exchange_rate) %>:</strong>
-      <span><%= asset_pair.exchange_rates.first.to_human_s %></span>
-    </div>
-    <div>
-      <strong><%= asset_pair.exchange_rates.first.t(:observed_at) %>:</strong>
-      <span><%= asset_pair.exchange_rates.first.observed_at %></span>
-    </div>
+    <% if asset_pair.exchange_rates.present? %>
+      <div>
+        <strong><%= asset_pair.exchange_rates.first.t(:exchange_rate)
+                      %>:</strong>
+        <span><%= asset_pair.exchange_rates.first.to_human_s %></span>
+      </div>
+      <div>
+        <strong><%= asset_pair.exchange_rates.first.t(:observed_at) %>:</strong>
+        <span><%= asset_pair.exchange_rates.first.observed_at %></span>
+      </div>
+    <% else %>
+      <div>
+        <i><%= ExchangeRate.t(:exchange_rate, count: 0) %></i>
+      </div>
+    <% end %>
   <% end %>
 </div>
