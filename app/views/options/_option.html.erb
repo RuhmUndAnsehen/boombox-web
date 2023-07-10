@@ -1,4 +1,11 @@
 <div id="<%= dom_id option %>">
+  <%= content_tag local_assigns.fetch(:tag, :h2) do %>
+    <% if local_assigns[:link] %>
+      <%= link_to option.to_human_s, option %>
+    <% else %>
+      <%= option.to_human_s %>
+    <% end %>
+  <% end %>
   <p>
     <strong><%= option.t(:underlying) %>:</strong>
     <%= option.underlying.to_human_s %>
