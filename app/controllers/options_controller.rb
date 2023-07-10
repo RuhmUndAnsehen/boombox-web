@@ -13,7 +13,9 @@ class OptionsController < ApplicationController
   end
 
   # GET /options/1 or /options/1.json
-  def show; end
+  def show
+    @asset_pairs = AssetPair.of(@option)
+  end
 
   # GET /options/new
   def new
