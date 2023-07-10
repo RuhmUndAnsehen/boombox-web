@@ -185,4 +185,17 @@ class Option < ApplicationRecord
       }
     }
   end
+
+  def to_human_s(*args, **opts)
+    underlying = self.underlying.base_asset.to_human_s
+    expiry = expires_at.strftime('%y%m%d')
+    type = t_enum(:type, self.type)
+    style = t_enum(:style, self.style)
+    strike_t = strike.*(1000).round(0)
+    default = format('%<underlying>s%<expiry>6s%<strike_t>08d%<type>1c',
+                     underlying:, expiry:, strike_t:, style:, type:)
+
+    super(*args, **opts.merge(underlying:, expiry:, expires_at:, strike:,
+                              strike_t:, style:, type:, default:))
+  end
 end
