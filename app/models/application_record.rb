@@ -10,6 +10,7 @@ class ApplicationRecord < ActiveRecord::Base
     ##
     # Returns the I18n translation for the given enum value.
     def human_enum_name(enum, value) = human_attribute_name("#{enum}.#{value}")
+    alias t_enum human_enum_name
 
     ##
     # Returns a hash of enum value and #human_enum_name combinations.
@@ -19,6 +20,7 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  delegate :t_enum, to: :class
   delegate :t, to: :class
 
   ##
