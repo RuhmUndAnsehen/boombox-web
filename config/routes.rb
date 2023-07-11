@@ -24,16 +24,10 @@ Rails.application.routes.draw do
 
   # Redirect country and currency alphabetic codes that aren't written in
   # entirely uppercase to the uppercase equivalent.
-  # TODO: Determine if the redirect can be done in a way that feels less hacky.
   scope to: redirect { |p, r|
               "#{r.fullpath.match(%r{\A/[^/]*})}/#{p[:id].upcase}"
             } do
     get '/countries/:id', id: /[[:alpha:]]{2,3}/
     get '/currencies/:id', id: /[[:alpha:]]{3}/
   end
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
 end
