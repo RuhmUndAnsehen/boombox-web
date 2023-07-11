@@ -24,7 +24,8 @@ class AssetPair < ApplicationRecord
   belongs_to :counter_asset, polymorphic: true
 
   has_many :exchange_rates, dependent: :destroy
-  has_many :options, foreign_key: :underlying_id, dependent: :destroy
+  has_many :options, inverse_of: :underlying, foreign_key: :underlying_id,
+                     dependent: :destroy
 
   # TODO: The default error message is referring to this attribute, but the
   #       constraint actually prevents creation of duplicate AssetPairs.
