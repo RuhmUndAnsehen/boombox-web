@@ -77,7 +77,9 @@ class ExchangesController < ApplicationController
   def set_exchange
     @exchange = Exchange.smart_find!(params[:id])
   rescue ActiveRecord::RecordNotFound
-    exchange = Exchange.find_by!(symbol_case_insensitive: params[:id])
+    # rubocop:disable Rails/DynamicFindBy
+    exchange = Exchange.find_by_symbol_case_insensitive!(params[:id])
+    # rubocop:enable  Rails/DynamicFindBy
     redirect_to request.parameters.merge(id: exchange.symbol)
   end
 
