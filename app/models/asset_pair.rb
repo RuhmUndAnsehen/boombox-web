@@ -14,16 +14,25 @@ class AssetPair < ApplicationRecord
 
       query.merge(yield(ExchangeRate))
     end
+
+    def preload_all(&)
+      preload(:base_asset, :counter_asset).includes_exchange_rates(&)
+    end
   end
 
   belongs_to :base_asset, polymorphic: true
   belongs_to :counter_asset, polymorphic: true
 
   has_many :exchange_rates, dependent: :destroy
-  has_many :options, dependent: :destroy
+  has_many :options, inverse_of: :underlying, foreign_key: :underlying_id,
+                     dependent: :destroy
 
-  validates_associated :base_asset
-  validates_associated :counter_asset
+  # TODO: The default error message is referring to this attribute, but the
+  #       constraint actually prevents creation of duplicate AssetPairs.
+  validates :counter_asset_type,
+            uniqueness: {
+              scope: %i[counter_asset_id base_asset_type base_asset_id]
+            }
 
   # :section: Asset based selectors
 

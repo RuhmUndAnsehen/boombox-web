@@ -11,4 +11,6 @@
   <% end %>
 </div>
 
-<%= link_to "New exchange", new_exchange_path %>
+<% if @country.present? %>
+  <%= link_to "New exchange", new_country_exchange_path(@country) %>
+<% end %>

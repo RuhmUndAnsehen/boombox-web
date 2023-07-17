@@ -3,6 +3,7 @@
 # :nodoc:
 class ExchangesController < ApplicationController
   before_action :set_exchange, only: %i[show edit update destroy]
+  before_action :set_country, only: %i[index show new create]
 
   # GET /exchanges or /exchanges.json
   def index
@@ -14,7 +15,7 @@ class ExchangesController < ApplicationController
 
   # GET /exchanges/new
   def new
-    @exchange = Exchange.new
+    @exchange = Exchange.new(country: @country)
   end
 
   # GET /exchanges/1/edit
@@ -77,12 +78,18 @@ class ExchangesController < ApplicationController
   def set_exchange
     @exchange = Exchange.smart_find!(params[:id])
   rescue ActiveRecord::RecordNotFound
-    exchange = Exchange.find_by!(symbol_case_insensitive: params[:id])
+    # rubocop:disable Rails/DynamicFindBy
+    exchange = Exchange.find_by_symbol_case_insensitive!(params[:id])
+    # rubocop:enable  Rails/DynamicFindBy
     redirect_to request.parameters.merge(id: exchange.symbol)
+  end
+
+  def set_country
+    @country = @exchange&.country || Country.smart_find(params[:country_id])
   end
 
   # Only allow a list of trusted parameters through.
   def exchange_params
-    params.require(:exchange).permit(:country_id, :symbol, :name)
+    params.require(:exchange).permit(:country_id, :symbol, :name, :timezone)
   end
 end

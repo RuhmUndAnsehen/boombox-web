@@ -58,5 +58,6 @@ module Alpha3Indexable
 
   prepended { raise 'include this Concern to define scopes' }
 
+  def to_human_s(*, **opts) = super(*, **opts.merge(default: to_param))
   def to_param = alpha3_code
 end
