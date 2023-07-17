@@ -57,6 +57,19 @@ class Equity < ApplicationRecord
   # Returns the value of the attribute denoted by #exchange_key.
   def exchange_symbol = attributes[exchange_key]
 
+  def to_asset_pair_params
+    counter_asset_id = exchange.country
+                               .currencies.active
+                               .order(:id).limit(1)
+                               .pluck(:id).first
+    {
+      base_asset_id: id,
+      base_asset_type: self.class,
+      counter_asset_id:,
+      counter_asset_type: Currency
+    }
+  end
+
   def to_param
     return id.to_s unless attributes.key?(exchange_key)
 
