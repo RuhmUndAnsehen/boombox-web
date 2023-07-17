@@ -17,23 +17,18 @@
   </div>
 
   <div>
+    <%= form.label :base_asset_type, style: "display: block" %>
+    <%= form.text_field :base_asset_type %>
+  </div>
+
+  <div>
     <%= form.label :counter_asset_id, style: "display: block" %>
     <%= form.text_field :counter_asset_id %>
   </div>
 
   <div>
-    <%= form.label :base_rate, style: "display: block" %>
-    <%= form.number_field :base_rate %>
-  </div>
-
-  <div>
-    <%= form.label :counter_rate, style: "display: block" %>
-    <%= form.number_field :counter_rate %>
-  </div>
-
-  <div>
-    <%= form.label :observed_at, style: "display: block" %>
-    <%= form.datetime_field :observed_at %>
+    <%= form.label :counter_asset_type, style: "display: block" %>
+    <%= form.text_field :counter_asset_type %>
   </div>
 
   <div>
