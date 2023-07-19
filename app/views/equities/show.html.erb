@@ -7,4 +7,5 @@
   <%= link_to "Back to equities", equities_path %>
 
   <%= button_to "Destroy this equity", @equity, method: :delete %>
+  <%= render 'shared/asset/create_asset_pair', asset: @equity %>
 </div>

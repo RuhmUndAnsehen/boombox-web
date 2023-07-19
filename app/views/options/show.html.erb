@@ -7,7 +7,5 @@
   <%= link_to "Back to options", asset_pair_options_path(@underlying) %>
 
   <%= button_to "Destroy this option", @option, method: :delete %>
-  <% if @asset_pairs.count.zero? %>
-    <%= button_to_create @option.to_asset_pair_params %>
-  <% end %>
+  <%= render 'shared/asset/create_asset_pair', locals: { asset: @option } %>
 </div>
