@@ -63,10 +63,12 @@ class Equity < ApplicationRecord
                                .order(:id).limit(1)
                                .pluck(:id).first
     {
-      base_asset_id: id,
-      base_asset_type: self.class,
-      counter_asset_id:,
-      counter_asset_type: Currency
+      asset_pair: {
+        base_asset_id: id,
+        base_asset_type: self.class,
+        counter_asset_id:,
+        counter_asset_type: Currency
+      }
     }
   end
 
