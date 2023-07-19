@@ -10,7 +10,9 @@ class EquitiesController < ApplicationController
   end
 
   # GET /equities/1 or /equities/1.json
-  def show; end
+  def show
+    @asset_pairs = AssetPair.of(@equity)
+  end
 
   # GET /equities/new
   def new
