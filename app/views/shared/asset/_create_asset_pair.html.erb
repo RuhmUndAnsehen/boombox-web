@@ -1,0 +1,3 @@
+<% if @asset_pairs.blank? || @asset_pairs.count.zero? %>
+  <%= button_to_create asset.to_asset_pair_params %>
+<% end %>
