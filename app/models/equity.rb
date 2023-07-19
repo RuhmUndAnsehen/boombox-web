@@ -60,8 +60,7 @@ class Equity < ApplicationRecord
   def to_asset_pair_params
     counter_asset_id = exchange.country
                                .currencies.active
-                               .order(:id).limit(1)
-                               .pluck(:id).first
+                               .order(:id).pick(:id)
     {
       asset_pair: {
         base_asset_id: id,
