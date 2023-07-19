@@ -58,9 +58,11 @@ class Equity < ApplicationRecord
   def exchange_symbol = attributes[exchange_key]
 
   def to_asset_pair_params
-    counter_asset_id = exchange.country
-                               .currencies.active
-                               .order(:id).pick(:id)
+    counter_asset_id = Currency.active
+                               .joins(countries: { exchanges: :equities })
+                               .merge(Equity.where(id:))
+                               .reorder(:id).pick(:id) || Currency.XXX.id
+
     {
       asset_pair: {
         base_asset_id: id,
