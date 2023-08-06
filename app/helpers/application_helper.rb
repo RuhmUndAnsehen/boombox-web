@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'enhanced/form_builder'
+require 'helpers/form_builder'
 
 # :nodoc:
 module ApplicationHelper
@@ -38,9 +38,9 @@ module ApplicationHelper
 
   ##
   # Decorates the built-in #form_with by switching the default form builder with
-  # Enhanced::FormBuilder.
+  # Helpers::FormBuilder.
   def form_with(*, **opts, &)
-    super(*, **{ builder: Enhanced::FormBuilder }.merge(opts), &)
+    super(*, **{ builder: ::Helpers::FormBuilder }.merge(opts), &)
   end
 
   ##

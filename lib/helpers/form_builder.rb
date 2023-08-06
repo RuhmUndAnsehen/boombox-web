@@ -2,7 +2,7 @@
 
 require 'rational_column/form_builder'
 
-module Enhanced
+module Helpers
   ##
   # Defines field methods that facilitate working with enums and rationals.
   class FormBuilder < ActionView::Helpers::FormBuilder
