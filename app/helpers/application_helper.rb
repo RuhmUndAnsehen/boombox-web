@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'helpers/form_builder'
 
 # :nodoc:
 module ApplicationHelper
@@ -34,13 +33,6 @@ module ApplicationHelper
 
     button_to(tl(controller, :create), { controller:, action: :create }, *args,
               method: :post, params:, **opts)
-  end
-
-  ##
-  # Decorates the built-in #form_with by switching the default form builder with
-  # Helpers::FormBuilder.
-  def form_with(*, **opts, &)
-    super(*, **{ builder: ::Helpers::FormBuilder }.merge(opts), &)
   end
 
   ##
