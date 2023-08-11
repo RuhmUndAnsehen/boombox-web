@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'helpers/navigation_helper'
 
 # :nodoc:
 module ApplicationHelper
+  include ::Helpers::NavigationHelper
+
   ##
   # Generates a title tag for the site headers.
   def title_tag
