@@ -1,15 +1,17 @@
 <header class="site-header">
-  <nav class="site-nav">
-    <ul class="nav-bar">
-      <li class="link_to-root">
-        <%= link_to t('app.name.long.html'), '#' %>
-      </li>
-      <li>
-        <span><%= t 'sections.market_data' %></span>
-      </li>
-      <li>
-        <span><%= t 'sections.other_data' %></span>
-      </li>
-    </ul>
-  <nav>
+  <%= nav_tag class: 'site-nav' do |nav| %>
+    <%= nav.bar do |nav| %>
+      <%= nav.item t('app.name.long.html'), '#', class: 'link_to-root' %>
+      <%= nav.item t('sections.market_data') do |nav| %>
+        <%= nav.menu do |nav| %>
+
+        <% end %>
+      <% end %>
+      <%= nav.item t('sections.other_data') do |nav| %>
+        <%= nav.menu do |nav| %>
+
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 </header>
