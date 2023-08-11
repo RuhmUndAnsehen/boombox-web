@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  root 'site#index'
+
   resources :equities
 
   resources :asset_pairs do
