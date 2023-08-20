@@ -69,31 +69,43 @@ module ApplicationHelper
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+
   ##
   # Provides translations for controller actions.
   #
   # It resolves in I18n like so: +"links.#{controller}.#{action}+
   #
+  # The method signatures with positional and named parameters are
+  # interchangeable, and positional and named parameters can also occur mixed.
+  #
   # :call-seq:
-  #     t_link(controller, action, default: nil) => "..."
-  #     t_link(action, default: nil) => "..."
-  #     t_link(model, action, default: nil) => "..."
-  def t_link(controller, action = nil, default: nil)
-    controller, action = action, controller unless action
+  #     t_link(controller = self, action = :index, default = nil) => ...
+  #     t_link(model, action = :show, default = nil) => ...
+  #     t_link(controller: self, action: :index, default: nil) => ...
+  #     t_link(model:, action: :show, default: nil) => ...
+  def t_link(*args, **opts)
+    controller, action, default = t_link_params(args, opts)
 
-    controller ||= controller_name
-    if controller.respond_to?(:model_name)
+    if controller.respond_to?(:controller_name)
+      controller = controller.controller_name
+    elsif controller.respond_to?(:model_name)
       model_name = controller.model_name
       controller = model_name.i18n_key
+      action ||= :show
 
       default ||= t_link_default(action, model_name.singular, model_name.plural)
-    else
-      default ||= t_link_default(action, controller)
     end
+
+    action  ||= :index
+    default ||= t_link_default(action, controller)
 
     t(action, default:, scope: [:links, controller])
   end
   alias tl t_link
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def t_link_default(action, singular, plural = nil)
     unless plural
@@ -101,6 +113,20 @@ module ApplicationHelper
       singular = singular.to_s.singularize
     end
 
-    (action.to_sym == :action ? plural : "#{action}_#{singular}").titleize
+    (action.to_sym == :index ? plural : "#{action}_#{singular}").titleize
+  end
+
+  def t_link_params(args, opts)
+    controller = if opts.key?(:controller)
+                   opts.delete(:controller)
+                 elsif opts.key?(:model)
+                   opts.delete(:model)
+                 else
+                   args.shift
+                 end
+    action = opts.key?(:action) ? opts.delete(:action) : args.shift
+    default = opts.key?(:default) ? opts.delete(:default) : args.shift
+
+    [controller.presence || self, action.presence, default]
   end
 end
