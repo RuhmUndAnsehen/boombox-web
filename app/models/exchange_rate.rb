@@ -72,6 +72,11 @@ class ExchangeRate < ApplicationRecord
   scope :latest, -> { group(:asset_pair_id).having('MAX(observed_at)') }
 
   ##
+  # Like ::latest, but doesn't exclude records that don't have an associated
+  # ExchangeRate already in more complex queries
+  scope :latest_or_none, -> { latest.or(having('COUNT(observed_at) = 0')) }
+
+  ##
   # Returns the records that were observed the closest to each of the specified
   # +times+, per AssetPair.
   scope :observed_near,
