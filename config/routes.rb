@@ -3,6 +3,12 @@
 Rails.application.routes.draw do
   root 'site#index'
 
+  namespace :market_data, only: %i[index show] do
+    resources :currencies
+    resources :equities
+    resources :options
+  end
+
   resources :equities
 
   resources :asset_pairs do
