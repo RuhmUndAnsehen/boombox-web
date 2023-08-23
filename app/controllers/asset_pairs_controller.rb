@@ -20,7 +20,7 @@ class AssetPairsController < ApplicationController
 
   # GET /asset_pairs or /asset_pairs.json
   def index
-    @asset_pairs = AssetPair.preload_all(&:latest)
+    @asset_pairs = asset_pairs.preload_all(&:latest_or_none)
   end
 
   # GET /asset_pairs/1 or /asset_pairs/1.json
@@ -89,7 +89,7 @@ class AssetPairsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_asset_pair
-    @asset_pair = AssetPair.find(params[:id])
+    @asset_pair = asset_pairs.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
