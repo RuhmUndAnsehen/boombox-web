@@ -2,6 +2,20 @@
 
 # :nodoc:
 class AssetPairsController < ApplicationController
+  class << self
+    ##
+    # Returns a relation selecting all AssetPairs. In subclasses, returns a
+    # relation selecting all AssetPairs where +base_asset_type+ is
+    # +subclass::model_name+.
+    def asset_pairs
+      return AssetPair.all if self == AssetPairsController
+
+      AssetPair.where(base_asset_type: model_name)
+    end
+  end
+
+  delegate :asset_pairs, to: :class
+
   before_action :set_asset_pair, only: %i[show edit update destroy]
 
   # GET /asset_pairs or /asset_pairs.json
