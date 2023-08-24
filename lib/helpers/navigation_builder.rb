@@ -126,7 +126,7 @@ module Helpers
 
     def add_class(cls, to:)
       cls = cls[:class] if cls.is_a?(Hash)
-      return { class: cls } if to.blank?
+      return { class: cls } if to.nil?
       return to if cls.blank?
 
       to_cls = to[:class]
