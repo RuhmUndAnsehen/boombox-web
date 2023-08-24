@@ -9,11 +9,11 @@
       <% end %>
       <%= nav.item t('sections.other_data') do |nav| %>
         <%= nav.menu do |nav| %>
-          <%= nav.item tl(:countries), { controller: :countries } %>
-          <%= nav.item tl(:currencies), { controller: :currencies} %>
-          <%= nav.item tl(:exchanges), { controller: :exchanges } %>
-          <%= nav.item tl(:equities), { controller: :equities } %>
-          <%= nav.item tl(:options), { controller: :options } %>
+          <%= nav.item tl(:countries), { controller: '/countries' } %>
+          <%= nav.item tl(:currencies), { controller: '/currencies'} %>
+          <%= nav.item tl(:exchanges), { controller: '/exchanges' } %>
+          <%= nav.item tl(:equities), { controller: '/equities' } %>
+          <%= nav.item tl(:options), { controller: '/options' } %>
         <% end %>
       <% end %>
     <% end %>
