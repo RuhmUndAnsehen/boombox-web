@@ -17,6 +17,20 @@ module Helpers
 
     def capture(*, &) = view_context.capture(self, *, &)
 
+    # FIXME: This currently only works with Hash URL parameters, not with
+    # strings or other means of specifying URLs.
+    def current_controller?(*args, **opts)
+      return @current_controller unless args.present? || opts.present?
+
+      opts = args.shift if opts.blank? && args.first.is_a?(Hash)
+
+      if opts.blank?
+        warn('#current_controller? only works with Hash parameters')
+      end
+
+      opts[:controller].in?([controller_path, "/#{controller_path}"])
+    end
+
     def current_page?(*args, **opts)
       return @current_page unless args.present? || opts.present?
 
@@ -29,14 +43,25 @@ module Helpers
     # Called by #link_to to indicate that the link points to the current page.
     #
     # Cascades up the HTML element hierarchy, up to the enclosing +nav+ tag.
+    def current_controller!
+      @parent&.current_controller! unless current_controller?
+      @current_controller = true
+    end
+
+    ##
+    # Called by #link_to to indicate that the link points to the current page.
+    #
+    # Cascades up the HTML element hierarchy, up to the enclosing +nav+ tag.
     def current_page!
-      @parent&.current_page!
+      current_controller!
+      @parent&.current_page! unless current_page?
       @current_page = true
     end
 
     def current_page_options(options = nil)
       options ||= {} # Initialize this way to deal with code passing nil
       add_class('current-page', to: options) if current_page?
+      add_class('current-controller', to: options) if current_controller?
       options
     end
 
@@ -78,7 +103,11 @@ module Helpers
     # Use regular +link_to+ if you want to avoid this behavior.
     def link_to(*args, &block)
       options = args[block_given? ? 0 : 1] || {}
-      current_page! if current_page?(options)
+      if current_page?(options)
+        current_page!
+      elsif current_controller?(options)
+        current_controller!
+      end
 
       view_context.link_to(*args, &block)
     end
