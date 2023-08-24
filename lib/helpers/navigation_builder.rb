@@ -26,7 +26,7 @@ module Helpers
     ##
     # Called by #link_to to indicate that the link points to the current page.
     #
-    # Cascades up the HTML element hierarchy.
+    # Cascades up the HTML element hierarchy, up to the enclosing +nav+ tag.
     def current_page!
       @parent&.current_page!
       @current_page = true
