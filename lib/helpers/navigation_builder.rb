@@ -138,7 +138,7 @@ module Helpers
       if block_given?
         spawn = new
         content += spawn.capture(&block)
-        spawn.current_page_options(options)
+        options = spawn.current_page_options(options)
       end
       content_tag(:li, content, add_class('nav-item', to: options))
     end
