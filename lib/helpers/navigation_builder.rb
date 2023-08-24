@@ -32,7 +32,8 @@ module Helpers
       @current_page = true
     end
 
-    def current_page_options(options = {})
+    def current_page_options(options = nil)
+      options ||= {} # Initialize this way to deal with code passing nil
       add_class('current-page', to: options) if current_page?
       options
     end
