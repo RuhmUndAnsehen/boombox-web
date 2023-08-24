@@ -4,7 +4,12 @@
       <%= nav.item t('app.name.long.html'), root_path, class: 'link_to-root' %>
       <%= nav.item t('sections.market_data') do |nav| %>
         <%= nav.menu do |nav| %>
-
+          <%= nav.item tl(:'market_data/currencies'),
+                       { controller: '/market_data/currencies' } %>
+          <%= nav.item tl(:'market_data/equities'),
+                       { controller: '/market_data/equities' } %>
+          <%= nav.item tl(:'market_data/options'),
+                       { controller: '/market_data/options' } %>
         <% end %>
       <% end %>
       <%= nav.item t('sections.other_data') do |nav| %>
