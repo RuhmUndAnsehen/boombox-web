@@ -21,6 +21,8 @@ module Helpers
       return @current_page unless args.present? || opts.present?
 
       view_context.current_page?(*args, **opts)
+    rescue ActionController::UrlGenerationError
+      nil # Explicitly return nil so the linter leaves us alone
     end
 
     ##
