@@ -53,6 +53,13 @@ class AssetPair < ApplicationRecord
     def preload_all(&)
       preload(:base_asset, :counter_asset).includes_exchange_rates(&)
     end
+
+    private
+
+    def inherited(subclass)
+      super
+      subclass.__send__(:default_scope) { of_base_type(subclass.basename) }
+    end
   end
 
   belongs_to :base_asset, polymorphic: true
