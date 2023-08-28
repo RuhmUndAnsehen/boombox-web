@@ -5,6 +5,10 @@ class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
   class << self
+    ##
+    # Returns the class name with namespaces removed.
+    def basename = name.demodulize
+
     alias t human_attribute_name
 
     ##
@@ -29,4 +33,6 @@ class ApplicationRecord < ActiveRecord::Base
     *scope, key = :activerecord, :to_human_s, model_name.i18n_key, *keys
     I18n.t(key, scope:, **{ default: to_s }.merge(attributes, opts))
   end
+
+  def to_partial_path = "#{model_name.collection}/#{model_name.element}"
 end
