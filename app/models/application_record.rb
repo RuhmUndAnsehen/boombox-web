@@ -5,6 +5,10 @@ class ApplicationRecord < ActiveRecord::Base
   primary_abstract_class
 
   class << self
+    ##
+    # Returns the class name with namespaces removed.
+    def basename = name.demodulize
+
     alias t human_attribute_name
 
     ##
