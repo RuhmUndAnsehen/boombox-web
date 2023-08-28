@@ -31,7 +31,7 @@ class AssetPair < ApplicationRecord
       @_model_name ||= AssetPair.model_name.dup.tap do |model_name|
         model_name.i18n_key = basename.underscore.to_sym
         model_name.route_key = ActiveSupport::Inflector.pluralize(
-          "market_data/#{model_name.__send__(:_singularize, basename)}", :en
+          "market_data_#{model_name.__send__(:_singularize, basename)}", :en
         )
         model_name.singular_route_key =
           ActiveSupport::Inflector.singularize(model_name.route_key)
