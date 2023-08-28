@@ -73,6 +73,7 @@ class AssetPair < ApplicationRecord
 
   scope :in, ->(counter_asset) { where(counter_asset:) }
   scope :of, ->(base_asset) { where(base_asset:) }
+  scope :of_base_type, ->(type) { where(base_asset_type: type.to_s) }
 
   # :section: ExchangeRate selectors
 
