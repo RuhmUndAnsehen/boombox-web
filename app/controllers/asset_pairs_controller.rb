@@ -10,7 +10,7 @@ class AssetPairsController < ApplicationController
     def asset_pairs
       return AssetPair.all if self == AssetPairsController
 
-      AssetPair.where(base_asset_type: model_name)
+      "AssetPair::#{model_name}".constantize.all
     end
   end
 
