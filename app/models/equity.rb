@@ -65,10 +65,8 @@ class Equity < ApplicationRecord
 
     {
       asset_pair: {
-        base_asset_id: id,
-        base_asset_type: self.class,
-        counter_asset_id:,
-        counter_asset_type: Currency
+        base_asset_id: id, base_asset_type: self.class,
+        counter_asset_id:, counter_asset_type: Currency
       }
     }
   end
