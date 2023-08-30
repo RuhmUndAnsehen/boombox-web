@@ -37,7 +37,8 @@ Rails.application.routes.draw do
   # +controller: id_constraints+
   {
     countries: /[[:alpha:]]{2,3}/,
-    currencies: /[[:alpha:]]{3}/
+    currencies: /[[:alpha:]]{3}/,
+    'market_data/currencies': /[[:alpha:]]{6}/
   }.each do |controller, id|
     get "/#{controller}/:id",
         id:, to: redirect { |p| "/#{controller}/#{p[:id].upcase}" }
