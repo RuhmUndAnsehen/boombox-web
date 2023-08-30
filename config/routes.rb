@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root 'site#index'
 
   namespace :market_data, only: %i[index show] do
-    resources :currencies
+    resources :currencies, id: /[[:upper:]]{6}|[[:digit:]]+/
     resources :equities
     resources :options
   end
@@ -31,12 +31,16 @@ Rails.application.routes.draw do
   end
   get '/exchanges', to: 'exchanges#index'
 
-  # Redirect country and currency alphabetic codes that aren't written in
+  # Redirect alphabetic codes that aren't written in, but required to be,
   # entirely uppercase to the uppercase equivalent.
-  scope to: redirect { |p, r|
-              "#{r.fullpath.match(%r{\A/[^/]*})}/#{p[:id].upcase}"
-            } do
-    get '/countries/:id', id: /[[:alpha:]]{2,3}/
-    get '/currencies/:id', id: /[[:alpha:]]{3}/
+  # Each line in the following Hash is of the format
+  # +controller: id_constraints+
+  {
+    countries: /[[:alpha:]]{2,3}/,
+    currencies: /[[:alpha:]]{3}/,
+    'market_data/currencies': /[[:alpha:]]{6}/
+  }.each do |controller, id|
+    get "/#{controller}/:id",
+        id:, to: redirect { |p| "/#{controller}/#{p[:id].upcase}" }
   end
 end

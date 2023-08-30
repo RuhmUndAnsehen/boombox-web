@@ -115,4 +115,14 @@ class AssetPair < ApplicationRecord
     super(*args, **opts.merge(base_asset:, counter_asset:,
                               default: "#{base_asset} (#{counter_asset})"))
   end
+
+  def to_param
+    return super if instance_of?(AssetPair) || !association(:base_asset).loaded?
+
+    _to_param
+  end
+
+  private
+
+  def _to_param = base_asset.to_param
 end
