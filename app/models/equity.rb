@@ -72,7 +72,7 @@ class Equity < ApplicationRecord
   end
 
   def to_param
-    return id.to_s unless attributes.key?(exchange_key)
+    return super unless association(:exchange).loaded?
 
     "#{exchange_symbol}:#{symbol}"
   end
