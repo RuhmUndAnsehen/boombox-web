@@ -65,16 +65,14 @@ class Equity < ApplicationRecord
 
     {
       asset_pair: {
-        base_asset_id: id,
-        base_asset_type: self.class,
-        counter_asset_id:,
-        counter_asset_type: Currency
+        base_asset_id: id, base_asset_type: self.class,
+        counter_asset_id:, counter_asset_type: Currency
       }
     }
   end
 
   def to_param
-    return id.to_s unless attributes.key?(exchange_key)
+    return super unless association(:exchange).loaded?
 
     "#{exchange_symbol}:#{symbol}"
   end
