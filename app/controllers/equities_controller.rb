@@ -2,6 +2,15 @@
 
 # :nodoc:
 class EquitiesController < ApplicationController
+  class << self
+    # :nodoc:
+    def parse_compound_symbol(symbol)
+      symbol
+      .match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
+      &.values_at(:exchange, :equity, :id)
+    end
+  end
+
   before_action :set_equity, only: %i[show edit update destroy]
 
   # GET /equities or /equities.json
@@ -72,6 +81,8 @@ class EquitiesController < ApplicationController
 
   private
 
+  delegate :parse_compound_symbol, to: :class
+
   ##
   # Initializes the `@equity` instance variable.
   #
@@ -82,7 +93,7 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    exchange, equity, id = *_parse_compound_symbol(params[:id])
+    exchange, equity, id = *parse_compound_symbol(params[:id])
 
     _set_equity_helper(exchange:, equity:, id:)
   rescue ActiveRecord::RecordNotFound
@@ -94,13 +105,6 @@ class EquitiesController < ApplicationController
                 { id: equity }
               end
     redirect_to request.parameters.merge(id_hash), status: :found
-  end
-
-  # :nodoc:
-  def _parse_compound_symbol(symbol)
-    symbol
-      .match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
-      &.values_at(:exchange, :equity, :id)
   end
 
   # :nodoc:
