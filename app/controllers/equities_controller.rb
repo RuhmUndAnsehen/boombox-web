@@ -4,7 +4,9 @@
 class EquitiesController < ApplicationController
   class << self
     # :nodoc:
-    def find_equity(exchange:, equity:, id:)
+    def find_equity(id)
+      exchange, equity, id = *parse_compound_symbol(id)
+
       # We don't technically need this, but catching these cases here reduces DB
       # usage.
       unless id || equity
@@ -111,18 +113,12 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    exchange, equity, id = *parse_compound_symbol(params[:id])
-
-    @equity = find_equity(exchange:, equity:, id:)
+    @equity = find_equity(params[:id])
   rescue ActiveRecord::RecordNotFound
     raise unless set_exchange(exchange) || equity.upcase!
 
-    id_hash = if @exchange && equity
-                { id: "#{@exchange.symbol}:#{equity}" }
-              else
-                { id: equity }
-              end
-    redirect_to request.parameters.merge(id_hash), status: :found
+    id = @exchange && equity ? "#{@exchange.symbol}:#{equity}" : equity
+    redirect_to request.parameters.merge(id:), status: :found
   end
 
   ##
