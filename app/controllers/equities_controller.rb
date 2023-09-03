@@ -24,9 +24,9 @@ class EquitiesController < ApplicationController
 
     # :nodoc:
     def parse_compound_symbol(symbol)
-      symbol
-      .match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
-      &.values_at(:exchange, :equity, :id)
+      symbol.match(
+        /\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/
+      )&.values_at(:exchange, :equity, :id)
     end
   end
 
