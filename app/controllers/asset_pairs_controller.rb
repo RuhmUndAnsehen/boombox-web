@@ -13,11 +13,19 @@ class AssetPairsController < ApplicationController
       "AssetPair::#{model_name}".constantize.all
     end
 
-    def find_asset_pair(id) = asset_pairs.find(id)
+    def find_asset_pair(id)
+      return asset_pairs.find(id) if id.to_s.match?(/\A[[:digit:]]+\z/)
 
-    private
+      find_asset_pair_by_string(id)
+    end
 
-    def int?(id) = id.is_a?(Integer) || id.to_s.match?(/\A[[:digit:]]+\z/)
+    def find_asset_pair_by_string(id)
+      asset_pairs.where(base_asset: find_base_asset(id)).first!
+    end
+
+    def find_base_asset(id)
+      raise ActionController::RoutingError, "invalid id: #{id}"
+    end
   end
 
   delegate :asset_pairs, to: :class
