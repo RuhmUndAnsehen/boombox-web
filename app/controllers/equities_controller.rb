@@ -95,7 +95,7 @@ class EquitiesController < ApplicationController
   def set_equity
     exchange, equity, id = *parse_compound_symbol(params[:id])
 
-    _set_equity_helper(exchange:, equity:, id:)
+    @equity = _set_equity_helper(exchange:, equity:, id:)
   rescue ActiveRecord::RecordNotFound
     raise unless set_exchange(exchange) || equity.upcase!
 
@@ -116,11 +116,11 @@ class EquitiesController < ApplicationController
     end
 
     if id
-      @equity = Equity.find(id)
+      Equity.find(id)
     elsif exchange && equity
-      @equity = Equity.find_by_compound_symbol!(exchange:, equity:)
+      Equity.find_by_compound_symbol!(exchange:, equity:)
     elsif equity
-      @equity = Equity.find_by!(symbol: equity)
+      Equity.find_by!(symbol: equity)
     end
   end
 
