@@ -4,6 +4,23 @@
 class EquitiesController < ApplicationController
   class << self
     # :nodoc:
+    def find_equity(exchange:, equity:, id:)
+      # We don't technically need this, but catching these cases here reduces DB
+      # usage.
+      unless id || equity
+        raise ActionController::RoutingError, "invalid id: #{params[:id]}"
+      end
+
+      if id
+        Equity.find(id)
+      elsif exchange && equity
+        Equity.find_by_compound_symbol!(exchange:, equity:)
+      elsif equity
+        Equity.find_by!(symbol: equity)
+      end
+    end
+
+    # :nodoc:
     def parse_compound_symbol(symbol)
       symbol
       .match(/\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/)
@@ -81,6 +98,7 @@ class EquitiesController < ApplicationController
 
   private
 
+  delegate :find_equity, to: :class
   delegate :parse_compound_symbol, to: :class
 
   ##
@@ -95,7 +113,7 @@ class EquitiesController < ApplicationController
   def set_equity
     exchange, equity, id = *parse_compound_symbol(params[:id])
 
-    @equity = _set_equity_helper(exchange:, equity:, id:)
+    @equity = find_equity(exchange:, equity:, id:)
   rescue ActiveRecord::RecordNotFound
     raise unless set_exchange(exchange) || equity.upcase!
 
@@ -105,23 +123,6 @@ class EquitiesController < ApplicationController
                 { id: equity }
               end
     redirect_to request.parameters.merge(id_hash), status: :found
-  end
-
-  # :nodoc:
-  def _set_equity_helper(exchange:, equity:, id:)
-    # We don't technically need this, but catching these cases here reduces DB
-    # usage.
-    unless id || equity
-      raise ActionController::RoutingError, "invalid id: #{params[:id]}"
-    end
-
-    if id
-      Equity.find(id)
-    elsif exchange && equity
-      Equity.find_by_compound_symbol!(exchange:, equity:)
-    elsif equity
-      Equity.find_by!(symbol: equity)
-    end
   end
 
   ##
