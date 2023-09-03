@@ -12,6 +12,8 @@ class AssetPairsController < ApplicationController
 
       "AssetPair::#{model_name}".constantize.all
     end
+
+    def find_asset_pair(id) = asset_pairs.find(id)
   end
 
   delegate :asset_pairs, to: :class
@@ -87,9 +89,11 @@ class AssetPairsController < ApplicationController
 
   private
 
+  delegate :find_asset_pair, to: :class
+
   # Use callbacks to share common setup or constraints between actions.
   def set_asset_pair
-    @asset_pair = asset_pairs.find(params[:id])
+    @asset_pair = find_asset_pair(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
