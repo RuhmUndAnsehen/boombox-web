@@ -12,6 +12,20 @@ class AssetPairsController < ApplicationController
 
       "AssetPair::#{model_name}".constantize.all
     end
+
+    def find_asset_pair(id)
+      return asset_pairs.find(id) if id.to_s.match?(/\A[[:digit:]]+\z/)
+
+      find_asset_pair_by_string(id)
+    end
+
+    def find_asset_pair_by_string(id)
+      asset_pairs.where(base_asset: find_base_asset(id)).first!
+    end
+
+    def find_base_asset(id)
+      raise ActionController::RoutingError, "invalid id: #{id}"
+    end
   end
 
   delegate :asset_pairs, to: :class
@@ -87,9 +101,11 @@ class AssetPairsController < ApplicationController
 
   private
 
+  delegate :find_asset_pair, to: :class
+
   # Use callbacks to share common setup or constraints between actions.
   def set_asset_pair
-    @asset_pair = asset_pairs.find(params[:id])
+    @asset_pair = find_asset_pair(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
