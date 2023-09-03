@@ -14,6 +14,10 @@ class AssetPairsController < ApplicationController
     end
 
     def find_asset_pair(id) = asset_pairs.find(id)
+
+    private
+
+    def int?(id) = id.is_a?(Integer) || id.to_s.match?(/\A[[:digit:]]+\z/)
   end
 
   delegate :asset_pairs, to: :class
