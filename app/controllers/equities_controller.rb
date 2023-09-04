@@ -25,6 +25,17 @@ class EquitiesController < ApplicationController
       yield(**matches.deconstruct_keys(%i[equity exchange]), error: e)
     end
 
+    ##
+    # Returns the Exchange for the given +symbol+. Performs a case insensitive
+    # search if it can't be found. If that fails, too, raises.
+    def find_exchange(symbol)
+      Exchange.find_by!(symbol:) if symbol.present?
+    rescue ActiveRecord::RecordNotFound
+      # rubocop:disable Rails/DynamicFindBy
+      Exchange.find_by_symbol_case_insensitive!(symbol) if symbol.present?
+      # rubocop:enable  Rails/DynamicFindBy
+    end
+
     # :nodoc:
     def parse_compound_symbol(symbol)
       symbol.match(
@@ -104,6 +115,7 @@ class EquitiesController < ApplicationController
   private
 
   delegate :find_equity, to: :class
+  delegate :find_exchange, to: :class
   delegate :parse_compound_symbol, to: :class
 
   ##
@@ -116,26 +128,13 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    @equity = find_equity(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    raise unless set_exchange(exchange) || equity.upcase!
+    @equity = find_equity(params[:id]) do |equity:, exchange:, error:|
+      exchange_symbol = find_exchange(exchange).symbol if exchange.present?
+      raise error if exchange == exchange_symbol && !equity.upcase!
 
-    id = @exchange && equity ? "#{@exchange.symbol}:#{equity}" : equity
-    redirect_to request.parameters.merge(id:), status: :found
-  end
-
-  ##
-  # Initializes the @exchange instance variable and returns +true+ if the
-  # record was found via case insensitive search.
-  def set_exchange(exchange) # rubocop:disable Naming/AccessorMethodName
-    @exchange = Exchange.find_by!(symbol: exchange) if exchange
-
-    false
-  rescue ActiveRecord::RecordNotFound
-    # rubocop:disable Rails/DynamicFindBy
-    @exchange = Exchange.find_by_symbol_case_insensitive!(exchange)
-    # rubocop:enable  Rails/DynamicFindBy
-    true
+      id = [exchange_symbol, equity].compact.join(':')
+      redirect_to request.parameters.merge(id:), status: :found
+    end
   end
 
   # Only allow a list of trusted parameters through.
