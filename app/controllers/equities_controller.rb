@@ -17,6 +17,12 @@ class EquitiesController < ApplicationController
       else
         raise ActionController::RoutingError, "invalid id: #{id}"
       end
+    rescue ActiveRecord::RecordNotFound => e
+      raise e unless block_given?
+
+      # Use deconstruct_keys instead of named_captures because the latter
+      # returns String keys, while the former returns Symbol keys.
+      yield(**matches.deconstruct_keys(%i[equity exchange]), error: e)
     end
 
     # :nodoc:
