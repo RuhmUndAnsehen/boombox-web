@@ -5,20 +5,17 @@ class EquitiesController < ApplicationController
   class << self
     # :nodoc:
     def find_equity(id)
-      exchange, equity, id = *parse_compound_symbol(id)
+      matches = parse_compound_symbol(id)
 
-      # We don't technically need this, but catching these cases here reduces DB
-      # usage.
-      unless id || equity
-        raise ActionController::RoutingError, "invalid id: #{params[:id]}"
-      end
-
-      if id
+      case matches
+      in *, String => id
         Equity.find(id)
-      elsif exchange && equity
+      in String => exchange, String => equity, _
         Equity.find_by_compound_symbol!(exchange:, equity:)
-      elsif equity
-        Equity.find_by!(symbol: equity)
+      in _, String => symbol, _
+        Equity.find_by!(symbol:)
+      else
+        raise ActionController::RoutingError, "invalid id: #{id}"
       end
     end
 
