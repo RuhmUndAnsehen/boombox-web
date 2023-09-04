@@ -8,11 +8,11 @@ class EquitiesController < ApplicationController
       matches = parse_compound_symbol(id)
 
       case matches
-      in *, String => id
+      in id: String => id
         Equity.find(id)
-      in String => exchange, String => equity, _
+      in exchange: String => exchange, equity: String => equity
         Equity.find_by_compound_symbol!(exchange:, equity:)
-      in _, String => symbol, _
+      in equity: String => symbol
         Equity.find_by!(symbol:)
       else
         raise ActionController::RoutingError, "invalid id: #{id}"
@@ -23,7 +23,7 @@ class EquitiesController < ApplicationController
     def parse_compound_symbol(symbol)
       symbol.match(
         /\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/
-      )&.values_at(:exchange, :equity, :id)
+      )
     end
   end
 
