@@ -13,11 +13,6 @@ class Equity < ApplicationRecord
 
   class << self
     ##
-    # Returns the name of the attribute that's used for the associated
-    # exchange's symbol column.
-    def exchange_key = 'exchange_symbol'
-
-    ##
     # Returns the record corresponding to the given Equity and Exchange symbols,
     # +nil+ if not found.
     #
@@ -42,20 +37,12 @@ class Equity < ApplicationRecord
   # listed on.
   #
   # Selects all of Equity's columns, plus Exchange#symbol.
-  scope :with_exchange_symbol,
-        lambda {
-          select("#{table_name}.*",
-                 "#{Exchange.table_name}.symbol AS #{exchange_key}")
-            .left_outer_joins(:exchange)
-        }
+  scope :with_exchange, -> { includes(:exchange).references(:exchange) }
+  singleton_class.__send__(:alias_method, :with_exchange_symbol, :with_exchange)
 
   ##
-  # Returns Equity.exchange_key.
-  def exchange_key = self.class.exchange_key
-
-  ##
-  # Returns the value of the attribute denoted by #exchange_key.
-  def exchange_symbol = attributes[exchange_key]
+  # Returns +exchange.symbol+.
+  def exchange_symbol = exchange&.symbol
 
   def to_asset_pair_params
     counter_asset_id = Currency.active
@@ -66,7 +53,7 @@ class Equity < ApplicationRecord
     {
       asset_pair: {
         base_asset_id: id, base_asset_type: self.class,
-        counter_asset_id:, counter_asset_type: Currency
+        counter_asset_id:, counter_asset_type: 'Currency'
       }
     }
   end
@@ -74,11 +61,11 @@ class Equity < ApplicationRecord
   def to_param
     return super unless association(:exchange).loaded?
 
-    "#{exchange_symbol}:#{symbol}"
+    [exchange_symbol, symbol].compact.join(':')
   end
 
   def to_human_s(*, **opts)
-    default = attributes.key?(exchange_key) ? to_param : symbol
+    default = association(:exchange).loaded? ? to_param : symbol
 
     super(*, **opts.merge(default:))
   end
