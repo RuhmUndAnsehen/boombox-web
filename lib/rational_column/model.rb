@@ -14,7 +14,7 @@ module RationalColumn
   module Model
     extend ActiveSupport::Concern
 
-    class_methods do # rubocop:disable Metrics/BlockLength
+    class_methods do
       ##
       # Returns the name of the denominator column for the given rational
       # column.
