@@ -2,47 +2,7 @@
 
 # :nodoc:
 class EquitiesController < ApplicationController
-  class << self
-    # :nodoc:
-    def find_equity(id)
-      matches = parse_compound_symbol(id)
-
-      case matches
-      in id: String => id
-        Equity.find(id)
-      in exchange: String => exchange, equity: String => equity
-        Equity.find_by_compound_symbol!(exchange:, equity:)
-      in equity: String => symbol
-        Equity.find_by!(symbol:)
-      else
-        raise ActionController::RoutingError, "invalid id: #{id}"
-      end
-    rescue ActiveRecord::RecordNotFound => e
-      raise e unless block_given?
-
-      # Use deconstruct_keys instead of named_captures because the latter
-      # returns String keys, while the former returns Symbol keys.
-      yield(**matches.deconstruct_keys(%i[equity exchange]), error: e)
-    end
-
-    ##
-    # Returns the Exchange for the given +symbol+. Performs a case insensitive
-    # search if it can't be found. If that fails, too, raises.
-    def find_exchange(symbol)
-      Exchange.find_by!(symbol:) if symbol.present?
-    rescue ActiveRecord::RecordNotFound
-      # rubocop:disable Rails/DynamicFindBy
-      Exchange.find_by_symbol_case_insensitive!(symbol) if symbol.present?
-      # rubocop:enable  Rails/DynamicFindBy
-    end
-
-    # :nodoc:
-    def parse_compound_symbol(symbol)
-      symbol.match(
-        /\A(?<id>[[:digit:]]+)|(?:(?<exchange>[^:]+):)?(?<equity>[^:]+)\z/
-      )
-    end
-  end
+  include self::Finders
 
   before_action :set_equity, only: %i[show edit update destroy]
 
@@ -113,10 +73,6 @@ class EquitiesController < ApplicationController
   end
 
   private
-
-  delegate :find_equity, to: :class
-  delegate :find_exchange, to: :class
-  delegate :parse_compound_symbol, to: :class
 
   ##
   # Initializes the `@equity` instance variable.
