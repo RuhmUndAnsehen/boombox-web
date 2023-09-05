@@ -23,7 +23,10 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
+    - 'config/routes.rb'
     - 'test/**/*.rb'
+  ExcludedMethods:
+    - 'class_methods'
 
 Metrics/MethodLength:
   Exclude:
