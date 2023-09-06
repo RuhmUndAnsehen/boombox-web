@@ -84,13 +84,7 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    @equity = find_equity(params[:id]) do |equity:, exchange:, error:|
-      exchange_symbol = find_exchange(exchange).symbol if exchange.present?
-      raise error if exchange == exchange_symbol && !equity.upcase!
-
-      id = [exchange_symbol, equity].compact.join(':')
-      redirect_to request.parameters.merge(id:), status: :found
-    end
+    @equity = find_equity_or_redirect
   end
 
   # Only allow a list of trusted parameters through.

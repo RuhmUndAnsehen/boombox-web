@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Provides methods shared by controllers that have to do Equity lookup.
 module EquitiesController::Finders
   extend ActiveSupport::Concern
 
@@ -44,9 +46,18 @@ module EquitiesController::Finders
     end
   end
 
-  included do
-  end
-
   delegate :find_equity, :find_exchange, :parse_compound_symbol, to: :class
   private :find_equity, :find_exchange, :parse_compound_symbol
+
+  private
+
+  def find_equity_or_redirect(status: :moved_permanently)
+    find_equity(params[:id]) do |equity:, exchange:, error:|
+      exchange_symbol = find_exchange(exchange).symbol if exchange.present?
+      raise error if exchange == exchange_symbol && !equity.upcase!
+
+      id = [exchange_symbol, equity].compact.join(':')
+      redirect_to request.parameters.merge(id:), status:
+    end
+  end
 end
