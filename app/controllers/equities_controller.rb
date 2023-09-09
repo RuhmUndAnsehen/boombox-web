@@ -84,7 +84,7 @@ class EquitiesController < ApplicationController
   # * equities/AAPL
   # * equities/aapl
   def set_equity
-    @equity = find_equity_or_redirect
+    @equity = find_equity_or_redirect(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
