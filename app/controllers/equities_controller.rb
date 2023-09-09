@@ -8,7 +8,7 @@ class EquitiesController < ApplicationController
 
   # GET /equities or /equities.json
   def index
-    @equities = Equity.with_exchange_symbol
+    @equities = equities
   end
 
   # GET /equities/1 or /equities/1.json

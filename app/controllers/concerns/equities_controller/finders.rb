@@ -6,6 +6,11 @@ module EquitiesController::Finders
   extend ActiveSupport::Concern
 
   class_methods do
+    ##
+    # Returns a relation returning all equities. Loads the #exchange
+    # association.
+    def equities = Equity.with_exchange
+
     # :nodoc:
     def parse_compound_symbol(symbol)
       symbol.match(
@@ -14,6 +19,7 @@ module EquitiesController::Finders
     end
   end
 
+  delegate :equities, to: :class
   delegate :parse_compound_symbol, to: :class
   private :parse_compound_symbol
 
@@ -24,11 +30,11 @@ module EquitiesController::Finders
 
     case matches
     in id: String => id
-      Equity.find(id)
+      equities.find(id)
     in exchange: String => exchange, equity: String => equity
-      Equity.find_by_compound_symbol!(exchange:, equity:)
+      equities.find_by_compound_symbol!(exchange:, equity:)
     in equity: String => symbol
-      Equity.find_by!(symbol:)
+      equities.find_by!(symbol:)
     else
       raise ActionController::RoutingError, "invalid id: #{id}"
     end
