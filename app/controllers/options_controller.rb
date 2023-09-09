@@ -2,6 +2,8 @@
 
 # :nodoc:
 class OptionsController < ApplicationController
+  include ::OptionsController::Finders
+
   before_action :set_option, only: %i[show edit compute update destroy]
   before_action :set_underlying, only: %i[index show new destroy]
 
@@ -86,7 +88,7 @@ class OptionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_option
-    @option = Option.find(params[:id])
+    @option = find_option(params[:id])
   end
 
   def set_underlying
