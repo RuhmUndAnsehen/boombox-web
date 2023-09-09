@@ -5,22 +5,24 @@
 # #base_asset is of type Currency.
 class MarketData::CurrenciesController < AssetPairsController
   class << self
-    def find_asset_pair_by_string(id)
-      parse_compound_symbol(id) => base:, quote:
-
-      base_asset = find_base_asset(base)
-      counter_asset = find_counter_asset(quote)
-
-      asset_pairs.where(base_asset:, counter_asset:).first!
-    end
-
-    def find_base_asset(symbol)
-      Currency.find_by!(alpha3_code: symbol)
-    end
-    alias find_counter_asset find_base_asset
-
     def parse_compound_symbol(symbol)
       symbol.match(/\A(?<base>[[:upper:]]{3})(?<quote>[[:upper:]]{3})\z/)
     end
+  end
+
+  delegate :parse_compound_symbol, to: :class
+  private :parse_compound_symbol
+
+  private
+
+  def set_asset_pair
+    super
+  rescue ActionController::RoutingError
+    parse_compound_symbol(params[:id]) => base:, quote:
+
+    base_asset = Currency.where(alpha3_code: base)
+    counter_asset = Currency.where(alpha3_code: quote)
+
+    @asset_pair = asset_pairs.where(base_asset:, counter_asset:).first!
   end
 end
