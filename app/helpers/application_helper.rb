@@ -55,18 +55,13 @@ module ApplicationHelper
   #             returning a two-element array. Omit the block if the data is
   #             ready as it is.
   def chart_data(records, group_by: nil, klass: nil, &block)
+    return records.map(&block) unless group_by
+
+    data = records.group_by(&group_by)
+    return chart_data(records, &block) if data.size == 1
+
     klass ||= records.klass
-
-    if group_by
-      result = records.group_by(&group_by)
-      return chart_data(records, &block) if result.size == 1
-
-      result.map do |name, group|
-        { name: klass.t(name), data: group.map(&block) }
-      end
-    else
-      records.map(&block)
-    end
+    data.map { |name, group| { name: klass.t(name), data: group.map(&block) } }
   end
 
   # rubocop:disable Metrics/MethodLength
