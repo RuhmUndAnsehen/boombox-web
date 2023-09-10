@@ -13,3 +13,107 @@
  *= require reset
  *= require_self
  */
+
+:root {
+  --color-palette-1: #5386C2;
+  --color-palette-2: #134B8F;
+  --color-palette-3: #83F4F5;
+  --color-palette-4: #F6CDC0;
+  --color-palette-5: #C25D53;
+
+  --bg-color-base: var(--color-palette-2);
+  --bg-color-active: var(--color-palette-1);
+
+  --fg-color: var(--color-palette-3);
+
+  --link-color: var(--color-palette-5);
+  --link-color-active: var(--color-palette-3);
+  --link-color-visited: var(--color-palette-4);
+
+  --golden-ratio: 1.618033989;
+  --golden-ratio-a: calc(1 / var(--golden-ratio));
+  --golden-ratio-b: calc(1 - var(--golden-ratio-a));
+  --golden-ratio-em: calc(1em * var(--golden-ratio));
+  --golden-ratio-a-em: calc(1em * var(--golden-ratio-a));
+  --golden-ratio-b-em: calc(1em * var(--golden-ratio-b));
+
+  --small-margin: var(--golden-ratio-b-em);
+  --wide-margin: var(--golden-ratio-a-em);
+
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+
+  font-size: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  width: 100%;
+  height: 100%;
+}
+
+main {
+  background-color: white;
+}
+
+a {
+  display: inline-block;
+
+  color: var(--link-color);
+}
+
+a:visited {
+  color: var(--link-color-visited);
+}
+
+a:active, a:focus, a:hover {
+  color: var(--link-color-active);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: thin;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-top: var(--wide-margin);
+  margin-bottom: var(--small-margin);
+}
+
+h1 {
+  font-size: 2.4em;
+}
+
+h2 {
+  font-size: 1.71em;
+}
+
+h3 {
+  font-size: 1.32em;
+}
+
+h4 {
+  font-size: 1.1em;
+}
+
+h5 {
+  font-size: 1em;
+}
+
+h6 {
+  float: left;
+  margin-right: var(--small-margin);
+
+  font-size: 1em;
+}
+
+p + p, p + h6 {
+  margin-top: var(--small-margin);
+}
