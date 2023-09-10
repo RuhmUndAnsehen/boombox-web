@@ -1,0 +1,26 @@
+:root {
+  --footer-height: 300px;
+}
+
+body::after {
+  content: ' ';
+
+  display: block;
+  height: var(--footer-height);
+  width: 1px;
+  overflow: hidden;
+  margin-left: -1px;
+}
+
+.site-footer {
+  display: block;
+
+  position: fixed;
+  bottom: 0;
+  z-index: -1;
+
+  height: var(--footer-height);
+  width: 100%;
+
+  background-color: var(--bg-color-base);
+}
