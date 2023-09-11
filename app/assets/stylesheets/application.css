@@ -47,10 +47,14 @@
   width: 100%;
 
   font-size: 18px;
+
+  transition: all 0.42s ease;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
+
+  transition: inherit;
 }
 
 body {
@@ -69,13 +73,18 @@ a {
   display: inline-block;
 
   color: var(--link-color);
+
+  /* Firefox incorrectly transitions if the color of visited links differs from
+   * the regular link color (and a hover/focus/active color is set).
+   */
+  -moz-transition-property: none;
 }
 
 a:visited {
   color: var(--link-color-visited);
 }
 
-a:active, a:focus, a:hover {
+:is(a, a:visited):is(:active, :focus, :hover) {
   color: var(--link-color-active);
 }
 
