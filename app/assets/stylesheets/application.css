@@ -24,6 +24,7 @@
 
   --bg-color-base: var(--color-palette-2);
   --bg-color-active: var(--color-palette-1);
+  --bg-color-highlight: var(--color-palette-3);
 
   --fg-color: var(--color-palette-3);
 
@@ -38,8 +39,13 @@
   --golden-ratio-a-em: calc(1em * var(--golden-ratio-a));
   --golden-ratio-b-em: calc(1em * var(--golden-ratio-b));
 
+  --unit-margin: 1em;
   --small-margin: var(--golden-ratio-b-em);
   --wide-margin: var(--golden-ratio-a-em);
+
+  --increased-line-height: var(--golden-ratio-em);
+  --tall-line-height:
+      calc(var(--increased-line-height) * var(--golden-ratio));
 
   position: relative;
 
