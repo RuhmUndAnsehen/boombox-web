@@ -12,6 +12,7 @@
  *
  *= require reset
  *= require_self
+ *= require header
  *= require footer
  */
 
@@ -73,6 +74,17 @@ body {
 
 main {
   background-color: white;
+}
+
+/* Hack to fill the void between the header and the first child. */
+main::before {
+  content: ' ';
+
+  display: block;
+  width: 1px;
+  height: 1px;
+  margin-right: -1px;
+  margin-bottom: -1px;
 }
 
 a {
