@@ -1,0 +1,101 @@
+.nav-item > :is(a, span) {
+  --line-height: var(--increased-line-height);
+  --gradient-angle: 20deg;
+  --gradient-offset: calc(var(--line-height) * sin(var(--gradient-angle)));
+  --gradient-stop-1: calc(var(--wide-margin) + var(--gradient-offset));
+  --gradient-stop-1-before: calc(var(--gradient-stop-1) - 1px);
+  --gradient-stop-2: calc(var(--gradient-stop-1) + var(--small-margin));
+  --gradient-stop-2-after: calc(var(--gradient-stop-2) + 1px);
+
+  display: block;
+  padding: 0 var(--small-margin);
+  width: 100%;
+  overflow: hidden;
+
+  position: relative;
+  z-index: 2;
+
+  line-height: var(--line-height);
+  text-decoration: none;
+}
+
+/* Spans are assumed to be submenu titles, which is why we're raising the line
+ * height. */
+.nav-item > span {
+  --line-height: var(--tall-line-height);
+
+  color: var(--link-color-visited);
+}
+
+/* We need linear-gradients to achieve our styling goals. However, they are not
+ * transitionable, which is why we're rendering them in pseudo elements instead.
+ */
+.nav-item > :is(a, span)::before, .nav-item > :is(a, span)::after {
+  --border-width: 1px;
+  --border-color: var(--bg-color-base);
+
+  content: ' ';
+
+  display: block;
+  height: 100%;
+  width: calc(100% - var(--border-width));
+  padding: 1px 0 0 0;
+
+  position: absolute;
+  top: 0;
+  right: var(--border-width);
+  z-index: -1;
+
+  border: var(--border-width) solid var(--border-color);
+  border-top-color: transparent;
+  border-left: 0;
+}
+
+/* Links and submenu titles that are direct descendants of the nav bar should
+ * have the active background color, if one of the following conditions holds:
+ * * They are not relating to current page/controller.
+ * * They *are* links pointing to the current page, but not at the top level.
+ * * They are an active link.
+ */
+.nav-bar > .nav-item:not(.current-page, .current-controller) > :is(a, span)::before,
+.nav-item.current-page > a::before,
+.nav-item > a:active::after {
+  background-color: var(--bg-color-active);
+}
+
+/* Main styling for links and titles.
+ * The background consists of two layered linear gradients with differing
+ * clipping. The obstructed one simply provides a fake border piece in the top
+ * right of the element.
+ * Hide the styles by default. */
+.nav-item > :is(a, span)::after {
+  --border-color: var(--bg-color-highlight);
+
+  opacity: 0;
+
+  background-image:
+  linear-gradient(calc(270deg + var(--gradient-angle)),
+                  var(--bg-color-base) var(--gradient-stop-1-before),
+                  var(--bg-color-highlight) var(--gradient-stop-1) var(--gradient-stop-2),
+                  transparent var(--gradient-stop-2-after)),
+                  linear-gradient(calc(270deg + var(--gradient-angle)),
+                                  var(--bg-color-highlight) var(--gradient-stop-2),
+                                  transparent var(--gradient-stop-2-after));
+                  background-clip: content-box, border-box;
+                  background-repeat: no-repeat, no-repeat;
+}
+
+/* Links directly decending from nav-bar get special styling when interacted
+ * with. */
+.nav-bar > .nav-item > a:is(:active, :focus, :hover)::after {
+  border-color: var(--bg-color-highlight);
+}
+
+/* Show our special styling in one of the two cases:
+ * * The link or title is a relating to the current page or controller.
+ * * The link or title is interacted with.
+ */
+.nav-item:is(.current-controller, .current-page) > :is(a, span)::after,
+.nav-item > :is(a, span):is(:active, :focus, :hover)::after {
+  opacity: 1;
+}

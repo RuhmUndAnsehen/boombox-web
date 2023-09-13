@@ -1,0 +1,10 @@
+.nav-item .nav-item {
+  display: grid;
+  overflow: hidden;
+  grid-template-rows: 0fr;
+}
+
+.nav-item:is(.current-controller, .current-page, :hover, :focus, :focus-within)
+    .nav-item {
+  grid-template-rows: 1fr;
+}
