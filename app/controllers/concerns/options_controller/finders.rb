@@ -2,7 +2,7 @@
 
 ##
 # Provides methods shared by controllers that have to do Option lookup.
-module EquitiesController::Finders
+module OptionsController::Finders
   extend ActiveSupport::Concern
 
   private
