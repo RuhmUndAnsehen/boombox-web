@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'builder'
+
 module Helpers
   ##
   # A HTML builder class that facilitates the generation of +nav+ tags and their
@@ -8,14 +10,7 @@ module Helpers
   # helpers that add the +.current-page+ CSS class to all parent item tags if
   # they link to the current page.
   class NavigationBuilder
-    attr_reader :view_context
-
-    def initialize(view_context, parent = nil)
-      @view_context = view_context
-      @parent = parent
-    end
-
-    def capture(*, &) = view_context.capture(self, *, &)
+    include ::Helpers::Builder
 
     # FIXME: This currently only works with Hash URL parameters, not with
     # strings or other means of specifying URLs.
@@ -132,14 +127,6 @@ module Helpers
     def menu(**, &) = nav_('menu', **, &)
 
     ##
-    # Delegate missing methods to #view_context.
-    def method_missing(name, ...)
-      return super unless view_context.respond_to?(name)
-
-      view_context.__send__(name, ...)
-    end
-
-    ##
     # Generates a navigation item container tag and yields a NavigationBuilder.
     def nav(**opts, &block) = content_tag(:ul, capture(&block), opts)
 
@@ -152,19 +139,7 @@ module Helpers
     # method directly.
     def nav_tag(options, &block) = content_tag(:nav, capture(&block), options)
 
-    def new = self.class.new(view_context, self)
-
     private
-
-    def add_class(cls, to:)
-      cls = cls[:class] if cls.is_a?(Hash)
-      return { class: cls } if to.nil?
-      return to if cls.blank?
-
-      to_cls = to[:class]
-      to[:class] = [to_cls, cls].compact.join(' ')
-      to
-    end
 
     def render_item(content, options = {}, &block)
       if block_given?
@@ -179,7 +154,5 @@ module Helpers
       spawn = new
       [spawn.link_to(*), spawn.current_page_options]
     end
-
-    def respond_to_missing?(...) = view_context.respond_to?(...)
   end
 end
