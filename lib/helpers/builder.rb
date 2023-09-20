@@ -13,6 +13,9 @@ module Helpers
       @parent = parent
     end
 
+    ##
+    # Delegates to ActionView::Helpers::CaptureHelper#capture,
+    # passing +self+ as first argument.
     def capture(*, &) = view_context.capture(self, *, &)
 
     ##
