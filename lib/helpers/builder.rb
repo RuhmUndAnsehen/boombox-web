@@ -34,14 +34,19 @@ module Helpers
 
     private
 
+    def add_attribute(attr_hash = nil, to:, **attrs)
+      to ||= {}
+      (attr_hash || attrs)&.each do |key, value|
+        to_value = to[key]
+        to[key] = [to_value, value].compact.join(' ')
+      end
+      to
+    end
+
     def add_class(cls, to:)
       cls = cls[:class] if cls.is_a?(Hash)
-      return { class: cls } if to.nil?
-      return to if cls.blank?
 
-      to_cls = to[:class]
-      to[:class] = [to_cls, cls].compact.join(' ')
-      to
+      add_attribute(class: cls, to:)
     end
 
     def respond_to_missing?(...) = view_context.respond_to?(...)
