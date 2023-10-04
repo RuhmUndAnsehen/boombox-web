@@ -32,6 +32,11 @@ module Helpers
     def new(...) = self.class.new(view_context, self, ...)
     alias spawn new
 
+    ##
+    # Creates a new instance of +klass+ where +parent+ points to the object this
+    # method was called on.
+    def spawn_as(klass, ...) = klass.new(view_context, self, ...)
+
     private
 
     def add_attribute(attr_hash = nil, to:, **attrs)
