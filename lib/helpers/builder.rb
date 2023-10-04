@@ -29,7 +29,7 @@ module Helpers
     ##
     # Creates a new instance of this class where +parent+ points to the object
     # this method was called on.
-    def new(...) = self.class.new(view_context, self, ...)
+    def new(...) = spawn_as(self.class, ...)
     alias spawn new
 
     ##
