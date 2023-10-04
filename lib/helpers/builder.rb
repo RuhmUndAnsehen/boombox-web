@@ -27,6 +27,16 @@ module Helpers
     end
 
     ##
+    # Works like #capture, except that it evaluates the block in
+    # instance context.
+    def self_capture(*, &)
+      value = nil
+      buffer = with_output_buffer { value = instance_exec(*, &) }
+      string = buffer.presence || value
+      ERB::Util.html_escape(string) if string.is_a?(String)
+    end
+
+    ##
     # Creates a new instance of this class where +parent+ points to the object
     # this method was called on.
     def new(...) = spawn_as(self.class, ...)
