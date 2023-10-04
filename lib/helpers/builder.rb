@@ -6,7 +6,7 @@ module Helpers
   module Builder
     extend ActiveSupport::Concern
 
-    attr_reader :view_context
+    attr_reader :parent, :view_context
 
     def initialize(view_context, parent = nil)
       @view_context = view_context
