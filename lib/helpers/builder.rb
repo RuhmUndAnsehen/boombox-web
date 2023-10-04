@@ -8,6 +8,8 @@ module Helpers
 
     attr_reader :parent, :view_context
 
+    delegate_missing_to '(parent || view_context)'
+
     def initialize(view_context, parent = nil)
       @view_context = view_context
       @parent = parent
@@ -17,14 +19,6 @@ module Helpers
     # Delegates to ActionView::Helpers::CaptureHelper#capture,
     # passing +self+ as first argument.
     def capture(*, &) = view_context.capture(self, *, &)
-
-    ##
-    # Delegate missing methods to #view_context.
-    def method_missing(name, ...)
-      return super unless view_context.respond_to?(name)
-
-      view_context.__send__(name, ...)
-    end
 
     ##
     # Like ActionView::Helpers::TagHelper#content_tag, but only wraps the
@@ -74,7 +68,5 @@ module Helpers
 
       add_attribute(class: cls, to:)
     end
-
-    def respond_to_missing?(...) = view_context.respond_to?(...)
   end
 end
