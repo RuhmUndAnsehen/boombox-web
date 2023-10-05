@@ -61,12 +61,15 @@ module Helpers::ModelOutput
     ##
     # Like ActionView::Helpers::TagHelper#content_tag, but enhances +options+
     # by #component_options.
-    def content_tag(name, content = nil, options = nil, ...)
-      options = content if block_given? && content.is_a?(Hash)
+    def content_tag(name, content = nil, options = nil, *, &block)
+      if block_given?
+        options = content if content.is_a?(Hash)
+        content = capture(&block)
+      end
 
       options = component_options(options)
 
-      (parent || view_context).content_tag(name, content, options, ...)
+      view_context.content_tag(name, content, options, *)
     end
 
     private
