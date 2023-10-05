@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require 'helpers/navigation_helper'
+require 'helpers/show_helper'
 
 # :nodoc:
 module ApplicationHelper
   include ::Helpers::NavigationHelper
+  include ::Helpers::ShowHelper
 
   ##
   # Generates a title tag for the site headers.

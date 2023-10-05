@@ -86,7 +86,7 @@ class Helpers::ModelOutput::ModelOutputBuilder
   ##
   # Returns a HTML representation for #model.
   def to_s
-    return dom_id_tag(@block) if @block
+    return dom_id_tag(&@block) if @block
 
     attrs = content_tag_if_name(attribute_list_tag_name, attribute,
                                 class: 'model-attributes-list')
