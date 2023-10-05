@@ -24,7 +24,7 @@ module Helpers
     # Like ActionView::Helpers::TagHelper#content_tag, but only wraps the
     # +content+ if +name+ is present. Otherwise returns content or evaluates the
     # block, if given.
-    def content_tag_if_name(name, content, options = {}, &block)
+    def content_tag_if_name(name, content = nil, options = {}, &block)
       return content_tag(name, content, options, &block) if name.present?
       return capture(&block) if block_given?
 
