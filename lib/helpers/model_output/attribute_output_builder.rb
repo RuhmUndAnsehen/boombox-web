@@ -28,13 +28,12 @@ class Helpers::ModelOutput::AttributeOutputBuilder
   ##
   # Returns a HTML representation of this attribute.
   def to_s
-    content = self_capture(&@block) if @block
+    return content_tag_if_name(container_tag_name, &@block) if @block
 
-    content ||= safe_join([content_tag(name_tag_name, name),
-                           content_tag(value_tag_name, value)])
-    return content if container_tag_name.blank?
+    content = safe_join([content_tag(name_tag_name, name),
+                         content_tag(value_tag_name, value)])
 
-    content_tag(container_tag_name, content)
+    content_tag_if_name(container_tag_name, content)
   end
 
   private

@@ -75,12 +75,15 @@ class Helpers::ModelOutput::ModelOutputBuilder
   ##
   # Generates a HTML tag with the +id+ attribute set to #model's +dom_id+.
   def dom_id_tag(content = nil, options = {}, &block)
-    options = content if block_given?
+    if block_given?
+      options = content
+      content = capture(&block)
+    end
 
     options = add_attribute(class: 'model-contents', id: dom_id(model),
                             to: options)
 
-    content_tag(dom_id_tag_name, content, options, &block)
+    content_tag(dom_id_tag_name, content, options)
   end
 
   ##

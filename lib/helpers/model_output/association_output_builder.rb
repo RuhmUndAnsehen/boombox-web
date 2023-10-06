@@ -26,7 +26,7 @@ class Helpers::ModelOutput::AssociationOutputBuilder
   ##
   # Returns a HTML representation of this association.
   def to_s
-    return self_capture(&@block) if @block
+    return capture(&@block) if @block
 
     content_tag(:div, value.to_human_s)
   end
