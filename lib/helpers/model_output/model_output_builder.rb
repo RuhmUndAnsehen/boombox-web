@@ -110,6 +110,19 @@ class Helpers::ModelOutput::ModelOutputBuilder
     spawn_as(::Helpers::ModelOutput::AttributeOutputBuilder, attribute:, &block)
   end
 
+  ##
+  # Returns a Proc that takes a Set and returns the transformed Set.
+  #
+  # Depending on +config+, one of the following procs is returned:
+  # +nil+ :: matches all elements
+  # +true+ :: matches all elements
+  # +false+ :: matches no elements
+  # String :: matches only the string itself
+  # +only:+ :: matches the value like a String or Enumerable
+  # +except:+ :: excludes all elements +only:+ would match and returns the
+  #              others
+  # Enumerable :: matches only the elements in the Enumerable object
+  # Proc :: returns the config unchanged
   def attribute_filter(config) # rubocop:disable Metrics/MethodLength
     case config
     in nil | true | false
