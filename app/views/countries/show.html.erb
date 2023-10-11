@@ -1,6 +1,15 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @country %>
+<%= show @country do |s| %>
+  <%= s.attribute 'name' do |s| %>
+    <%= s.content_tag :h1, s.value %>
+  <% end %>
+
+  <%= s.content_tag_if_name s.attribute_list_tag_name,
+                            class: 'model-attributes-list' do |s| %>
+    <%= s.attribute except: 'name' %>
+  <% end %>
+<% end %>
 
 <div>
   <%= link_to "Back to countries", countries_path %>
