@@ -3,11 +3,13 @@
 require_relative 'builder'
 require_relative 'attribute_output_builder'
 require_relative 'association_output_builder'
+require_relative 'spawn_helper'
 
 ##
 # A HTML builder for ActiveRecord models.
 class Helpers::ModelOutput::ModelOutputBuilder
   include ::Helpers::ModelOutput::Builder
+  include ::Helpers::ModelOutput::SpawnHelper
 
   class InvalidConfigError < ::ArgumentError; end
 
@@ -100,15 +102,6 @@ class Helpers::ModelOutput::ModelOutputBuilder
   end
 
   private
-
-  def association_builder(association, &block)
-    spawn_as(::Helpers::ModelOutput::AssociationOutputBuilder,
-             association:, &block)
-  end
-
-  def attribute_builder(attribute, &block)
-    spawn_as(::Helpers::ModelOutput::AttributeOutputBuilder, attribute:, &block)
-  end
 
   ##
   # Returns a Proc that takes a Set and returns the transformed Set.
