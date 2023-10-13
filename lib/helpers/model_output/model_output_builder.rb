@@ -19,8 +19,10 @@ class Helpers::ModelOutput::ModelOutputBuilder
 
   def initialize(*, model:, associations: [],
                  attributes: { except: %i[id created_at updated_at] },
-                 **, &block)
-    super(*, **)
+                 **opts, &block)
+    @spawn_options = opts
+
+    super(*, **opts)
 
     self.model = model
 
@@ -160,4 +162,6 @@ class Helpers::ModelOutput::ModelOutputBuilder
 
   def initialize_attributes(config = nil) = attributes(config)
   def initialize_associations(config = Set[]) = associations(config)
+
+  def spawn_options(opts) = @spawn_options.merge(opts)
 end
