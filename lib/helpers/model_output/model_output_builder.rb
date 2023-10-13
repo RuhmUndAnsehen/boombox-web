@@ -20,6 +20,7 @@ class Helpers::ModelOutput::ModelOutputBuilder
   def initialize(*, model:, associations: [],
                  attributes: { except: %i[id created_at updated_at] },
                  **opts, &block)
+    @embed = opts.delete(:embed)
     @spawn_options = opts
 
     super(*, **opts)
@@ -93,14 +94,17 @@ class Helpers::ModelOutput::ModelOutputBuilder
   ##
   # Returns a HTML representation for #model.
   def to_s
-    return dom_id_tag(&@block) if @block
+    if @block
+      content = capture(&@block)
+    else
+      attrs = content_tag_if_name(attribute_list_tag_name, attribute,
+                                  class: 'model-attributes-list')
+      assocs = content_tag_if_name(association_list_tag_name, association,
+                                   class: 'model-associations-list')
+      content = safe_join([attrs.presence, assocs.presence].compact)
+    end
 
-    attrs = content_tag_if_name(attribute_list_tag_name, attribute,
-                                class: 'model-attributes-list')
-    assocs = content_tag_if_name(association_list_tag_name, association,
-                                 class: 'model-associations-list')
-
-    dom_id_tag(safe_join([attrs.presence, assocs.presence].compact))
+    embed? ? content : dom_id_tag(content)
   end
 
   private
@@ -159,6 +163,8 @@ class Helpers::ModelOutput::ModelOutputBuilder
   end
 
   def attribute_filter_symbol(config) = attribute_filter_enumerable(config.then)
+
+  def embed? = @embed
 
   def initialize_attributes(config = nil) = attributes(config)
   def initialize_associations(config = Set[]) = associations(config)
