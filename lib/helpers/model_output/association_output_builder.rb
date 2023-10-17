@@ -11,6 +11,8 @@ class Helpers::ModelOutput::AssociationOutputBuilder
 
   delegate :loaded?, to: :@association
 
+  tag_names :container, name: :dt, values: :dd
+
   def initialize(*, association:, **, &block)
     super(*, **)
 
@@ -28,7 +30,12 @@ class Helpers::ModelOutput::AssociationOutputBuilder
   def to_s
     return capture(&@block) if @block
 
-    content_tag(:div, value.to_human_s)
+    if value.is_a?(ActiveRecord::Associations::CollectionProxy)
+      show_many(value, dom_id_tag_name: :li)
+    else
+      show(value,
+           dom_id_tag_name: container_tag_name, embed: !container_tag_name)
+    end
   end
 
   def type = nil
@@ -42,5 +49,13 @@ class Helpers::ModelOutput::AssociationOutputBuilder
     self.name = model.class.human_attribute_name(raw_name)
     self.raw_name = raw_name
     @association = model.association(raw_name)
+  end
+
+  def show_many(values, **)
+    value = safe_join(values.map { |val| show(val, dom_id_tag_name: :li) })
+    content = safe_join([content_tag(name_tag_name, name),
+                         content_tag(values_tag_name, content_tag(:ul, value))])
+
+    content_tag_if_name(container_tag_name, content)
   end
 end
