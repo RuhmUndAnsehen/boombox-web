@@ -92,6 +92,10 @@ class Helpers::ModelOutput::ModelOutputBuilder
   end
 
   ##
+  # Returns the value of the embed flag.
+  def embed? = @embed
+
+  ##
   # Returns a HTML representation for #model.
   def to_s
     if @block
@@ -163,8 +167,6 @@ class Helpers::ModelOutput::ModelOutputBuilder
   end
 
   def attribute_filter_symbol(config) = attribute_filter_enumerable(config.then)
-
-  def embed? = @embed
 
   def initialize_attributes(config = nil) = attributes(config)
   def initialize_associations(config = Set[]) = associations(config)
