@@ -16,6 +16,7 @@ module Helpers::ModelOutput
       def initialize(tags_with_defaults) # rubocop:disable Metrics/MethodLength
         super()
 
+        tag_methods = tags_with_defaults.keys.map { |tag| :"#{tag}_tag" }
         tags_with_defaults.transform_keys! { |tag| :"#{tag}_tag_name" }
 
         assignments = tags_with_defaults.map do |tag, default|
@@ -25,10 +26,22 @@ module Helpers::ModelOutput
         module_eval <<-RUBY, __FILE__, __LINE__ + 1
           attr_accessor #{tags_with_defaults.keys.map(&:inspect).join(', ')}
 
+          def method_missing(name, ...)
+            return super unless #{tag_methods.inspect}.include?(name)
+
+            content_tag(__send__("#\{name}_name"), ...)
+          end
+
+          private
+
           def initialize_tag_names(tag_names)
             super
 
             #{assignments.join("\n")}
+          end
+
+          def respond_to_missing?(name, ...)
+            #{tag_methods.inspect}.include?(name) || super
           end
         RUBY
       end
