@@ -1,7 +1,10 @@
-<p style="color: green"><%= notice %></p>
+<%= show @currency do |s| %>
+  <%= s.attribute 'currency' do |s| %>
+    <% s.content_tag :h1, s.value %>
+  <% end %>
 
-<%= render @currency %>
-
-<div>
-  <%= link_to "Back to currencies", currencies_path %>
-</div>
+  <%= s.content_tag_if_name s.attribute_list_tag_name,
+                            class: 'model-attributes-list' do |s| %>
+    <%= s.attribute except: 'currency' %>
+  <% end %>
+<% end %>
