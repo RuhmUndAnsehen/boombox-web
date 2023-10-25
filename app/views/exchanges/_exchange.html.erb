@@ -1,22 +1,10 @@
-<div id="<%= dom_id exchange %>">
-  <p>
-    <strong>Country:</strong>
-    <%= exchange.country_id %>
-  </p>
-
-  <p>
-    <strong>Symbol:</strong>
-    <%= exchange.symbol %>
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    <%= exchange.name %>
-  </p>
-
-  <p>
-    <strong><%= exchange.t :timezone %>:</strong>
-    <%= exchange.timezone %>
-  </p>
-
-</div>
+<%= show exchange, associations: :country,
+                   attributes: %i[name symbol timezone],
+                   link: :name do |s| %>
+  <%= s.attribute %i[name symbol] %>
+  <%= s.association :country do |s| %>
+    <%= s.name_tag s.name %>
+    <%= s.values_tag link_to(s.value.alpha3_code, s.value) %>
+  <% end %>
+  <%= s.attribute :timezone %>
+<% end %>

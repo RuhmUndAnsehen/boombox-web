@@ -1,10 +1,15 @@
-<p style="color: green"><%= notice %></p>
+<%= show @exchange, associations: :country do |s| %>
+  <%= s.attribute :name do |s| %>
+    <%= s.content_tag :h1, s.value %>
+  <% end %>
 
-<%= render @exchange %>
-
-<div>
-  <%= link_to "Edit this exchange", edit_exchange_path(@exchange) %> |
-  <%= link_to "Back to exchanges", exchanges_path %>
-
-  <%= button_to "Destroy this exchange", @exchange, method: :delete %>
-</div>
+  <%= s.content_tag_if_name s.attribute_list_tag_name,
+                            class: 'model-attributes-list' do |s| %>
+    <%= s.attribute :symbol %>
+    <%= s.association :country do |s| %>
+      <%= s.name_tag s.name %>
+      <%= s.values_tag link_to(s.value.alpha3_code, s.value) %>
+    <% end %>
+    <%= s.attribute :timezone %>
+  <% end %>
+<% end %>
