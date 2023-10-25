@@ -7,12 +7,15 @@ require_relative 'builder'
 class Helpers::ModelOutput::AttributeOutputBuilder
   include ::Helpers::ModelOutput::Builder
 
-  attr_accessor :name, :raw_name, :type, :value
+  attr_accessor :index, :link, :name, :raw_name, :type, :value
 
   tag_names :container, name: :dt, value: :dd
 
-  def initialize(*, attribute:, **, &block)
+  def initialize(*, attribute:, index: nil, link: 0, **, &block)
     super(*, **)
+
+    self.index = index
+    self.link = link
 
     initialize_attribute_attributes(attribute.to_s)
 
@@ -26,12 +29,20 @@ class Helpers::ModelOutput::AttributeOutputBuilder
   end
 
   ##
+  # Returns +true+ if this builder should generate a link to the
+  # model it belongs to.
+  def link?
+    link.in?([true, index, raw_name]) ||
+      link.is_a?(Symbol) && link.to_s == raw_name
+  end
+
+  ##
   # Returns a HTML representation of this attribute.
   def to_s
     return content_tag_if_name(container_tag_name, &@block) if @block
 
-    content = safe_join([content_tag(name_tag_name, name),
-                         content_tag(value_tag_name, value)])
+    content = safe_join([name_tag(name),
+                         value_tag(link_to_if(link?, value, model))])
 
     content_tag_if_name(container_tag_name, content)
   end
