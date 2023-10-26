@@ -85,29 +85,36 @@ module Helpers::ModelOutput
     ##
     # Like ActionView::Helpers::TagHelper#content_tag, but enhances +options+
     # by #component_options.
-    def content_tag(name, content = nil, options = nil, *, &block)
-      if block_given?
-        options = content if content.is_a?(Hash)
-        content = capture(&block)
-      end
-
+    #
+    # :call-seq: content_tag(name, content = nil, options = {}, &block)
+    def content_tag(name, ...)
+      content, options = extract_tag_params(...)
       options = component_options(options)
 
-      view_context.content_tag(name, content, options, *)
+      view_context.content_tag(name, content, options)
     end
 
-    def named_tag(name, content = nil, options = nil, *, &block)
-      if block_given?
-        options = content if content.is_a?(Hash)
-        content = capture(&block)
-      end
+    ##
+    # Generates a HTML tag matching the tag name +name+.
+    #
+    # :call-seq: named_tag(name, content = nil, options = {}, &block)
+    def named_tag(name, ...)
+      content, options = extract_tag_params(...)
+      add_class(name, to: options)
 
-      options = add_class(name, to: options)
-
-      content_tag(__send__("#{name}_name"), content, options, *)
+      content_tag(__send__("#{name}_name"), content, options)
     end
 
     private
+
+    def extract_tag_params(content = nil, options = nil, *args, &block)
+      if block_given?
+        options = content if content.is_a?(Hash)
+        content = capture(&block)
+      end
+
+      [content, options || {}, args]
+    end
 
     def initialize_tag_names(...); end
   end
