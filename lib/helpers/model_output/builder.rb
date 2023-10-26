@@ -29,7 +29,7 @@ module Helpers::ModelOutput
           def method_missing(name, ...)
             return super unless #{tag_methods.inspect}.include?(name)
 
-            content_tag(__send__("#\{name}_name"), ...)
+            named_tag(name, ...)
           end
 
           private
@@ -94,6 +94,17 @@ module Helpers::ModelOutput
       options = component_options(options)
 
       view_context.content_tag(name, content, options, *)
+    end
+
+    def named_tag(name, content = nil, options = nil, *, &block)
+      if block_given?
+        options = content if content.is_a?(Hash)
+        content = capture(&block)
+      end
+
+      options = add_class(name, to: options)
+
+      content_tag(__send__("#{name}_name"), content, options, *)
     end
 
     private
