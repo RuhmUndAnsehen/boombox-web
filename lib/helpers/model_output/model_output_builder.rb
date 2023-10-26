@@ -60,7 +60,8 @@ class Helpers::ModelOutput::ModelOutputBuilder
   # Generates HTML for the attributes matching +config+.
   #
   # @see #attribute_filter
-  def attribute(config = nil, link: @spawn_options[:link], **config_opts, &block)
+  def attribute(config = nil, link: @spawn_options[:link], **config_opts,
+                &block)
     config ||= config_opts.presence
     link = config.present? ? false : 0 if link.blank?
 
