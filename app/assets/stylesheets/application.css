@@ -18,6 +18,9 @@
  */
 
 :root {
+  --color-base: white;
+  --color-base-text: #222;
+
   --color-palette-1: #5386C2;
   --color-palette-2: #134B8F;
   --color-palette-3: #83F4F5;
@@ -40,6 +43,9 @@
   --golden-ratio-em: calc(1em * var(--golden-ratio));
   --golden-ratio-a-em: calc(1em * var(--golden-ratio-a));
   --golden-ratio-b-em: calc(1em * var(--golden-ratio-b));
+  --golden-ratio-pc: calc(100% * var(--golden-ratio));
+  --golden-ratio-a-pc: calc(100% * var(--golden-ratio-a));
+  --golden-ratio-b-pc: calc(100% * var(--golden-ratio-b));
 
   --unit-margin: 1em;
   --small-margin: var(--golden-ratio-b-em);
