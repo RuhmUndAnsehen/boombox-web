@@ -1,14 +1,18 @@
+.nav-item {
+  --padding-x: var(--small-margin);
+  --padding-y: 0px;
+}
+
 .nav-item > :is(a, span) {
   --line-height: var(--increased-line-height);
   --gradient-angle: 20deg;
-  --gradient-offset: calc(var(--line-height) * sin(var(--gradient-angle)));
+  --gradient-offset: calc((var(--line-height) * 1em + 2 * var(--padding-y)) * sin(var(--gradient-angle)));
   --gradient-stop-1: calc(var(--wide-margin) + var(--gradient-offset));
   --gradient-stop-1-before: calc(var(--gradient-stop-1) - 1px);
-  --gradient-stop-2: calc(var(--gradient-stop-1) + var(--small-margin));
+  --gradient-stop-2: calc(var(--gradient-stop-1) + var(--wide-margin));
   --gradient-stop-2-after: calc(var(--gradient-stop-2) + 1px);
 
   display: block;
-  padding: 0 var(--small-margin);
   width: 100%;
   overflow: hidden;
 

@@ -51,7 +51,7 @@
   --small-margin: var(--golden-ratio-b-em);
   --wide-margin: var(--golden-ratio-a-em);
 
-  --increased-line-height: var(--golden-ratio-em);
+  --increased-line-height: var(--golden-ratio);
   --tall-line-height:
       calc(var(--increased-line-height) * var(--golden-ratio));
 
