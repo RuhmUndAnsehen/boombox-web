@@ -78,15 +78,15 @@
   opacity: 0;
 
   background-image:
-  linear-gradient(calc(270deg + var(--gradient-angle)),
-                  var(--bg-color-base) var(--gradient-stop-1-before),
-                  var(--bg-color-highlight) var(--gradient-stop-1) var(--gradient-stop-2),
-                  transparent var(--gradient-stop-2-after)),
-                  linear-gradient(calc(270deg + var(--gradient-angle)),
-                                  var(--bg-color-highlight) var(--gradient-stop-2),
-                                  transparent var(--gradient-stop-2-after));
-                  background-clip: content-box, border-box;
-                  background-repeat: no-repeat, no-repeat;
+    linear-gradient(calc(270deg + var(--gradient-angle)),
+                    var(--bg-color-base) var(--gradient-stop-1-before),
+                    var(--bg-color-highlight) var(--gradient-stop-1) var(--gradient-stop-2),
+                    transparent var(--gradient-stop-2-after)),
+    linear-gradient(calc(270deg + var(--gradient-angle)),
+                    var(--bg-color-highlight) var(--gradient-stop-2),
+                    transparent var(--gradient-stop-2-after));
+  background-clip: content-box, border-box;
+  background-repeat: no-repeat, no-repeat;
 }
 
 /* Links directly decending from nav-bar get special styling when interacted
