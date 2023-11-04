@@ -51,7 +51,8 @@
   --small-margin: var(--golden-ratio-b-em);
   --wide-margin: var(--golden-ratio-a-em);
 
-  --increased-line-height: var(--golden-ratio);
+  --line-height: 1;
+  --increased-line-height: calc(var(--line-height) * var(--golden-ratio));
   --tall-line-height:
       calc(var(--increased-line-height) * var(--golden-ratio));
 
@@ -61,6 +62,7 @@
   width: 100%;
 
   font-size: 18px;
+  line-height: var(--line-height);
 
   transition: all 0.42s ease;
 }
