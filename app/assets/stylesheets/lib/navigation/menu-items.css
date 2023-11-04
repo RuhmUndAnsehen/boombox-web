@@ -5,12 +5,13 @@
 
 .nav-item > :is(a, span) {
   --line-height: var(--increased-line-height);
-  --gradient-angle: 20deg;
-  --gradient-offset: calc((var(--line-height) * 1em + 2 * var(--padding-y)) * sin(var(--gradient-angle)));
-  --gradient-stop-1: calc(var(--wide-margin) + var(--gradient-offset));
-  --gradient-stop-1-before: calc(var(--gradient-stop-1) - 1px);
-  --gradient-stop-2: calc(var(--gradient-stop-1) + var(--wide-margin));
-  --gradient-stop-2-after: calc(var(--gradient-stop-2) + 1px);
+  --earmark-angle: 20deg;
+  --earmark-angle-offset: calc((var(--line-height) * 1em + 2 * var(--padding-y))
+                                 * sin(var(--earmark-angle)));
+  --earmark-stop-1: calc(var(--wide-margin) + var(--earmark-angle-offset));
+  --earmark-stop-1-before: calc(var(--earmark-stop-1) - 1px);
+  --earmark-stop-2: calc(var(--earmark-stop-1) + var(--wide-margin));
+  --earmark-stop-2-after: calc(var(--earmark-stop-2) + 1px);
 
   display: block;
   width: 100%;
@@ -75,16 +76,26 @@
 .nav-item > :is(a, span)::after {
   --border-color: var(--bg-color-highlight);
 
+  --earmark-color-earmark: var(--bg-color-base);
+  --earmark-color-stripe: var(--bg-color-highlight);
+  --earmark-color-background: transparent;
+  --earmark-border-color-earmark: var(--earmark-color-stripe);
+  --earmark-border-color-stripe: var(--earmark-border-color-earmark);
+  --earmark-border-color-background: var(--earmark-color-background);
+  --earmark-gradient:
+    linear-gradient(calc(270deg + var(--earmark-angle)),
+                    var(--earmark-color-earmark) var(--earmark-stop-1-before),
+                    var(--earmark-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
+                    var(--earmark-color-background) var(--earmark-stop-2-after));
+  --earmark-border-gradient:
+    linear-gradient(calc(270deg + var(--earmark-angle)),
+                    var(--earmark-border-color-earmark) var(--earmark-stop-1-before),
+                    var(--earmark-border-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
+                    var(--earmark-border-color-background) var(--earmark-stop-2-after));
+
   opacity: 0;
 
-  background-image:
-    linear-gradient(calc(270deg + var(--gradient-angle)),
-                    var(--bg-color-base) var(--gradient-stop-1-before),
-                    var(--bg-color-highlight) var(--gradient-stop-1) var(--gradient-stop-2),
-                    transparent var(--gradient-stop-2-after)),
-    linear-gradient(calc(270deg + var(--gradient-angle)),
-                    var(--bg-color-highlight) var(--gradient-stop-2),
-                    transparent var(--gradient-stop-2-after));
+  background-image: var(--earmark-gradient), var(--earmark-border-gradient);
   background-clip: content-box, border-box;
   background-repeat: no-repeat, no-repeat;
 }
