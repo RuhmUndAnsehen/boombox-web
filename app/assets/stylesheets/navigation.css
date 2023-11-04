@@ -5,22 +5,23 @@
  */
 
 .nav-bar, .nav-menu {
-  --vpadding: var(--wide-margin);
+  --padding-x: 0px;
+  --padding-y: var(--wide-margin);
 
-  padding: var(--vpadding) 0;
+  padding: var(--padding-y) var(--padding-x);
 
   background-color: var(--bg-color-base);
 }
 
 /* Closed submenus have zero vertical padding... */
 .nav-item .nav-menu {
-  --vpadding: 0;
+  --padding-y: 0px;
 }
 
 /* ... but opened do. */
 .nav-item:is(.current-controller, .current-page, :hover, :focus, :focus-within)
     .nav-menu {
-  --vpadding: var(--small-margin);
+  --padding-y: var(--small-margin);
 }
 
 .nav-item:last-child .nav-menu {
