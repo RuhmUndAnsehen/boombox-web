@@ -1,8 +1,5 @@
-/*
- *= require_self
- *= require lib/navigation/height-transition.css
- *= require lib/navigation/menu-items.css
- */
+@use "height-transition";
+@use "menu-items";
 
 .nav-bar, .nav-menu {
   --padding-x: 0px;
