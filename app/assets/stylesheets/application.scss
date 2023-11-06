@@ -2,11 +2,15 @@
 @use "reset";
 @use "cssvars" as vars;
 @use "navigation";
-@use "header";
-@use "footer";
+@use "header"
+@use "footer" with (
+  $bg-color: vars.$palette-color-2
+);
 
 @include reset.styles;
 @include vars.styles;
+
+@include footer.styles;
 
 :root {
   --bg-color-base: var(--color-palette-2);
