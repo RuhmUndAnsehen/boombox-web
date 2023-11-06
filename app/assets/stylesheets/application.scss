@@ -2,7 +2,9 @@
 @use "reset";
 @use "cssvars" as vars;
 @use "navigation";
-@use "header"
+@use "header" with (
+  $bg-color: vars.$palette-color-2
+);
 @use "footer" with (
   $bg-color: vars.$palette-color-2
 );
@@ -10,6 +12,7 @@
 @include reset.styles;
 @include vars.styles;
 
+@include header.styles;
 @include footer.styles;
 
 :root {

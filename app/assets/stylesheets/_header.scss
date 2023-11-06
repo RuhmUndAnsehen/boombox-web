@@ -1,0 +1,7 @@
+$bg-color: null !default;
+
+@mixin styles {
+  .site-header {
+    background-color: $bg-color;
+  }
+}
