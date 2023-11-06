@@ -5,6 +5,7 @@
 @use "header";
 @use "footer";
 
+@include reset.styles;
 @include vars.styles;
 
 :root {
