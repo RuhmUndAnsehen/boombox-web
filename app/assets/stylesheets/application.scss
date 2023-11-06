@@ -59,7 +59,7 @@ body {
 }
 
 main {
-  background-color: vars.$base-color;
+  background-color: vars.$base-bg-color;
 
   // Prevent margin collapse between header and the first child.
   &::before {

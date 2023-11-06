@@ -1,7 +1,7 @@
 @use "defs";
 
-$_base-color-name: --color-base;
-$_base-text-color-name: --color-base-text;
+$_base-bg-color-name: --color-base;
+$_base-color-name: --color-base-text;
 
 $_palette-color-1-name: --color-palette-1;
 $_palette-color-2-name: --color-palette-2;
@@ -11,8 +11,8 @@ $_palette-color-5-name: --color-palette-5;
 
 $_line-height-name: --line-height;
 
+$base-bg-color: var($_base-bg-color-name);
 $base-color: var($_base-color-name);
-$base-text-color: var($_base-text-color-name);
 
 $palette-color-1: var($_palette-color-1-name);
 $palette-color-2: var($_palette-color-2-name);
@@ -35,8 +35,8 @@ $line-height: var($_line-height-name);
 /// configurable.
 @mixin styles {
   :root {
+    #{$_base-bg-color-name}: defs.$base-bg-color;
     #{$_base-color-name}: defs.$base-color;
-    #{$_base-text-color-name}: defs.$base-text-color;
 
     #{$_palette-color-1-name}: defs.$palette-color-1;
     #{$_palette-color-2-name}: defs.$palette-color-2;
