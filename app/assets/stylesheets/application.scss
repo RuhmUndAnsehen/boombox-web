@@ -99,13 +99,13 @@ a {
   }
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: lighter;
+}
+
 h1, h2, h3, h4, h5 {
   margin-top: var(--wide-margin);
   margin-bottom: var(--small-margin);
-
-  &, h6 {
-    font-weight: thin;
-  }
 }
 
 h1 {
