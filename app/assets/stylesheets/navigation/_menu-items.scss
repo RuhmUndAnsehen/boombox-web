@@ -1,3 +1,14 @@
+@use "defs";
+@use "cssvars" as vars;
+
+$bg-color: vars.$palette-color-2 !default;
+$bg-color-highlight: vars.$palette-color-1 !default;
+$bg-color-active: vars.$palette-color-3 !default;
+
+$color: vars.$palette-color-5 !default;
+$color-active: vars.$palette-color-3 !default;
+$color-visited: vars.$palette-color-4 !default;
+
 .nav-item {
   --padding-x: var(--small-margin);
   --padding-y: 0px;
@@ -24,20 +35,19 @@
   text-decoration: none;
 }
 
-/* Spans are assumed to be submenu titles, which is why we're raising the line
- * height. */
+// Spans are assumed to be submenu titles, which is why we're raising the line
+// height.
 .nav-item > span {
   --line-height: var(--tall-line-height);
 
-  color: var(--link-color-visited);
+  color: $color-visited;
 }
 
-/* We need linear-gradients to achieve our styling goals. However, they are not
- * transitionable, which is why we're rendering them in pseudo elements instead.
- */
+// We need linear-gradients to achieve our styling goals. However, they are not
+// transitionable, which is why we're rendering them in pseudo elements instead.
 .nav-item > :is(a, span)::before, .nav-item > :is(a, span)::after {
   --border-width: 1px;
-  --border-color: var(--bg-color-base);
+  #{"--border-color"}: $bg-color;
 
   content: ' ';
 
@@ -56,28 +66,28 @@
   border-left: 0;
 }
 
-/* Links and submenu titles that are direct descendants of the nav bar should
- * have the active background color, if one of the following conditions holds:
- * * They are not relating to current page/controller.
- * * They *are* links pointing to the current page, but not at the top level.
- * * They are an active link.
- */
+// Links and submenu titles that are direct descendants of the nav bar should
+// have the highlight background color, if one of the following conditions
+// holds:
+//   * They are not relating to current page/controller.
+//   * They *are* links pointing to the current page, but not at the top level.
+//   * They are an active link.
 .nav-bar > .nav-item:not(.current-page, .current-controller) > :is(a, span)::before,
 .nav-item.current-page > a::before,
 .nav-item > a:active::after {
-  background-color: var(--bg-color-active);
+  background-color: $bg-color-highlight;
 }
 
-/* Main styling for links and titles.
- * The background consists of two layered linear gradients with differing
- * clipping. The obstructed one simply provides a fake border piece in the top
- * right of the element.
- * Hide the styles by default. */
+// Main styling for links and titles.
+// The background consists of two layered linear gradients with differing
+// clipping. The obstructed one simply provides a fake border piece in the top
+// right of the element.
+// Hide the styles by default.
 .nav-item > :is(a, span)::after {
-  --border-color: var(--bg-color-highlight);
+  #{"--border-color"}: $bg-color-active;
 
-  --earmark-color-earmark: var(--bg-color-base);
-  --earmark-color-stripe: var(--bg-color-highlight);
+  #{"--earmark-color-earmark"}: $bg-color;
+  #{"--earmark-color-stripe"}: $bg-color-active;
   --earmark-color-background: transparent;
   --earmark-border-color-earmark: var(--earmark-color-stripe);
   --earmark-border-color-stripe: var(--earmark-border-color-earmark);
@@ -100,16 +110,15 @@
   background-repeat: no-repeat, no-repeat;
 }
 
-/* Links directly decending from nav-bar get special styling when interacted
- * with. */
+// Links directly decending from nav-bar get special styling when interacted
+// with.
 .nav-bar > .nav-item > a:is(:active, :focus, :hover)::after {
-  border-color: var(--bg-color-highlight);
+  border-color: $bg-color-active;
 }
 
-/* Show our special styling in one of the two cases:
- * * The link or title is a relating to the current page or controller.
- * * The link or title is interacted with.
- */
+// Show our special styling in one of the two cases:
+//   * The link or title is a relating to the current page or controller.
+//   * The link or title is interacted with.
 .nav-item:is(.current-controller, .current-page) > :is(a, span)::after,
 .nav-item > :is(a, span):is(:active, :focus, :hover)::after {
   opacity: 1;

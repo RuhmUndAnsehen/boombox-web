@@ -1,5 +1,15 @@
+@use "defs";
+@use "cssvars" as vars;
 @use "height-transition";
 @use "menu-items";
+
+$bg-color: vars.$palette-color-2 !default;
+$bg-color-highlight: vars.$palette-color-1 !default;
+$bg-color-active: vars.$palette-color-3 !default;
+
+$color: vars.$palette-color-5 !default;
+$color-active: vars.$palette-color-3 !default;
+$color-visited: vars.$palette-color-4 !default;
 
 .nav-bar, .nav-menu {
   --padding-x: 0px;
@@ -7,15 +17,15 @@
 
   padding: var(--padding-y) var(--padding-x);
 
-  background-color: var(--bg-color-base);
+  background-color: $bg-color;
 }
 
-/* Closed submenus have zero vertical padding... */
+// Closed submenus have zero vertical padding...
 .nav-item .nav-menu {
   --padding-y: 0px;
 }
 
-/* ... but opened do. */
+// ... but opened do.
 .nav-item:is(.current-controller, .current-page, :hover, :focus, :focus-within)
     .nav-menu {
   --padding-y: var(--small-margin);
@@ -25,10 +35,10 @@
   padding-bottom: 0;
 }
 
-/* We disabled anchor tag transitions in Firefox due to a decade old bug, but
- * the conditions aren't there in menus, so we're activating them again. */
+// We disabled anchor tag transitions in Firefox due to a decade old bug, but
+// the conditions aren't there in menus, so we're activating them again.
 :is(.nav-bar, .nav-menu) a {
-  --link-color: var(--link-color-visited);
+  color: $color;
 
   transition-property: inherit;
 }

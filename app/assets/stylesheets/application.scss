@@ -1,27 +1,18 @@
+@use "defs";
 @use "reset";
+@use "cssvars" as vars;
 @use "navigation";
 @use "header";
 @use "footer";
 
+@include vars.styles;
+
 :root {
-  --color-base: white;
-  --color-base-text: #222;
-
-  --color-palette-1: #5386C2;
-  --color-palette-2: #134B8F;
-  --color-palette-3: #83F4F5;
-  --color-palette-4: #F6CDC0;
-  --color-palette-5: #C25D53;
-
   --bg-color-base: var(--color-palette-2);
   --bg-color-active: var(--color-palette-1);
   --bg-color-highlight: var(--color-palette-3);
 
   --fg-color: var(--color-palette-3);
-
-  --link-color: var(--color-palette-5);
-  --link-color-active: var(--color-palette-3);
-  --link-color-visited: var(--color-palette-4);
 
   --golden-ratio: 1.618033989;
   --golden-ratio-a: calc(1 / var(--golden-ratio));
@@ -37,7 +28,6 @@
   --small-margin: var(--golden-ratio-b-em);
   --wide-margin: var(--golden-ratio-a-em);
 
-  --line-height: 1;
   --increased-line-height: calc(var(--line-height) * var(--golden-ratio));
   --tall-line-height:
       calc(var(--increased-line-height) * var(--golden-ratio));
@@ -48,7 +38,6 @@
   width: 100%;
 
   font-size: 18px;
-  line-height: var(--line-height);
 
   transition: all 0.42s ease;
 }
@@ -65,49 +54,50 @@ body {
 
   width: 100%;
   height: 100%;
+
+  line-height: vars.$line-height;
 }
 
 main {
-  background-color: white;
-}
+  background-color: vars.$base-color;
 
-/* Hack to fill the void between the header and the first child. */
-main::before {
-  content: ' ';
+  // Prevent margin collapse between header and the first child.
+  &::before {
+    content: ' ';
 
-  display: block;
-  width: 1px;
-  height: 1px;
-  margin-right: -1px;
-  margin-bottom: -1px;
+    display: block;
+    width: 1px;
+    height: 1px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+  }
 }
 
 a {
   display: inline-block;
 
-  color: var(--link-color);
+  color: vars.$link-color;
 
-  /* Firefox incorrectly transitions if the color of visited links differs from
-   * the regular link color (and a hover/focus/active color is set).
-   */
+   // Firefox incorrectly transitions if the color of visited links differs from
+   // the regular link color (and a hover/focus/active color is set).
   -moz-transition-property: none;
-}
 
-a:visited {
-  color: var(--link-color-visited);
-}
+  &:visited {
+    color: vars.$link-color-visited;
+  }
 
-:is(a, a:visited):is(:active, :focus, :hover) {
-  color: var(--link-color-active);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: thin;
+  :is(&, &:visited):is(:active, :focus, :hover) {
+    color: vars.$link-color-active;
+  }
 }
 
 h1, h2, h3, h4, h5 {
   margin-top: var(--wide-margin);
   margin-bottom: var(--small-margin);
+
+  &, h6 {
+    font-weight: thin;
+  }
 }
 
 h1 {
@@ -137,6 +127,8 @@ h6 {
   font-size: 1em;
 }
 
-p + p, p + h6 {
-  margin-top: var(--small-margin);
+p {
+  + p, + h6 {
+    margin-top: var(--small-margin);
+  }
 }

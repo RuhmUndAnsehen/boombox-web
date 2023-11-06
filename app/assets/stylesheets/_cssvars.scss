@@ -1,0 +1,49 @@
+@use "defs";
+
+$_base-color-name: --color-base;
+$_base-text-color-name: --color-base-text;
+
+$_palette-color-1-name: --color-palette-1;
+$_palette-color-2-name: --color-palette-2;
+$_palette-color-3-name: --color-palette-3;
+$_palette-color-4-name: --color-palette-4;
+$_palette-color-5-name: --color-palette-5;
+
+$_line-height-name: --line-height;
+
+$base-color: var($_base-color-name);
+$base-text-color: var($_base-text-color-name);
+
+$palette-color-1: var($_palette-color-1-name);
+$palette-color-2: var($_palette-color-2-name);
+$palette-color-3: var($_palette-color-3-name);
+$palette-color-4: var($_palette-color-4-name);
+$palette-color-5: var($_palette-color-5-name);
+
+$link-color: $palette-color-5;
+$link-color-active: $palette-color-3;
+$link-color-visited: $palette-color-4;
+
+$line-height: var($_line-height-name);
+
+/// Defines CSS custom properties for the SASS variables provided in this
+/// module.
+///
+/// Using the variables has the effect that instead of inserting the
+/// SASS constants into the generated styles, this inserts them as CSS custom
+/// properties, making them accessible with JS, as well as end-user
+/// configurable.
+@mixin styles {
+  :root {
+    #{$_base-color-name}: defs.$base-color;
+    #{$_base-text-color-name}: defs.$base-text-color;
+
+    #{$_palette-color-1-name}: defs.$palette-color-1;
+    #{$_palette-color-2-name}: defs.$palette-color-2;
+    #{$_palette-color-3-name}: defs.$palette-color-3;
+    #{$_palette-color-4-name}: defs.$palette-color-4;
+    #{$_palette-color-5-name}: defs.$palette-color-5;
+
+    #{$_line-height-name}: defs.$line-height;
+  }
+}
