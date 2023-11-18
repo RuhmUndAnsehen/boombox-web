@@ -11,7 +11,65 @@ $color: vars.$palette-color-5 !default;
 $color-active: vars.$palette-color-3 !default;
 $color-visited: vars.$palette-color-4 !default;
 
-.nav-bar, .nav-menu {
+.nav-bar {
+  @extend %navigation-bar;
+}
+
+.nav-menu {
+  @extend %navigation-menu;
+}
+
+.nav-item {
+  @extend %navigation-item;
+
+  &.current-page {
+    @extend %navigation-current-page-item;
+
+    > a {
+      @extend %navigation-current-page-item-link;
+    }
+  }
+
+  &:is(.current-controller, .current-page) {
+    @extend %navigation-current-item;
+
+    > a {
+      @extend %navigation-current-item-link;
+
+      &:is(:active, :focus, :hover) {
+        @extend %navigation-current-item-active-link;
+      }
+    }
+
+    > span {
+      @extend %navigation-current-category-label;
+    }
+  }
+
+  &:is(.current-controller, .current-page, :hover, :focus, :focus-within) {
+    @extend %navigation-active-item;
+  }
+
+  > a {
+    @extend %navigation-item-link;
+
+    &:is(:active, :focus, :hover) {
+      @extend %navigation-item-active-link;
+    }
+  }
+
+  > span {
+    @extend %navigation-category-label;
+  }
+}
+
+%navigation-category-label {
+  @extend %navigation-item-label;
+}
+
+// .nav-bar, .nav-menu {
+%navigation-bar,
+%navigation-menu {
   --padding-x: 0px;
   --padding-y: var(--wide-margin);
 
@@ -21,18 +79,90 @@ $color-visited: vars.$palette-color-4 !default;
 }
 
 // Closed submenus have zero vertical padding...
-.nav-item .nav-menu {
+// .nav-item .nav-menu {
+%navigation-submenu {
   --padding-y: 0px;
 }
 
-// ... but opened do.
-.nav-item:is(.current-controller, .current-page, :hover, :focus, :focus-within)
-    .nav-menu {
-  --padding-y: var(--small-margin);
+%navigation-item {
+  &:not(& &) {
+    @extend %navigation-root-item;
+
+    > a {
+      @extend %navigation-root-item-link;
+
+      &:is(:active, :focus, :hover) {
+        @extend %navigation-root-item-active-link;
+      }
+    }
+  }
+
+  %navigation-menu {
+    @extend %navigation-submenu;
+  }
+
+  &-link {
+    @extend %navigation-item-label;
+  }
+
+  &-active-link {
+    @extend %navigation-item-link;
+  }
 }
 
-.nav-item:last-child .nav-menu {
-  padding-bottom: 0;
+%navigation-root-item {
+  &-link {}
+  &-active-link {}
+
+  @at-root %navigation-bar &:not(.current-controller, .current-page) {
+    @extend %navigation-bar-default-item;
+
+    > a {
+      @extend %navigation-bar-default-item-link;
+    }
+
+    > span {
+      @extend %navigation-bar-default-category-label;
+    }
+  }
+}
+
+%navigation-bar-default-item {
+  &-label {}
+
+  &-link {
+    @extend %navigation-bar-default-item-label;
+  }
+}
+
+%navigation-bar-default-category-label {
+  @extend %navigation-bar-default-item-label;
+}
+
+%navigation-current-page-item {}
+
+%navigation-current-item {
+  &-link {
+    @extend %navigation-current-item-label;
+  }
+  &-active-link {}
+}
+
+%navigation-current-category-label {
+  @extend %navigation-current-item-label;
+}
+
+%navigation-non-current-root-item {}
+
+%navigation-active-item %navigation-menu {
+  @extend %navigation-active-submenu;
+}
+
+// ... but opened do.
+// .nav-item:is(.current-controller, .current-page, :hover, :focus, :focus-within)
+    // .nav-menu {
+%navigation-active-submenu {
+  --padding-y: var(--small-margin);
 }
 
 // We disabled anchor tag transitions in Firefox due to a decade old bug, but

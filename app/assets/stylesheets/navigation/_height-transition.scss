@@ -1,0 +1,39 @@
+@use "transition";
+
+// .nav-item .nav-item {
+%navigation-submenu-item {
+  @extend %transition-children-height-to-auto;
+  @extend %closed;
+}
+
+%navigation-item {
+  & & {
+    @extend %navigation-submenu-item;
+  }
+}
+
+// .nav-item:where(.current-controller, .current-page, :hover, :focus, :focus-within)
+    // .nav-item {
+%navigation-active-submenu-item {
+  @extend %transition-children-height-to-auto;
+  @extend %opened;
+}
+
+%navigation-active-item %navigation-item {
+  @extend %navigation-active-submenu-item;
+}
+
+// .nav-item > :is(a, span) {
+%navigation-item-label {
+  padding: var(--padding-y) var(--padding-x);
+}
+
+// .nav-item:where(.current-controller, .current-page, :hover, :focus, :focus-within)
+    // .nav-item > :is(a, span) {
+%navigation-active-submenu-item-label {
+  --padding-y: var(--small-margin);
+}
+
+%navigation-active-item %navigation-item-label {
+  @extend %navigation-active-submenu-item-label;
+}

@@ -1,0 +1,12 @@
+%transition-children-height-to-auto {
+  display: grid;
+  overflow: hidden;
+
+  &%closed {
+    grid-template-rows: 0fr;
+  }
+
+  &%opened {
+    grid-template-rows: 1fr;
+  }
+}
