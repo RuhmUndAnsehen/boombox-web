@@ -9,13 +9,11 @@ $color: vars.$palette-color-5 !default;
 $color-active: vars.$palette-color-3 !default;
 $color-visited: vars.$palette-color-4 !default;
 
-// .nav-item {
 %navigation-item {
   --padding-x: var(--small-margin);
   --padding-y: 0px;
 }
 
-// .nav-item > :is(a, span) {
 %navigation-item-label {
   --line-height: var(--increased-line-height);
   --earmark-angle: 20deg;
@@ -39,7 +37,6 @@ $color-visited: vars.$palette-color-4 !default;
 
 // Spans are assumed to be submenu titles, which is why we're raising the line
 // height.
-// .nav-item > span {
 %navigation-category-label {
   @extend %navigation-item-label;
 
@@ -50,7 +47,6 @@ $color-visited: vars.$palette-color-4 !default;
 
 // We need linear-gradients to achieve our styling goals. However, they are not
 // transitionable, which is why we're rendering them in pseudo elements instead.
-// .nav-item > :is(a, span)::before, .nav-item > :is(a, span)::after {
 %navigation-item-label {
   &::before, &::after {
     --border-width: 1px;
@@ -80,11 +76,8 @@ $color-visited: vars.$palette-color-4 !default;
 //   * They are not relating to current page/controller.
 //   * They *are* links pointing to the current page, but not at the top level.
 //   * They are an active link.
-// .nav-bar > .nav-item:not(.current-page, .current-controller) > :is(a, span)::before,
 %navigation-bar-default-item-label::before,
-// .nav-item.current-page > a::before,
 %navigation-current-page-item-link::before,
-// .nav-item > a:active::after {
 %navigation-item-link:active::after {
   background-color: $bg-color-highlight;
 }
@@ -94,7 +87,6 @@ $color-visited: vars.$palette-color-4 !default;
 // clipping. The obstructed one simply provides a fake border piece in the top
 // right of the element.
 // Hide the styles by default.
-// .nav-item > :is(a, span)::after {
 %navigation-item-label::after {
   #{"--border-color"}: $bg-color-active;
 
@@ -124,7 +116,6 @@ $color-visited: vars.$palette-color-4 !default;
 
 // Links directly descending from nav-bar get special styling when interacted
 // with.
-// .nav-bar > .nav-item > a:is(:active, :focus, :hover)::after {
 %navigation-bar %navigation-root-item-active-link::after {
   border-color: $bg-color-active;
 }
@@ -132,9 +123,7 @@ $color-visited: vars.$palette-color-4 !default;
 // Show our special styling in the two cases:
 //   * The link or title is a relating to the current page or controller.
 //   * The link or title is interacted with.
-// .nav-item:is(.current-controller, .current-page) > :is(a, span)::after,
 %navigation-current-item-label::after,
-// .nav-item > :is(a, span):is(:active, :focus, :hover)::after {
 %navigation-item-label:is(:active, :focus, :hover)::after {
   opacity: 1;
 }
