@@ -1,7 +1,6 @@
 @use "defs";
 @use "cssvars" as vars;
-@use "height-transition";
-@use "menu-items";
+@use "transition";
 
 $bg-color: vars.$palette-color-2 !default;
 $bg-color-highlight: vars.$palette-color-1 !default;
@@ -65,24 +64,72 @@ $color-visited: vars.$palette-color-4 !default;
 
 %navigation-category-label {
   @extend %navigation-item-label;
+
+  // Spans are assumed to be submenu titles, which is why we're raising the line
+  // height.
+  --line-height: var(--tall-line-height);
+
+  color: $color-visited;
 }
 
 %navigation-bar,
 %navigation-menu {
-  --padding-x: 0px;
-  --padding-y: var(--wide-margin);
-
-  padding: var(--padding-y) var(--padding-x);
+  padding: var(--wide-margin) 0;
 
   background-color: $bg-color;
 }
 
+%navigation-bar {
+  // Links directly descending from nav-bar get special styling when interacted
+  // with.
+  %navigation-root-item-active-link::after {
+    border-color: $bg-color-active;
+  }
+
+  &-default-item {
+    &-label {}
+    &-link {
+      @extend %navigation-bar-default-item-label;
+    }
+  }
+
+  &-default-category-label {
+    @extend %navigation-bar-default-item-label;
+  }
+}
+
 // Closed submenus have zero vertical padding...
 %navigation-submenu {
-  --padding-y: 0px;
+  padding: {
+    top: 0;
+    bottom: 0;
+  }
+
+  &-item {
+    @extend %transition-children-height-to-auto;
+    @extend %closed;
+
+    &-label {
+      padding: {
+        top: 0;
+        bottom: 0;
+      }
+    }
+  }
 }
 
 %navigation-item {
+  --padding-x: var(--small-margin);
+  --padding-y: 0px;
+
+  & & {
+    @extend %navigation-submenu-item;
+
+    & %navigation-item-label {
+      @extend %navigation-submenu-item-label;
+    }
+  }
+
   &:not(& &) {
     @extend %navigation-root-item;
 
@@ -97,6 +144,84 @@ $color-visited: vars.$palette-color-4 !default;
 
   %navigation-menu {
     @extend %navigation-submenu;
+  }
+
+  &-label {
+    --line-height: var(--increased-line-height);
+    --earmark-angle: 20deg;
+    --earmark-angle-offset: calc((var(--line-height) * 1em + 2 * var(--padding-y))
+    * sin(var(--earmark-angle)));
+    --earmark-stop-1: calc(var(--wide-margin) + var(--earmark-angle-offset));
+    --earmark-stop-1-before: calc(var(--earmark-stop-1) - 1px);
+    --earmark-stop-2: calc(var(--earmark-stop-1) + var(--wide-margin));
+    --earmark-stop-2-after: calc(var(--earmark-stop-2) + 1px);
+
+    display: block;
+    width: 100%;
+    padding: var(--small-margin);
+    overflow: hidden;
+
+    position: relative;
+    z-index: 2;
+
+    line-height: var(--line-height);
+    text-decoration: none;
+
+    // We need linear-gradients to achieve our styling goals. However, they are
+    // not transitionable, which is why we're rendering them in pseudo elements
+    // instead.
+    &::before, &::after {
+      --border-width: 1px;
+      #{"--border-color"}: $bg-color;
+
+      content: ' ';
+
+      display: block;
+      height: 100%;
+      width: calc(100% - var(--border-width));
+      padding: 1px 0 0 0;
+
+      position: absolute;
+      top: 0;
+      right: var(--border-width);
+      z-index: -1;
+
+      border: var(--border-width) solid var(--border-color);
+      border-top-color: transparent;
+      border-left: 0;
+    }
+
+    // Main styling for links and titles.
+    // The background consists of two layered linear gradients with differing
+    // clipping. The obstructed one simply provides a fake border piece in the
+    // top right of the element.
+    // Hide the styles by default.
+    &::after {
+      #{"--border-color"}: $bg-color-active;
+
+      #{"--earmark-color-earmark"}: $bg-color;
+      #{"--earmark-color-stripe"}: $bg-color-active;
+      --earmark-color-background: transparent;
+      --earmark-border-color-earmark: var(--earmark-color-stripe);
+      --earmark-border-color-stripe: var(--earmark-border-color-earmark);
+      --earmark-border-color-background: var(--earmark-color-background);
+      --earmark-gradient:
+        linear-gradient(calc(270deg + var(--earmark-angle)),
+                        var(--earmark-color-earmark) var(--earmark-stop-1-before),
+                        var(--earmark-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
+                        var(--earmark-color-background) var(--earmark-stop-2-after));
+      --earmark-border-gradient:
+        linear-gradient(calc(270deg + var(--earmark-angle)),
+                        var(--earmark-border-color-earmark) var(--earmark-stop-1-before),
+                        var(--earmark-border-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
+                        var(--earmark-border-color-background) var(--earmark-stop-2-after));
+
+      opacity: 0;
+
+      background-image: var(--earmark-gradient), var(--earmark-border-gradient);
+      background-clip: content-box, border-box;
+      background-repeat: no-repeat, no-repeat;
+    }
   }
 
   &-link {
@@ -125,18 +250,6 @@ $color-visited: vars.$palette-color-4 !default;
   }
 }
 
-%navigation-bar-default-item {
-  &-label {}
-
-  &-link {
-    @extend %navigation-bar-default-item-label;
-  }
-}
-
-%navigation-bar-default-category-label {
-  @extend %navigation-bar-default-item-label;
-}
-
 %navigation-current-page-item {}
 
 %navigation-current-item {
@@ -152,13 +265,35 @@ $color-visited: vars.$palette-color-4 !default;
 
 %navigation-non-current-root-item {}
 
-%navigation-active-item %navigation-menu {
-  @extend %navigation-active-submenu;
+%navigation-active-item {
+  %navigation-menu {
+    @extend %navigation-active-submenu;
+  }
+
+  %navigation-item {
+    @extend %navigation-active-submenu-item;
+
+    &-label {
+      @extend %navigation-active-submenu-item-label;
+    }
+  }
 }
 
 // ... but opened do.
 %navigation-active-submenu {
-  --padding-y: var(--small-margin);
+  padding: {
+    top: var(--small-margin);
+    bottom: var(--small-margin);
+  }
+
+  &-item {
+    @extend %transition-children-height-to-auto;
+    @extend %opened;
+
+    &-label {
+      padding: var(--small-margin);
+    }
+  }
 }
 
 // We disabled anchor tag transitions in Firefox due to a decade old bug, but
@@ -167,4 +302,24 @@ $color-visited: vars.$palette-color-4 !default;
   color: $color;
 
   transition-property: inherit;
+}
+
+// Links and submenu titles that are direct descendants of the nav bar should
+// have the highlight background color, if one of the following conditions
+// holds:
+//   * They are not relating to current page/controller.
+//   * They *are* links pointing to the current page, but not at the top level.
+//   * They are an active link.
+%navigation-bar-default-item-label::before,
+%navigation-current-page-item-link::before,
+%navigation-item-link:active::after {
+  background-color: $bg-color-highlight;
+}
+
+// Show our special styling in the two cases:
+//   * The link or title is a relating to the current page or controller.
+//   * The link or title is interacted with.
+%navigation-current-item-label::after,
+%navigation-item-label:is(:active, :focus, :hover)::after {
+  opacity: 1;
 }
