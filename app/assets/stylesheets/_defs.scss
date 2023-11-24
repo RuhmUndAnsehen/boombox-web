@@ -8,3 +8,14 @@ $palette-color-4: #F6CDC0 !default;
 $palette-color-5: #C25D53 !default;
 
 $line-height: 1 !default;
+
+$golden-ratio: 1.618033989;
+$golden-ratio-a: calc(1 / $golden-ratio);
+$golden-ratio-b: calc(1 - $golden-ratio-a);
+
+$unit-margin: 1em !default;
+$small-margin: calc($golden-ratio-b * $unit-margin) !default;
+$wide-margin: calc($golden-ratio-a * $unit-margin) !default;
+
+$increased-line-height: $golden-ratio !default;
+$tall-line-height: calc(pow($golden-ratio, 2)) !default;

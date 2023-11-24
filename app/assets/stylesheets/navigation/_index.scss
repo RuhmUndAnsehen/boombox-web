@@ -67,14 +67,14 @@ $color-visited: vars.$palette-color-4 !default;
 
   // Spans are assumed to be submenu titles, which is why we're raising the line
   // height.
-  --line-height: var(--tall-line-height);
+  #{"--line-height"}: defs.$tall-line-height;
 
   color: $color-visited;
 }
 
 %navigation-bar,
 %navigation-menu {
-  padding: var(--wide-margin) 0;
+  padding: defs.$wide-margin 0;
 
   background-color: $bg-color;
 }
@@ -119,9 +119,6 @@ $color-visited: vars.$palette-color-4 !default;
 }
 
 %navigation-item {
-  --padding-x: var(--small-margin);
-  --padding-y: 0px;
-
   & & {
     @extend %navigation-submenu-item;
 
@@ -147,18 +144,20 @@ $color-visited: vars.$palette-color-4 !default;
   }
 
   &-label {
-    --line-height: var(--increased-line-height);
+    #{"--line-height"}: defs.$increased-line-height;
     --earmark-angle: 20deg;
-    --earmark-angle-offset: calc((var(--line-height) * 1em + 2 * var(--padding-y))
-    * sin(var(--earmark-angle)));
-    --earmark-stop-1: calc(var(--wide-margin) + var(--earmark-angle-offset));
+    #{"--earmark-angle-offset"}: calc((var(--line-height) * 1em
+                                         + 2 * defs.$small-margin)
+                                        * sin(var(--earmark-angle)));
+    #{"--earmark-stop-1"}: calc(defs.$small-margin
+                                  + var(--earmark-angle-offset));
     --earmark-stop-1-before: calc(var(--earmark-stop-1) - 1px);
-    --earmark-stop-2: calc(var(--earmark-stop-1) + var(--wide-margin));
+    #{"--earmark-stop-2"}: calc(var(--earmark-stop-1) + defs.$wide-margin);
     --earmark-stop-2-after: calc(var(--earmark-stop-2) + 1px);
 
     display: block;
     width: 100%;
-    padding: var(--small-margin);
+    padding: defs.$small-margin;
     overflow: hidden;
 
     position: relative;
@@ -282,8 +281,8 @@ $color-visited: vars.$palette-color-4 !default;
 // ... but opened do.
 %navigation-active-submenu {
   padding: {
-    top: var(--small-margin);
-    bottom: var(--small-margin);
+    top: defs.$small-margin;
+    bottom: defs.$small-margin;
   }
 
   &-item {
@@ -291,7 +290,7 @@ $color-visited: vars.$palette-color-4 !default;
     @extend %opened;
 
     &-label {
-      padding: var(--small-margin);
+      padding: defs.$small-margin;
     }
   }
 }

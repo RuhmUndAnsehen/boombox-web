@@ -16,30 +16,6 @@
 @include footer.styles;
 
 :root {
-  --bg-color-base: var(--color-palette-2);
-  --bg-color-active: var(--color-palette-1);
-  --bg-color-highlight: var(--color-palette-3);
-
-  --fg-color: var(--color-palette-3);
-
-  --golden-ratio: 1.618033989;
-  --golden-ratio-a: calc(1 / var(--golden-ratio));
-  --golden-ratio-b: calc(1 - var(--golden-ratio-a));
-  --golden-ratio-em: calc(1em * var(--golden-ratio));
-  --golden-ratio-a-em: calc(1em * var(--golden-ratio-a));
-  --golden-ratio-b-em: calc(1em * var(--golden-ratio-b));
-  --golden-ratio-pc: calc(100% * var(--golden-ratio));
-  --golden-ratio-a-pc: calc(100% * var(--golden-ratio-a));
-  --golden-ratio-b-pc: calc(100% * var(--golden-ratio-b));
-
-  --unit-margin: 1em;
-  --small-margin: var(--golden-ratio-b-em);
-  --wide-margin: var(--golden-ratio-a-em);
-
-  --increased-line-height: calc(var(--line-height) * var(--golden-ratio));
-  --tall-line-height:
-      calc(var(--increased-line-height) * var(--golden-ratio));
-
   position: relative;
 
   height: 100%;
@@ -104,8 +80,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1, h2, h3, h4, h5 {
-  margin-top: var(--wide-margin);
-  margin-bottom: var(--small-margin);
+  margin: {
+    top: defs.$wide-margin;
+    bottom: defs.$small-margin;
+  }
 }
 
 h1 {
@@ -130,13 +108,13 @@ h5 {
 
 h6 {
   float: left;
-  margin-right: var(--small-margin);
+  margin-right: defs.$small-margin;
 
   font-size: 1em;
 }
 
 p {
   + p, + h6 {
-    margin-top: var(--small-margin);
+    margin-top: defs.$small-margin;
   }
 }
