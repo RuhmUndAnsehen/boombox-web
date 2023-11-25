@@ -1,0 +1,73 @@
+@use "sass:list";
+
+$zero-angle: 270deg;
+$angle: 20deg !default;
+$earmark-color: transparent !default;
+$earmark-offset: 1em !default;
+$stripe-color: #222 !default;
+$stripe-width: 0.5em !default;
+$background-color: transparent !default;
+
+/// Produces an earmark linear gradient.
+///
+/// @param {length} $box-height
+///   The height of the box the earmark is added to.
+/// @param {angle} $angle
+///   The gradient angle.
+/// @param {color [length]} $earmark
+///   The earmark color and offset.
+/// @param {color [length]} $stripe
+///   The stripe color and width.
+/// @param {color [length]} $background
+///   The background color.
+/// @param {bool} $anti-aliasing
+///   If true, inserts additional color stops to make angled gradients appear
+///   smoother.
+///
+/// @return {background-image} a linear gradient
+@function gradient($angle: $angle,
+                   $earmark: $earmark-color,
+                   $stripe: $stripe-color,
+                   $background: $background-color,
+                   $box-height: 2em,
+                   $anti-aliasing: true) {
+  // Extract colors from the parameters.
+  $earmark-color: _color($earmark);
+  $stripe-color: _color($stripe);
+  $background-color: _color($background);
+
+  $earmark-offset: calc(sin($angle) * $box-height + $earmark-offset);
+  // Compute stops.
+  $earmark-stop-end: calc($earmark-offset + _stop($earmark, 0px));
+  $stripe-stop-start: $earmark-stop-end;
+  $stripe-stop-end: calc($earmark-stop-end + _stop($stripe, $stripe-width));
+  $background-stop-start: $stripe-stop-end;
+
+  // If anti-aliasing is enabled, allow a 1 pixel wide gradient between stops of
+  // different colors.
+  @if $anti-aliasing {
+    $earmark-stop-end: calc($earmark-stop-end - 1px);
+    $stripe-stop-end: calc($stripe-stop-end - 1px);
+  }
+
+  @return linear-gradient(calc(270deg + $angle),
+                          $earmark-color $earmark-stop-end,
+                          $stripe-color $stripe-stop-start $stripe-stop-end,
+                          $background-color $background-stop-start);
+}
+
+@function _color($color-stop) {
+  @if list.length($color-stop) == 1 {
+    @return $color-stop;
+  }
+
+  @return list.nth($color-stop, 1);
+}
+
+@function _stop($color-stop, $default-length) {
+  @if list.length($color-stop) == 1 {
+    @return $default-length;
+  }
+
+  @return list.nth($color-stop, 2);
+}
