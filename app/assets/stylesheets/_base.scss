@@ -1,0 +1,107 @@
+@mixin styles($line-height: 1, $small-margin: 0.5, $wide-margin: 1,
+              $base-bg-color: white, $link-color: blue,
+              $link-color-visited: navy, $link-color-active: teal) {
+  :root {
+    position: relative;
+
+    height: 100%;
+    width: 100%;
+
+    font-size: 18px;
+
+    transition: all 0.42s ease;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+
+    transition: inherit;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    width: 100%;
+    height: 100%;
+
+    line-height: $line-height;
+  }
+
+  main {
+    background-color: $base-bg-color;
+
+    // Prevent margin collapse between header and the first child.
+    &::before {
+      content: ' ';
+
+      display: block;
+      width: 1px;
+      height: 1px;
+      margin-right: -1px;
+      margin-bottom: -1px;
+    }
+  }
+
+  a {
+    display: inline-block;
+
+    color: $link-color;
+
+    // Firefox incorrectly transitions if the color of visited links differs from
+    // the regular link color (and a hover/focus/active color is set).
+    -moz-transition-property: none;
+
+    &:visited {
+      color: $link-color-visited;
+    }
+
+    :is(&, &:visited):is(:active, :focus, :hover) {
+      color: $link-color-active;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: lighter;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin: {
+      top: $wide-margin;
+      bottom: $small-margin;
+    }
+  }
+
+  h1 {
+    font-size: 2.4em;
+  }
+
+  h2 {
+    font-size: 1.71em;
+  }
+
+  h3 {
+    font-size: 1.32em;
+  }
+
+  h4 {
+    font-size: 1.1em;
+  }
+
+  h5 {
+    font-size: 1em;
+  }
+
+  h6 {
+    float: left;
+    margin-right: $small-margin;
+
+    font-size: 1em;
+  }
+
+  p {
+    + p, + h6 {
+      margin-top: $small-margin;
+    }
+  }
+}

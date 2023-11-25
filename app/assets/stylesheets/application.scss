@@ -1,6 +1,7 @@
 @use "defs";
 @use "reset";
 @use "cssvars" as vars;
+@use "base";
 @use "navigation";
 @use "header" with (
   $bg-color: vars.$palette-color-2
@@ -11,110 +12,15 @@
 
 @include reset.styles;
 @include vars.styles;
+@include base.styles(
+  $line-height: vars.$line-height,
+  $small-margin: defs.$small-margin,
+  $wide-margin: defs.$wide-margin,
 
+  $base-bg-color: vars.$base-bg-color,
+  $link-color: vars.$link-color,
+  $link-color-visited: vars.$link-color-visited,
+  $link-color-active: vars.$link-color-active
+);
 @include header.styles;
 @include footer.styles;
-
-:root {
-  position: relative;
-
-  height: 100%;
-  width: 100%;
-
-  font-size: 18px;
-
-  transition: all 0.42s ease;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-
-  transition: inherit;
-}
-
-body {
-  overflow-x: hidden;
-  overflow-y: scroll;
-
-  width: 100%;
-  height: 100%;
-
-  line-height: vars.$line-height;
-}
-
-main {
-  background-color: vars.$base-bg-color;
-
-  // Prevent margin collapse between header and the first child.
-  &::before {
-    content: ' ';
-
-    display: block;
-    width: 1px;
-    height: 1px;
-    margin-right: -1px;
-    margin-bottom: -1px;
-  }
-}
-
-a {
-  display: inline-block;
-
-  color: vars.$link-color;
-
-   // Firefox incorrectly transitions if the color of visited links differs from
-   // the regular link color (and a hover/focus/active color is set).
-  -moz-transition-property: none;
-
-  &:visited {
-    color: vars.$link-color-visited;
-  }
-
-  :is(&, &:visited):is(:active, :focus, :hover) {
-    color: vars.$link-color-active;
-  }
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: lighter;
-}
-
-h1, h2, h3, h4, h5 {
-  margin: {
-    top: defs.$wide-margin;
-    bottom: defs.$small-margin;
-  }
-}
-
-h1 {
-  font-size: 2.4em;
-}
-
-h2 {
-  font-size: 1.71em;
-}
-
-h3 {
-  font-size: 1.32em;
-}
-
-h4 {
-  font-size: 1.1em;
-}
-
-h5 {
-  font-size: 1em;
-}
-
-h6 {
-  float: left;
-  margin-right: defs.$small-margin;
-
-  font-size: 1em;
-}
-
-p {
-  + p, + h6 {
-    margin-top: defs.$small-margin;
-  }
-}
