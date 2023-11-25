@@ -1,6 +1,10 @@
 @use "defs";
 @use "cssvars" as vars;
 @use "transition";
+@use "earmark" with (
+  $earmark-offset: defs.$small-margin,
+  $stripe-width: defs.$wide-margin
+);
 
 $bg-color: vars.$palette-color-2 !default;
 $bg-color-highlight: vars.$palette-color-1 !default;
@@ -145,15 +149,6 @@ $color-visited: vars.$palette-color-4 !default;
 
   &-label {
     #{"--line-height"}: defs.$increased-line-height;
-    --earmark-angle: 20deg;
-    #{"--earmark-angle-offset"}: calc((var(--line-height) * 1em
-                                         + 2 * defs.$small-margin)
-                                        * sin(var(--earmark-angle)));
-    #{"--earmark-stop-1"}: calc(defs.$small-margin
-                                  + var(--earmark-angle-offset));
-    --earmark-stop-1-before: calc(var(--earmark-stop-1) - 1px);
-    #{"--earmark-stop-2"}: calc(var(--earmark-stop-1) + defs.$wide-margin);
-    --earmark-stop-2-after: calc(var(--earmark-stop-2) + 1px);
 
     display: block;
     width: 100%;
@@ -198,26 +193,20 @@ $color-visited: vars.$palette-color-4 !default;
     &::after {
       #{"--border-color"}: $bg-color-active;
 
-      #{"--earmark-color-earmark"}: $bg-color;
-      #{"--earmark-color-stripe"}: $bg-color-active;
-      --earmark-color-background: transparent;
-      --earmark-border-color-earmark: var(--earmark-color-stripe);
-      --earmark-border-color-stripe: var(--earmark-border-color-earmark);
-      --earmark-border-color-background: var(--earmark-color-background);
-      --earmark-gradient:
-        linear-gradient(calc(270deg + var(--earmark-angle)),
-                        var(--earmark-color-earmark) var(--earmark-stop-1-before),
-                        var(--earmark-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
-                        var(--earmark-color-background) var(--earmark-stop-2-after));
-      --earmark-border-gradient:
-        linear-gradient(calc(270deg + var(--earmark-angle)),
-                        var(--earmark-border-color-earmark) var(--earmark-stop-1-before),
-                        var(--earmark-border-color-stripe) var(--earmark-stop-1) var(--earmark-stop-2),
-                        var(--earmark-border-color-background) var(--earmark-stop-2-after));
+      $earmark:
+        earmark.gradient(defs.$earmark-angle,
+                         $bg-color, $bg-color-active, transparent,
+                         calc(var(--line-height) * 1em + 2 * defs.$small-margin
+                              + 2 * var(--border-width)));
+      $earmark-border:
+        earmark.gradient(defs.$earmark-angle,
+                         $bg-color-active, $bg-color-active, transparent,
+                         calc(var(--line-height) * 1em + 2 * defs.$small-margin
+                              + 2 * var(--border-width)));
 
       opacity: 0;
 
-      background-image: var(--earmark-gradient), var(--earmark-border-gradient);
+      background-image: $earmark, $earmark-border;
       background-clip: content-box, border-box;
       background-repeat: no-repeat, no-repeat;
     }
