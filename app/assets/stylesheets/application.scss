@@ -23,4 +23,12 @@
   $link-color-active: vars.$link-color-active
 );
 @include header.styles;
+@include navigation.styles(
+  $bg-color: vars.$palette-color-2,
+  $bg-color-highlight: vars.$palette-color-1,
+  $bg-color-active: vars.$palette-color-3,
+  $color: vars.$palette-color-4,
+  $color-active: vars.$palette-color-3,
+  $color-visited: vars.$palette-color-4
+);
 @include footer.styles;

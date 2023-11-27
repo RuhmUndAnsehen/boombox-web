@@ -6,308 +6,317 @@
   $stripe-width: defs.$wide-margin
 );
 
-$bg-color: vars.$palette-color-2 !default;
-$bg-color-highlight: vars.$palette-color-1 !default;
-$bg-color-active: vars.$palette-color-3 !default;
+@mixin styles($bg-color: navy,
+              $bg-color-highlight: cornflowerblue,
+              $bg-color-active: turquoise,
+              $color: wheat,
+              $color-active: salmon,
+              $color-visited: wheat) {
+  @include placeholders($bg-color, $bg-color-highlight, $bg-color-active,
+                        $color, $color-active, $color-visited);
 
-$color: vars.$palette-color-5 !default;
-$color-active: vars.$palette-color-3 !default;
-$color-visited: vars.$palette-color-4 !default;
-
-.nav-bar {
-  @extend %navigation-bar;
-}
-
-.nav-menu {
-  @extend %navigation-menu;
-}
-
-.nav-item {
-  @extend %navigation-item;
-
-  &.current-page {
-    @extend %navigation-current-page-item;
-
-    > a {
-      @extend %navigation-current-page-item-link;
-    }
+  .nav-bar {
+    @extend %navigation-bar;
   }
 
-  &:is(.current-controller, .current-page) {
-    @extend %navigation-current-item;
+  .nav-menu {
+    @extend %navigation-menu;
+  }
+
+  .nav-item {
+    @extend %navigation-item;
+
+    &.current-page {
+      @extend %navigation-current-page-item;
+
+      > a {
+        @extend %navigation-current-page-item-link;
+      }
+    }
+
+    &:is(.current-controller, .current-page) {
+      @extend %navigation-current-item;
+
+      > a {
+        @extend %navigation-current-item-link;
+
+        &:is(:active, :focus, :hover) {
+          @extend %navigation-current-item-active-link;
+        }
+      }
+
+      > span {
+        @extend %navigation-current-category-label;
+      }
+    }
+
+    &:is(.current-controller, .current-page, :hover, :focus, :focus-within) {
+      @extend %navigation-active-item;
+    }
 
     > a {
-      @extend %navigation-current-item-link;
+      @extend %navigation-item-link;
 
       &:is(:active, :focus, :hover) {
-        @extend %navigation-current-item-active-link;
+        @extend %navigation-item-active-link;
       }
     }
 
     > span {
-      @extend %navigation-current-category-label;
+      @extend %navigation-category-label;
     }
   }
 
-  &:is(.current-controller, .current-page, :hover, :focus, :focus-within) {
-    @extend %navigation-active-item;
+  // We disabled anchor tag transitions in Firefox due to a decade old bug, but
+  // the conditions aren't there in menus, so we're activating them again.
+  :is(.nav-bar, .nav-menu) a {
+    color: $color;
+
+    transition-property: inherit;
+  }
+}
+
+@mixin placeholders($bg-color: navy,
+                    $bg-color-highlight: cornflowerblue,
+                    $bg-color-active: turquoise,
+                    $color: wheat,
+                    $color-active: salmon,
+                    $color-visited: wheat) {
+  %navigation-category-label {
+    @extend %navigation-item-label;
+
+    // Spans are assumed to be submenu titles, which is why we're raising the line
+    // height.
+    #{"--line-height"}: defs.$tall-line-height;
+
+    color: $color-visited;
   }
 
-  > a {
-    @extend %navigation-item-link;
+  %navigation-bar,
+  %navigation-menu {
+    padding: defs.$wide-margin 0;
 
-    &:is(:active, :focus, :hover) {
-      @extend %navigation-item-active-link;
+    background-color: $bg-color;
+  }
+
+  %navigation-bar {
+    // Links directly descending from nav-bar get special styling when interacted
+    // with.
+    %navigation-root-item-active-link::after {
+      border-color: $bg-color-active;
     }
-  }
 
-  > span {
-    @extend %navigation-category-label;
-  }
-}
+    &-default-item {
+      &-label {}
+      &-link {
+        @extend %navigation-bar-default-item-label;
+      }
+    }
 
-%navigation-category-label {
-  @extend %navigation-item-label;
-
-  // Spans are assumed to be submenu titles, which is why we're raising the line
-  // height.
-  #{"--line-height"}: defs.$tall-line-height;
-
-  color: $color-visited;
-}
-
-%navigation-bar,
-%navigation-menu {
-  padding: defs.$wide-margin 0;
-
-  background-color: $bg-color;
-}
-
-%navigation-bar {
-  // Links directly descending from nav-bar get special styling when interacted
-  // with.
-  %navigation-root-item-active-link::after {
-    border-color: $bg-color-active;
-  }
-
-  &-default-item {
-    &-label {}
-    &-link {
+    &-default-category-label {
       @extend %navigation-bar-default-item-label;
     }
   }
 
-  &-default-category-label {
-    @extend %navigation-bar-default-item-label;
-  }
-}
-
-// Closed submenus have zero vertical padding...
-%navigation-submenu {
-  padding: {
-    top: 0;
-    bottom: 0;
-  }
-
-  &-item {
-    @extend %transition-children-height-to-auto;
-    @extend %closed;
-
-    &-label {
-      padding: {
-        top: 0;
-        bottom: 0;
-      }
-    }
-  }
-}
-
-%navigation-item {
-  & & {
-    @extend %navigation-submenu-item;
-
-    & %navigation-item-label {
-      @extend %navigation-submenu-item-label;
-    }
-  }
-
-  &:not(& &) {
-    @extend %navigation-root-item;
-
-    > a {
-      @extend %navigation-root-item-link;
-
-      &:is(:active, :focus, :hover) {
-        @extend %navigation-root-item-active-link;
-      }
-    }
-  }
-
-  %navigation-menu {
-    @extend %navigation-submenu;
-  }
-
-  &-label {
-    #{"--line-height"}: defs.$increased-line-height;
-
-    display: block;
-    width: 100%;
-    padding: defs.$small-margin;
-    overflow: hidden;
-
-    position: relative;
-    z-index: 2;
-
-    line-height: var(--line-height);
-    text-decoration: none;
-
-    // We need linear-gradients to achieve our styling goals. However, they are
-    // not transitionable, which is why we're rendering them in pseudo elements
-    // instead.
-    &::before, &::after {
-      --border-width: 1px;
-      #{"--border-color"}: $bg-color;
-
-      content: ' ';
-
-      display: block;
-      height: 100%;
-      width: calc(100% - var(--border-width));
-      padding: 1px 0 0 0;
-
-      position: absolute;
+  // Closed submenus have zero vertical padding...
+  %navigation-submenu {
+    padding: {
       top: 0;
-      right: var(--border-width);
-      z-index: -1;
-
-      border: var(--border-width) solid var(--border-color);
-      border-top-color: transparent;
-      border-left: 0;
+      bottom: 0;
     }
 
-    // Main styling for links and titles.
-    // The background consists of two layered linear gradients with differing
-    // clipping. The obstructed one simply provides a fake border piece in the
-    // top right of the element.
-    // Hide the styles by default.
-    &::after {
-      #{"--border-color"}: $bg-color-active;
+    &-item {
+      @extend %transition-children-height-to-auto;
+      @extend %closed;
 
-      $earmark:
-        earmark.gradient(defs.$earmark-angle,
-                         $bg-color, $bg-color-active, transparent,
-                         calc(var(--line-height) * 1em + 2 * defs.$small-margin
-                              + 2 * var(--border-width)));
-      $earmark-border:
-        earmark.gradient(defs.$earmark-angle,
-                         $bg-color-active, $bg-color-active, transparent,
-                         calc(var(--line-height) * 1em + 2 * defs.$small-margin
-                              + 2 * var(--border-width)));
-
-      opacity: 0;
-
-      background-image: $earmark, $earmark-border;
-      background-clip: content-box, border-box;
-      background-repeat: no-repeat, no-repeat;
+      &-label {
+        padding: {
+          top: 0;
+          bottom: 0;
+        }
+      }
     }
-  }
-
-  &-link {
-    @extend %navigation-item-label;
-  }
-
-  &-active-link {
-    @extend %navigation-item-link;
-  }
-}
-
-%navigation-root-item {
-  &-link {}
-  &-active-link {}
-
-  @at-root %navigation-bar &:not(.current-controller, .current-page) {
-    @extend %navigation-bar-default-item;
-
-    > a {
-      @extend %navigation-bar-default-item-link;
-    }
-
-    > span {
-      @extend %navigation-bar-default-category-label;
-    }
-  }
-}
-
-%navigation-current-page-item {}
-
-%navigation-current-item {
-  &-link {
-    @extend %navigation-current-item-label;
-  }
-  &-active-link {}
-}
-
-%navigation-current-category-label {
-  @extend %navigation-current-item-label;
-}
-
-%navigation-non-current-root-item {}
-
-%navigation-active-item {
-  %navigation-menu {
-    @extend %navigation-active-submenu;
   }
 
   %navigation-item {
-    @extend %navigation-active-submenu-item;
+    & & {
+      @extend %navigation-submenu-item;
 
-    &-label {
-      @extend %navigation-active-submenu-item-label;
+      & %navigation-item-label {
+        @extend %navigation-submenu-item-label;
+      }
     }
-  }
-}
 
-// ... but opened do.
-%navigation-active-submenu {
-  padding: {
-    top: defs.$small-margin;
-    bottom: defs.$small-margin;
-  }
+    &:not(& &) {
+      @extend %navigation-root-item;
 
-  &-item {
-    @extend %transition-children-height-to-auto;
-    @extend %opened;
+      > a {
+        @extend %navigation-root-item-link;
+
+        &:is(:active, :focus, :hover) {
+          @extend %navigation-root-item-active-link;
+        }
+      }
+    }
+
+    %navigation-menu {
+      @extend %navigation-submenu;
+    }
 
     &-label {
+      #{"--line-height"}: defs.$increased-line-height;
+
+      display: block;
+      width: 100%;
       padding: defs.$small-margin;
+      overflow: hidden;
+
+      position: relative;
+      z-index: 2;
+
+      line-height: var(--line-height);
+      text-decoration: none;
+
+      // We need linear-gradients to achieve our styling goals. However, they are
+      // not transitionable, which is why we're rendering them in pseudo elements
+      // instead.
+      &::before, &::after {
+        --border-width: 1px;
+        #{"--border-color"}: $bg-color;
+
+        content: ' ';
+
+        display: block;
+        height: 100%;
+        width: calc(100% - var(--border-width));
+        padding: 1px 0 0 0;
+
+        position: absolute;
+        top: 0;
+        right: var(--border-width);
+        z-index: -1;
+
+        border: var(--border-width) solid var(--border-color);
+        border-top-color: transparent;
+        border-left: 0;
+      }
+
+      // Main styling for links and titles.
+      // The background consists of two layered linear gradients with differing
+      // clipping. The obstructed one simply provides a fake border piece in the
+      // top right of the element.
+      // Hide the styles by default.
+      &::after {
+        #{"--border-color"}: $bg-color-active;
+
+        $earmark:
+          earmark.gradient(defs.$earmark-angle,
+                          $bg-color, $bg-color-active, transparent,
+                          calc(var(--line-height) * 1em + 2 * defs.$small-margin
+                                + 2 * var(--border-width)));
+        $earmark-border:
+          earmark.gradient(defs.$earmark-angle,
+                          $bg-color-active, $bg-color-active, transparent,
+                          calc(var(--line-height) * 1em + 2 * defs.$small-margin
+                                + 2 * var(--border-width)));
+
+        opacity: 0;
+
+        background-image: $earmark, $earmark-border;
+        background-clip: content-box, border-box;
+        background-repeat: no-repeat, no-repeat;
+      }
+    }
+
+    &-link {
+      @extend %navigation-item-label;
+    }
+
+    &-active-link {
+      @extend %navigation-item-link;
     }
   }
-}
 
-// We disabled anchor tag transitions in Firefox due to a decade old bug, but
-// the conditions aren't there in menus, so we're activating them again.
-:is(.nav-bar, .nav-menu) a {
-  color: $color;
+  %navigation-root-item {
+    &-link {}
+    &-active-link {}
 
-  transition-property: inherit;
-}
+    @at-root %navigation-bar &:not(.current-controller, .current-page) {
+      @extend %navigation-bar-default-item;
 
-// Links and submenu titles that are direct descendants of the nav bar should
-// have the highlight background color, if one of the following conditions
-// holds:
-//   * They are not relating to current page/controller.
-//   * They *are* links pointing to the current page, but not at the top level.
-//   * They are an active link.
-%navigation-bar-default-item-label::before,
-%navigation-current-page-item-link::before,
-%navigation-item-link:active::after {
-  background-color: $bg-color-highlight;
-}
+      > a {
+        @extend %navigation-bar-default-item-link;
+      }
 
-// Show our special styling in the two cases:
-//   * The link or title is a relating to the current page or controller.
-//   * The link or title is interacted with.
-%navigation-current-item-label::after,
-%navigation-item-label:is(:active, :focus, :hover)::after {
-  opacity: 1;
+      > span {
+        @extend %navigation-bar-default-category-label;
+      }
+    }
+  }
+
+  %navigation-current-page-item {}
+
+  %navigation-current-item {
+    &-link {
+      @extend %navigation-current-item-label;
+    }
+    &-active-link {}
+  }
+
+  %navigation-current-category-label {
+    @extend %navigation-current-item-label;
+  }
+
+  %navigation-non-current-root-item {}
+
+  %navigation-active-item {
+    %navigation-menu {
+      @extend %navigation-active-submenu;
+    }
+
+    %navigation-item {
+      @extend %navigation-active-submenu-item;
+
+      &-label {
+        @extend %navigation-active-submenu-item-label;
+      }
+    }
+  }
+
+  // ... but opened do.
+  %navigation-active-submenu {
+    padding: {
+      top: defs.$small-margin;
+      bottom: defs.$small-margin;
+    }
+
+    &-item {
+      @extend %transition-children-height-to-auto;
+      @extend %opened;
+
+      &-label {
+        padding: defs.$small-margin;
+      }
+    }
+  }
+
+  // Links and submenu titles that are direct descendants of the nav bar should
+  // have the highlight background color, if one of the following conditions
+  // holds:
+  //   * They are not relating to current page/controller.
+  //   * They *are* links pointing to the current page, but not at the top level.
+  //   * They are an active link.
+  %navigation-bar-default-item-label::before,
+  %navigation-current-page-item-link::before,
+  %navigation-item-link:active::after {
+    background-color: $bg-color-highlight;
+  }
+
+  // Show our special styling in the two cases:
+  //   * The link or title is a relating to the current page or controller.
+  //   * The link or title is interacted with.
+  %navigation-current-item-label::after,
+  %navigation-item-label:is(:active, :focus, :hover)::after {
+    opacity: 1;
+  }
 }
