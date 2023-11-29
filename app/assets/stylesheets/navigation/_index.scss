@@ -12,6 +12,7 @@
               $color: wheat,
               $color-active: salmon,
               $color-visited: wheat) {
+  @include transition.placeholders;
   @include placeholders($bg-color, $bg-color-highlight, $bg-color-active,
                         $color, $color-active, $color-visited);
 
