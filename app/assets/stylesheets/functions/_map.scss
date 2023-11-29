@@ -1,0 +1,19 @@
+@forward "sass:map";
+
+@use "sass:map";
+
+/// Returns a new map containing the entries for the given $keys.
+/// Keys that are not found are nulled.
+///
+/// @param {map} $map
+///   The map to slice.
+/// @param {arglist} $keys
+///   The keys that should be included in the result map.
+/// @return A subset of $map containing only the given $keys.
+@function slice($map, $keys...) {
+  $result: ();
+  @each $key in $keys {
+    $result: map.set($result, $key, map.get($map, $key))
+  }
+  @return $result;
+}

@@ -1,0 +1,17 @@
+/// Returns a map of all global variables in a module, optionally sliced to only
+/// include a specific subset.
+///
+/// @param {string} $module
+///   The module name.
+/// @param {argument list} $slice
+///   The names of the variables to be included in the result.
+/// @return The global variables in $module. If $slice is not empty, only the
+///         variables matching its elements are included.
+@function variables-from($module, $slice...) {
+  $variables: meta.module-variables($module);
+
+  @if list.length($slice) == 0 {
+    @return $variables;
+  }
+  @return map.slice($variables, $slice...);
+}
