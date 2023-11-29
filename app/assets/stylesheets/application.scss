@@ -1,3 +1,8 @@
+@use "sass:list";
+@use "sass:meta";
+
+@use "functions/map";
+
 @use "defs";
 @use "cssvars" as vars;
 @use "reset";
@@ -10,22 +15,23 @@
   $bg-color: vars.$palette-color-2
 );
 
+@import "functions/import-unscoped";
+
 @include reset.styles(
   $color: vars.$base-color,
   $selection-color: vars.$palette-color-4,
   $selection-bg-color: vars.$palette-color-1,
-  $line-height: vars.$line-height
+  $line-height: defs.$line-height
 );
-@include vars.styles;
+@include vars.styles(
+  variables-from(defs, base-bg-color, base-color, palette-color-1,
+                       palette-color-2, palette-color-3, palette-color-4,
+                       palette-color-5, line-height)...
+);
 @include base.styles(
-  $line-height: vars.$line-height,
-  $small-margin: defs.$small-margin,
-  $wide-margin: defs.$wide-margin,
-
-  $base-bg-color: vars.$base-bg-color,
-  $link-color: vars.$link-color,
-  $link-color-visited: vars.$link-color-visited,
-  $link-color-active: vars.$link-color-active
+  variables-from(defs, line-height, small-margin, wide-margin)...,
+  variables-from(vars, base-bg-color, link-color, link-color-visited,
+                       link-color-active)...
 );
 @include header.styles;
 @include navigation.styles(
