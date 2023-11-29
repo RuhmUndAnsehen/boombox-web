@@ -33,17 +33,24 @@ $line-height: var($_line-height-name);
 /// SASS constants into the generated styles, this inserts them as CSS custom
 /// properties, making them accessible with JS, as well as end-user
 /// configurable.
-@mixin styles {
+@mixin styles($base-bg-color: white,
+              $base-color: #222,
+              $palette-color-1: cornflowerblue,
+              $palette-color-2: navy,
+              $palette-color-3: turquoise,
+              $palette-color-4: wheat,
+              $palette-color-5: salmon,
+              $line-height: 1) {
   :root {
-    #{$_base-bg-color-name}: defs.$base-bg-color;
-    #{$_base-color-name}: defs.$base-color;
+    #{$_base-bg-color-name}: $base-bg-color;
+    #{$_base-color-name}: $base-color;
 
-    #{$_palette-color-1-name}: defs.$palette-color-1;
-    #{$_palette-color-2-name}: defs.$palette-color-2;
-    #{$_palette-color-3-name}: defs.$palette-color-3;
-    #{$_palette-color-4-name}: defs.$palette-color-4;
-    #{$_palette-color-5-name}: defs.$palette-color-5;
+    #{$_palette-color-1-name}: $palette-color-1;
+    #{$_palette-color-2-name}: $palette-color-2;
+    #{$_palette-color-3-name}: $palette-color-3;
+    #{$_palette-color-4-name}: $palette-color-4;
+    #{$_palette-color-5-name}: $palette-color-5;
 
-    #{$_line-height-name}: defs.$line-height;
+    #{$_line-height-name}: $line-height;
   }
 }

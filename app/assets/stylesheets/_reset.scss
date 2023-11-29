@@ -1,16 +1,7 @@
-@use "cssvars" as vars;
-
-$color: vars.$base-color !default;
-$selection-color: vars.$palette-color-4 !default;
-$selection-bg-color: vars.$palette-color-1 !default;
-
-$line-height: vars.$line-height !default;
-
-// http://meyerweb.com/eric/tools/css/reset/
-// v2.0-modified | 20110126
-// License: none (public domain)
-
-@mixin styles {
+@mixin styles($color: #222,
+              $selection-color: white,
+              $selection-bg-color: cornflowerblue,
+              $line-height: 1) {
   html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
   blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
   img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i,

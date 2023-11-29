@@ -10,7 +10,12 @@
   $bg-color: vars.$palette-color-2
 );
 
-@include reset.styles;
+@include reset.styles(
+  $color: vars.$base-color,
+  $selection-color: vars.$palette-color-4,
+  $selection-bg-color: vars.$palette-color-1,
+  $line-height: vars.$line-height
+);
 @include vars.styles;
 @include base.styles(
   $line-height: vars.$line-height,
