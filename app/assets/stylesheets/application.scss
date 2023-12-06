@@ -7,13 +7,9 @@
 @use "cssvars" as vars;
 @use "reset";
 @use "base";
+@use "header";
 @use "navigation";
-@use "header" with (
-  $bg-color: vars.$palette-color-2
-);
-@use "footer" with (
-  $bg-color: vars.$palette-color-2
-);
+@use "footer";
 
 @import "functions/import-unscoped";
 
@@ -33,7 +29,7 @@
   variables-from(vars, base-bg-color, link-color, link-color-visited,
                        link-color-active)...
 );
-@include header.styles;
+@include header.styles($bg-color: vars.$palette-color-2);
 @include navigation.styles(
   $bg-color: vars.$palette-color-2,
   $bg-color-highlight: vars.$palette-color-1,
@@ -42,4 +38,4 @@
   $color-active: vars.$palette-color-3,
   $color-visited: vars.$palette-color-4
 );
-@include footer.styles;
+@include footer.styles($bg-color: vars.$palette-color-2);

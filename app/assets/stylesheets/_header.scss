@@ -1,6 +1,4 @@
-$bg-color: null !default;
-
-@mixin styles {
+@mixin styles($bg-color: navy) {
   .site-header {
     background-color: $bg-color;
   }

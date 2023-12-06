@@ -1,8 +1,4 @@
-$height: 300px !default;
-
-$bg-color: null !default;
-
-@mixin styles {
+@mixin styles($bg-color: navy, $height: 300px) {
   body::after {
     content: ' ';
 
