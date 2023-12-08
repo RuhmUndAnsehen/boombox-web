@@ -1,3 +1,5 @@
+@use "sass:meta";
+
 @mixin styles($line-height: 1, $small-margin: 0.5, $wide-margin: 1,
               $base-bg-color: white, $link-color: blue,
               $link-color-visited: navy, $link-color-active: teal) {
@@ -72,31 +74,13 @@
     }
   }
 
-  h1 {
-    font-size: 2.4em;
+  @for $level from 1 through 5 {
+    @include heading($level);
   }
 
-  h2 {
-    font-size: 1.71em;
-  }
-
-  h3 {
-    font-size: 1.32em;
-  }
-
-  h4 {
-    font-size: 1.1em;
-  }
-
-  h5 {
-    font-size: 1em;
-  }
-
-  h6 {
+  @include heading(6) {
     float: left;
     margin-right: $small-margin;
-
-    font-size: 1em;
   }
 
   p {
@@ -104,4 +88,25 @@
       margin-top: $small-margin;
     }
   }
+}
+
+@mixin heading($level) {
+  h#{$level} {
+    font-size: 1em * heading-multiplier($level);
+
+    @if meta.content-exists() {
+      @content;
+    }
+  }
+}
+
+@function heading-multiplier($level) {
+  $multiplier: 1;
+
+  @for $level from $level to 6 {
+    $level-multiplier: (5 - $level) * 0.1 + 1;
+    $multiplier: $multiplier * $level-multiplier;
+  }
+
+  @return $multiplier;
 }
