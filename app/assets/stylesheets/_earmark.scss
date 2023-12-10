@@ -1,4 +1,5 @@
 @use "sass:list";
+@use "sass:meta";
 
 $zero-angle: 270deg;
 $angle: 20deg !default;
@@ -23,6 +24,12 @@ $background-color: transparent !default;
 /// @param {bool} $anti-aliasing
 ///   If true, inserts additional color stops to make angled gradients appear
 ///   smoother.
+/// @param {color [length] | null} $stripe-border
+///   Color and width of the stripe borders, or null if no border should be
+///   generated.
+/// @param {string} $stripe-sizing
+///   If the stripe width should include the border, pass "border". Pass any
+///   other value otherwise.
 ///
 /// @return {background-image} a linear gradient
 @function gradient($angle: $angle,
@@ -30,7 +37,9 @@ $background-color: transparent !default;
                    $stripe: $stripe-color,
                    $background: $background-color,
                    $box-height: 2em,
-                   $anti-aliasing: true) {
+                   $anti-aliasing: true,
+                   $stripe-border: null,
+                   $stripe-sizing: border) {
   // Extract colors from the parameters.
   $earmark-color: _color($earmark);
   $stripe-color: _color($stripe);
@@ -45,23 +54,89 @@ $background-color: transparent !default;
 
   // If anti-aliasing is enabled, allow a 1 pixel wide gradient between stops of
   // different colors.
-  @if $anti-aliasing {
-    $earmark-stop-end: calc($earmark-stop-end - 1px);
-    $stripe-stop-end: calc($stripe-stop-end - 1px);
-  }
+  $aa-offset: 1px;
 
-  @return linear-gradient(calc(270deg + $angle),
-                          $earmark-color $earmark-stop-end,
-                          $stripe-color $stripe-stop-start $stripe-stop-end,
-                          $background-color $background-stop-start);
+  // If the stripe should have a border.
+  @if $stripe-border {
+    // Compute stripe border color and width.
+    $stripe-border-color: _color($stripe-border);
+    $stripe-border-width: _stop($stripe-border, 1px);
+
+    // Declare variables for later assignment.
+    $earmark-border-stop-start: null;
+    $earmark-border-stop-end: null;
+    $background-border-stop-start: null;
+    $background-border-stop-end: null;
+
+    // If stripe-sizing is set to "border" use the stripe stops as outer
+    // boundaries for the border stops.
+    @if $stripe-sizing == border {
+      $earmark-border-stop-start: $stripe-stop-start;
+      $earmark-border-stop-end: calc($earmark-border-stop-start
+                                     + $stripe-border-width);
+      $stripe-stop-start: $earmark-border-stop-end;
+
+      $background-border-stop-end: $stripe-stop-end;
+      $background-border-stop-start: calc($background-border-stop-end
+                                          - $stripe-border-width);
+      $stripe-stop-end: $background-border-stop-start;
+    }
+    // Otherwise, expand the border into the earmark and background areas.
+    @else {
+      $earmark-border-stop-end: $earmark-stop-end;
+      $earmark-border-stop-start: calc($earmark-border-stop-end
+                                       - $stripe-border-width);
+      $earmark-stop-end: $earmark-border-stop-start;
+
+      $background-border-stop-start: $background-stop-start;
+      $background-border-stop-end: calc($background-border-stop-start
+                                        + $stripe-border-width);
+      $background-stop-start: $background-border-stop-end;
+    }
+
+    // Apply the aa-offset if anti-aliasing is enabled.
+    @if $anti-aliasing {
+      $earmark-stop-end: calc($earmark-stop-end - $aa-offset);
+      $earmark-border-stop-end: calc($earmark-border-stop-end - $aa-offset);
+      $stripe-stop-end: calc($stripe-stop-end - $aa-offset);
+      $background-border-stop-end: calc($background-border-stop-end
+                                        - $aa-offset);
+    }
+
+    @return linear-gradient(calc(270deg + $angle),
+                            $earmark-color $earmark-stop-end,
+                            $stripe-border-color $earmark-border-stop-start
+                                                 $earmark-border-stop-end,
+                            $stripe-color $stripe-stop-start $stripe-stop-end,
+                            $stripe-border-color $background-border-stop-start
+                                                 $background-border-stop-end,
+                            $background-color $background-stop-start);
+
+  }
+  // No border around the stripe.
+  @else {
+    // Apply the aa-offset if anti-aliasing is enabled.
+    @if $anti-aliasing {
+      $earmark-stop-end: calc($earmark-stop-end - $aa-offset);
+      $stripe-stop-end: calc($stripe-stop-end - $aa-offset);
+    }
+
+    @return linear-gradient(calc(270deg + $angle),
+                            $earmark-color $earmark-stop-end,
+                            $stripe-color $stripe-stop-start $stripe-stop-end,
+                            $background-color $background-stop-start);
+  }
 }
 
-@function _color($color-stop) {
-  @if list.length($color-stop) == 1 {
-    @return $color-stop;
+@function _color($color-stop, $default-color: transparent) {
+  $color: list.nth($color-stop, 1);
+  $type-of-color: meta.type-of($color);
+
+  @if $type-of-color == number or $type-of-color == calculation {
+    @return $default-color;
   }
 
-  @return list.nth($color-stop, 1);
+  @return $color;
 }
 
 @function _stop($color-stop, $default-length) {
@@ -69,5 +144,10 @@ $background-color: transparent !default;
     @return $default-length;
   }
 
-  @return list.nth($color-stop, 2);
+  $stop: list.nth($color-stop, 2);
+  @if meta.type-of($stop) == number {
+    @return $stop;
+  }
+
+  @return $default-stop;
 }
