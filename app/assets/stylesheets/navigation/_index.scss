@@ -210,16 +210,13 @@
       &::after {
         #{"--border-color"}: $bg-color-active;
 
-        $earmark:
-          earmark.gradient(defs.$earmark-angle,
-                          $bg-color, $bg-color-active, transparent,
-                          calc(var(--line-height) * 1em + 2 * defs.$small-margin
-                                + 2 * var(--border-width)));
-        $earmark-border:
-          earmark.gradient(defs.$earmark-angle,
-                          $bg-color-active, $bg-color-active, transparent,
-                          calc(var(--line-height) * 1em + 2 * defs.$small-margin
-                                + 2 * var(--border-width)));
+        $box-height: calc(var(--line-height) * 1em + 2 * defs.$small-margin
+                          + 2 * var(--border-width));
+        $earmark: earmark.gradient(defs.$earmark-angle, $bg-color,
+                                   $bg-color-active, transparent, $box-height);
+        $earmark-border: earmark.gradient(defs.$earmark-angle, $bg-color-active,
+                                          $bg-color-active, transparent,
+                                          $box-height);
 
         opacity: 0;
 
