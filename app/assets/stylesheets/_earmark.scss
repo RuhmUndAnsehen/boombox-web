@@ -24,9 +24,16 @@ $background-color: transparent !default;
 /// @param {bool} $anti-aliasing
 ///   If true, inserts additional color stops to make angled gradients appear
 ///   smoother.
-/// @param {color [length] | null} $stripe-border
+/// @param {color [length] | null} $stripe-boundary
 ///   Color and width of the stripe borders, or null if no border should be
-///   generated.
+///   generated. Defines $stripe-earmark-boundary and/or
+///   $stripe-background-boundary if left unspecified.
+/// @param {color [length] | null} $stripe-earmark-boundary
+///   Color and width of the border between earmark and stripe, or null if no
+///   border should be generated.
+/// @param {color [length] | null} $stripe-background-boundary
+///   Color and width of the border between stripe and background, or null if
+///   no border should be generated.
 /// @param {string} $stripe-sizing
 ///   If the stripe width should include the border, pass "border". Pass any
 ///   other value otherwise.
@@ -38,7 +45,9 @@ $background-color: transparent !default;
                    $background: $background-color,
                    $box-height: 2em,
                    $anti-aliasing: true,
-                   $stripe-border: null,
+                   $stripe-boundary: null,
+                   $stripe-earmark-boundary: null,
+                   $stripe-background-boundary: null,
                    $stripe-sizing: border) {
   // Extract colors from the parameters.
   $earmark-color: _color($earmark);
@@ -57,10 +66,17 @@ $background-color: transparent !default;
   $aa-offset: 1px;
 
   // If the stripe should have a border.
-  @if $stripe-border {
+  @if $stripe-boundary or $stripe-earmark-boundary
+      or $stripe-background-boundary {
+    $stripe-earmark-boundary: $stripe-earmark-boundary or $stripe-boundary
+                              or $stripe-background-boundary;
+    $stripe-background-boundary: $stripe-background-boundary or $stripe-boundary
+                                 or $stripe-earmark-boundary;
     // Compute stripe border color and width.
-    $stripe-border-color: _color($stripe-border);
-    $stripe-border-width: _stop($stripe-border, 1px);
+    $stripe-earmark-boundary-color: _color($stripe-earmark-boundary);
+    $stripe-earmark-boundary-width: _stop($stripe-earmark-boundary, 1px);
+    $stripe-background-boundary-color: _color($stripe-background-boundary);
+    $stripe-background-boundary-width: _stop($stripe-background-boundary, 1px);
 
     // Declare variables for later assignment.
     $earmark-border-stop-start: null;
@@ -73,24 +89,24 @@ $background-color: transparent !default;
     @if $stripe-sizing == border {
       $earmark-border-stop-start: $stripe-stop-start;
       $earmark-border-stop-end: calc($earmark-border-stop-start
-                                     + $stripe-border-width);
+                                     + $stripe-earmark-boundary-width);
       $stripe-stop-start: $earmark-border-stop-end;
 
       $background-border-stop-end: $stripe-stop-end;
       $background-border-stop-start: calc($background-border-stop-end
-                                          - $stripe-border-width);
+                                          - $stripe-background-boundary-width);
       $stripe-stop-end: $background-border-stop-start;
     }
     // Otherwise, expand the border into the earmark and background areas.
     @else {
       $earmark-border-stop-end: $earmark-stop-end;
       $earmark-border-stop-start: calc($earmark-border-stop-end
-                                       - $stripe-border-width);
+                                       - $stripe-earmark-boundary-width);
       $earmark-stop-end: $earmark-border-stop-start;
 
       $background-border-stop-start: $background-stop-start;
       $background-border-stop-end: calc($background-border-stop-start
-                                        + $stripe-border-width);
+                                        + $stripe-background-boundary-width);
       $background-stop-start: $background-border-stop-end;
     }
 
@@ -105,11 +121,13 @@ $background-color: transparent !default;
 
     @return linear-gradient(calc(270deg + $angle),
                             $earmark-color $earmark-stop-end,
-                            $stripe-border-color $earmark-border-stop-start
-                                                 $earmark-border-stop-end,
+                            $stripe-earmark-boundary-color
+                              $earmark-border-stop-start
+                              $earmark-border-stop-end,
                             $stripe-color $stripe-stop-start $stripe-stop-end,
-                            $stripe-border-color $background-border-stop-start
-                                                 $background-border-stop-end,
+                            $stripe-background-boundary-color
+                              $background-border-stop-start
+                              $background-border-stop-end,
                             $background-color $background-stop-start);
 
   }
