@@ -148,9 +148,8 @@ $background-color: transparent !default;
 
 @function _color($color-stop, $default-color: transparent) {
   $color: list.nth($color-stop, 1);
-  $type-of-color: meta.type-of($color);
 
-  @if $type-of-color == number or $type-of-color == calculation {
+  @if _is-num($color) {
     @return $default-color;
   }
 
@@ -163,9 +162,15 @@ $background-color: transparent !default;
   }
 
   $stop: list.nth($color-stop, 2);
-  @if meta.type-of($stop) == number {
+  @if _is-num($stop) {
     @return $stop;
   }
 
-  @return $default-stop;
+  @return $default-length;
+}
+
+@function _is-num($value) {
+  $type: meta.type-of($value);
+
+  @return $type == number or $type == calculation;
 }
