@@ -11,8 +11,6 @@ $background-color: transparent !default;
 
 /// Produces an earmark linear gradient.
 ///
-/// @param {length} $box-height
-///   The height of the box the earmark is added to.
 /// @param {angle} $angle
 ///   The gradient angle.
 /// @param {color [length]} $earmark
@@ -21,6 +19,8 @@ $background-color: transparent !default;
 ///   The stripe color and width.
 /// @param {color [length]} $background
 ///   The background color.
+/// @param {length} $box-height
+///   The height of the box the earmark is added to.
 /// @param {bool} $anti-aliasing
 ///   If true, inserts additional color stops to make angled gradients appear
 ///   smoother.
