@@ -1,6 +1,8 @@
 @use "sass:list";
 @use "sass:meta";
 
+@use "functions/map";
+
 $zero-angle: 270deg;
 $angle: 20deg !default;
 $earmark-color: transparent !default;
@@ -144,6 +146,247 @@ $background-color: transparent !default;
                             $stripe-color $stripe-stop-start $stripe-stop-end,
                             $background-color $background-stop-start);
   }
+}
+
+/// Generates a double earmark gradient background. The second gradient, in
+/// combination with box padding, gives the appearance of a border.
+///
+/// @param {angle} $angle
+///   The gradient angle.
+/// @param {color [length]} $earmark
+///   The earmark color and offset.
+/// @param {color [length]} $stripe
+///   The stripe color and width.
+/// @param {color [length]} $background
+///   The background color.
+/// @param {length} $box-height
+///   The height of the box the earmark is added to.
+/// @param{[length] [list (string)] | map (name: [color] [length]) | null}
+///       $border-spec
+///   Which borders to render and how.
+///   * If given as a list, ignores the length if given, and the rest of the
+///     list elements to determine which gradient components should receive
+///     borders. Utilizes a heuristic to determine the colors.
+///   * If given as a map of component name and color-stop pairs, ignores the
+///     stop lengths.
+///   * If given as 0 or null, renders no borders.
+/// @param {bool} $anti-aliasing
+///   If true, inserts additional color stops to make angled gradients appear
+///   smoother.
+/// @param {color [length] | null} $stripe-boundary
+///   Color and width of the stripe borders, or null if no border should be
+///   generated. Defines $stripe-earmark-boundary and/or
+///   $stripe-background-boundary if left unspecified.
+/// @param {color [length] | null} $stripe-earmark-boundary
+///   Color and width of the border between earmark and stripe, or null if no
+///   border should be generated.
+/// @param {color [length] | null} $stripe-background-boundary
+///   Color and width of the border between stripe and background, or null if
+///   no border should be generated.
+/// @param {string} $stripe-sizing
+///   If the stripe width should include the border, pass "border". Pass any
+///   other value otherwise.
+@mixin background($angle: $angle,
+                  $earmark: $earmark-color,
+                  $stripe: $stripe-color,
+                  $background: $background-color,
+                  $box-height: 2em,
+                  $border-spec: 0,
+                  $anti-aliasing: true,
+                  $stripe-boundary: null,
+                  $stripe-earmark-boundary: null,
+                  $stripe-background-boundary: null,
+                  $stripe-sizing: border) {
+  $earmark-spec: _earmark-spec($earmark, $stripe, $background,
+                               $stripe-boundary, $stripe-earmark-boundary,
+                               $stripe-background-boundary);
+  $border-spec: _parse-border-spec($border-spec);
+
+  $border-width: map.get($border-spec, "border-width") or 1px;
+  $earmark-spec: _sanitize-earmark-spec($earmark-spec, $border-spec);
+  $border-spec: _sanitize-border-spec($border-spec, $earmark-spec);
+
+  $gradient: gradient($angle, $earmark-spec...,
+                      $box-height: $box-height, $anti-aliasing: $anti-aliasing,
+                      $stripe-sizing: $stripe-sizing);
+  $border: gradient($angle,
+                    $box-height: $box-height, $anti-aliasing: $anti-aliasing,
+                    $stripe-sizing: $stripe-sizing,
+                    map.slice($border-spec, earmark, stripe, background,
+                              stripe-boundary, stripe-earmark-boundary,
+                              stripe-background-boundary)...);
+
+  padding: $border-width;
+  background-image: $gradient, $border;
+  background-clip: content-box, padding-box;
+  background-repeat: no-repeat, no-repeat;
+}
+
+@function _earmark-spec($earmark, $stripe, $background, $stripe-boundary: null,
+                        $stripe-earmark-boundary: null,
+                        $stripe-background-boundary: null)
+{
+  $spec: ("earmark": $earmark, "stripe": $stripe, "background": $background);
+  $optional: ("stripe-boundary": $stripe-boundary,
+              "stripe-earmark-boundary": $stripe-earmark-boundary,
+              "stripe-background-boundary": $stripe-background-boundary);
+
+  @each $name, $value in $optional {
+    @if $value {
+      $spec: map.set($spec, $name, $value);
+    }
+  }
+
+  @return $spec;
+}
+
+@function _build-border-spec($border-spec, $earmark-spec) {
+  $border-spec: _parse-border-spec($border-spec);
+  $border-spec: _sanitize-border-spec($border-spec, $earmark-spec);
+
+  @return $border-spec;
+}
+
+@function _sanitize-earmark-spec($earmark-spec, $border-spec) {
+  $stripe-boundary: map.get($earmark-spec, stripe-boundary);
+  $stripe-earmark-boundary: map.get($earmark-spec, stripe-earmark-boundary);
+  $stripe-background-boundary: map.get($earmark-spec,
+                                       stripe-background-boundary);
+
+  @if $stripe-boundary {
+    // Remove the stripe-boundary from the spec. We'll later set the individual
+    // parts instead.
+    $earmark-spec: map.remove($earmark-spec, stripe-boundary);
+
+    // If not already present, set the individual components to the value of
+    // stripe-boundary.
+    @if not $stripe-earmark-boundary {
+      $stripe-earmark-boundary: $stripe-boundary;
+      $earmark-spec: map.set($earmark-spec, stripe-earmark-boundary,
+                             $stripe-boundary);
+    }
+    @if not $stripe-background-boundary {
+      $stripe-background-boundary: $stripe-boundary;
+      $earmark-spec: map.set($earmark-spec, stripe-background-boundary,
+                             $stripe-boundary);
+    }
+  }
+
+  $earmark-border: map.get($border-spec, earmark);
+  $background-border: map.get($border-spec, background);
+
+  // If both boundaries are specified, there is no border around the stripe,
+  // and earmark-borer or background-border are given, delete the boundary that
+  // has no associated border.
+  @if $stripe-earmark-boundary and $stripe-background-boundary
+      and not map.get($border-spec, stripe)
+      and ($earmark-border or $background-border) {
+    @if not $earmark-border {
+      $earmark-spec: map.remove($earmark-spec, stripe-earmark-boundary);
+    }
+    @if not $background-border {
+      $earmark-spec: map.remove($earmark-spec, stripe-background-boundary);
+    }
+  }
+
+  @return $earmark-spec;
+}
+
+@function _sanitize-border-spec($border-spec, $earmark-spec) {
+  $new-spec: ();
+
+  $names: "earmark" "stripe" "background" "stripe-earmark-boundary"
+          "stripe-background-boundary" "stripe-boundary";
+
+  @each $name in $names {
+    $color-stop: _lookup-border-spec($border-spec, $name, $earmark-spec,
+                                     "stripe-#{$name}-boundary",
+                                     "stripe-boundary", "stripe");
+    $color-stop: $color-stop or map.get($earmark-spec, $name);
+
+    $new-spec: map.set($new-spec, $name, $color-stop);
+  }
+
+  @return $new-spec;
+}
+
+@function _lookup-border-spec($border-spec, $key, $fallback-spec,
+                              $fallback-keys...) {
+  $border: map.get($border-spec, $key);
+
+  @if not $border {
+    @return null;
+  }
+
+  $color: _color($border, null);
+  $stop: _stop($border, null);
+
+  @if $color and $stop {
+    $color-stop: $color $stop;
+
+    @return $color-stop;
+  }
+
+  $color-stop: _get-first-color-stop($border-spec, $fallback-keys, $stop)
+               or _get-first-color-stop($fallback-spec, $fallback-keys, $stop);
+
+  @if $color-stop {
+    @return $color-stop;
+  }
+
+  @return null;
+}
+
+@function _get-first-color-stop($spec, $keys, $stop: null) {
+  @each $key in $keys {
+    $color-stop: map.get($spec, $key);
+
+    $color: _color($color-stop, null);
+    $stop: $stop or _stop($color-stop, null);
+
+    @if $color {
+      $color-stop: $color $stop;
+
+      @return $color-stop;
+    }
+  }
+
+  @return null;
+}
+
+@function _parse-border-spec($border-spec, $border-width: 1px) {
+  // If border-spec is falsey or 0, return an empty map.
+  @if not $border-spec or $border-spec == 0 {
+    @return ();
+  }
+  // If border-spec is a map already, return it.
+  @if meta.type-of($border-spec) == map {
+    @return $border-spec;
+  }
+
+  $border-config: ("border-width": $border-width);
+  $first-index: 1;
+  $max-index: list.length($border-spec);
+
+  // If the border-spec starts with a number, interpret it as the border-width
+  // and start evaluation at the second element.
+  @if _is-num(list.nth($border-spec, 1)) {
+    $border-width: list.nth($border-spec, 1);
+    $first-index: 2;
+  }
+
+  // If the border-spec was given as a length only, the following @for loop
+  // would fail if evaluated.
+  @if $first-index > $max-index {
+    @return $border-config;
+  }
+
+  @for $index from $first-index through $max-index {
+    $item: list.nth($border-spec, $index);
+    $border-config: map.set($border-config, $item, $border-width);
+  }
+
+  @return $border-config;
 }
 
 @function _color($color-stop, $default-color: transparent) {
