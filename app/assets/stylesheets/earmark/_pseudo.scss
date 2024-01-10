@@ -1,0 +1,46 @@
+@use "sass:meta";
+
+@use "earmark";
+
+/// Generates the styles for an absolutely positioned element with earmark
+/// background. While the selector $type can be any valid CSS selector, this
+/// mixin mainly serves as a basis for the `before` and `after` mixins.
+///
+/// Accepts a content block which is inserted inside the selector block after
+/// all other styles.
+///
+/// @param {string} $type
+///   The CSS selector.
+/// @param {arglist} $earmark-args...
+///   Parameters for `earmark.background`.
+@mixin element($type, $earmark-args...) {
+  #{$type} {
+    content: ' ';
+
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+
+    @include earmark.background($earmark-args...);
+    @content;
+  }
+}
+
+/// Shorthand for `element` that generates a `::before` pseudo element.
+@mixin before($earmark-args...) {
+  @include element("&::before", $earmark-args...) {
+    @content;
+  }
+}
+
+/// Shorthand for `element` that generates an `::after` pseudo element.
+@mixin after($earmark-args...) {
+  @include element("&::after", $earmark-args...) {
+    @content;
+  }
+}
