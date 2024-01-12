@@ -321,7 +321,7 @@ $background-color: transparent !default;
   $color: _color($border, null);
   $stop: _stop($border, null);
 
-  @if $color and $stop {
+  @if $color {
     $color-stop: $color $stop;
 
     @return $color-stop;
