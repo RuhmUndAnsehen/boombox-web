@@ -2,18 +2,15 @@
 
 @use "earmark";
 
-/// Generates the styles for an absolutely positioned element with earmark
-/// background. While the selector $type can be any valid CSS selector, this
-/// mixin mainly serves as a basis for the `before` and `after` mixins.
+/// Generates the styles for an absolutely positioned element.
+/// Called by `element` to generate common styles.
 ///
 /// Accepts a content block which is inserted inside the selector block after
 /// all other styles.
 ///
 /// @param {string} $type
 ///   The CSS selector.
-/// @param {arglist} $earmark-args...
-///   Parameters for `earmark.background`.
-@mixin element($type, $earmark-args...) {
+@mixin element-base($type) {
   #{$type} {
     content: ' ';
 
@@ -26,6 +23,23 @@
     left: 0;
     z-index: -1;
 
+    @content;
+  }
+}
+
+/// Generates the styles for an absolutely positioned element with earmark
+/// background. While the selector $type can be any valid CSS selector, this
+/// mixin mainly serves as a basis for the `before` and `after` mixins.
+///
+/// Accepts a content block which is inserted inside the selector block after
+/// all other styles.
+///
+/// @param {string} $type
+///   The CSS selector.
+/// @param {arglist} $earmark-args...
+///   Parameters for `earmark.background`.
+@mixin element($type, $earmark-args...) {
+  @include element-base($type) {
     @include earmark.background($earmark-args...);
     @content;
   }
