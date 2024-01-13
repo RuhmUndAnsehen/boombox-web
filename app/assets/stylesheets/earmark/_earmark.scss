@@ -364,7 +364,6 @@ $background-color: transparent !default;
     @return $border-spec;
   }
 
-  $border-config: ("border-width": $border-width);
   $first-index: 1;
   $max-index: list.length($border-spec);
 
@@ -374,6 +373,8 @@ $background-color: transparent !default;
     $border-width: list.nth($border-spec, 1);
     $first-index: 2;
   }
+
+  $border-config: ("border-width": $border-width);
 
   // If the border-spec was given as a length only, the following @for loop
   // would fail if evaluated.
