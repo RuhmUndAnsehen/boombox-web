@@ -30,6 +30,10 @@
                        palette-color-5, line-height)...
 );
 @include base.styles(
+  $ornament-color: vars.$palette-color-2,
+  $accent-color: vars.$palette-color-1,
+  $important-ornament-color: vars.$palette-color-5,
+  $important-accent-color: vars.$palette-color-4,
   variables-from(defs, line-height, small-margin, wide-margin)...,
   variables-from(vars, base-bg-color, link-color, link-color-visited,
                        link-color-active)...

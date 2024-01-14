@@ -1,8 +1,16 @@
 @use "sass:meta";
 
+@use "functions/list";
+@use "functions/map";
+
+@use "earmark";
+
 @mixin styles($line-height: 1, $small-margin: 0.5, $wide-margin: 1,
               $base-bg-color: white, $link-color: blue,
-              $link-color-visited: navy, $link-color-active: teal) {
+              $link-color-visited: navy, $link-color-active: teal,
+              $ornament-color: navy, $accent-color: blue,
+              $important-ornament-color: salmon, $important-accent-color: wheat) {
+
   :root {
     position: relative;
 
@@ -63,25 +71,46 @@
     }
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5 {
     font-weight: lighter;
   }
 
-  h1, h2, h3, h4, h5 {
+  h1, h2, h3, h4, h5, h6 {
     margin: {
       top: $wide-margin;
       bottom: $small-margin;
     }
+
+    position: relative;
+    z-index: 1;
   }
 
-  @for $level from 1 through 5 {
-    @include heading($level);
+  $box-height: $line-height * 1em + 2 * $small-margin;
+  @include heading(1, $small-margin,
+                   $important-accent-color, transparent, $base-bg-color,
+                   $box-height: $box-height,
+                   $border-spec: (earmark: $important-ornament-color,
+                                  background: $important-accent-color),
+                   $stripe-earmark-boundary: $important-ornament-color,
+                   $stripe-background-boundary: $important-accent-color);
+  @include heading(2, $small-margin, $accent-color, $ornament-color,
+                   transparent, $box-height: $box-height) {
+    @include earmark.pseudo-element-base("&::after") {
+      z-index: -2;
+
+      border-bottom: 1px solid $ornament-color;
+    }
   }
 
-  @include heading(6) {
-    float: left;
-    margin-right: $small-margin;
+  @include heading(3, $small-margin, $ornament-color, transparent,
+                   transparent, $box-height: $box-height);
+  @include heading(4, $small-margin) {
+    border-right: 1px solid $ornament-color;
   }
+
+  @include heading(5, $small-margin);
+  @include heading(6, $small-margin, $box-height: $box-height,
+                   $stripe: $accent-color $small-margin);
 
   p {
     + p, + h6 {
@@ -90,9 +119,15 @@
   }
 }
 
-@mixin heading($level) {
+@mixin heading($level, $padding: 0px, $earmark-args...) {
   h#{$level} {
-    font-size: 1em * heading-multiplier($level);
+    $multiplier: heading-multiplier($level);
+    padding: $padding calc($padding / $multiplier);
+    font-size: 1em * $multiplier;
+
+    @if not list.is-empty($earmark-args) {
+      @include earmark.pseudo-before(20deg, $earmark-args...);
+    }
 
     @if meta.content-exists() {
       @content;
@@ -101,6 +136,10 @@
 }
 
 @function heading-multiplier($level) {
+  @if $level == 6 {
+    @return 0.8;
+  }
+
   $multiplier: 1;
 
   @for $level from $level to 6 {

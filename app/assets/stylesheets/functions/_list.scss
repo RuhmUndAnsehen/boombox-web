@@ -1,0 +1,19 @@
+@forward "sass:list";
+
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
+
+@function is-empty($list) {
+  @if meta.type-of($list) == arglist {
+    @if list.length(map.keys(meta.keywords($list))) > 0 {
+      @return false;
+    }
+  }
+
+  @if list.length($list) > 0 {
+    @return false;
+  }
+
+  @return true;
+}
