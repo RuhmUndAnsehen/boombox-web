@@ -5,6 +5,11 @@
 
 @use "defs";
 @use "cssvars" as vars;
+@use "earmark" with (
+  $earmark-offset: defs.$wide-margin,
+  $stripe-width: defs.$wide-margin
+);
+
 @use "reset";
 @use "base";
 @use "header";

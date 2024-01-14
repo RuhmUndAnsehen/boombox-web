@@ -1,10 +1,7 @@
 @use "defs";
 @use "cssvars" as vars;
 @use "transition";
-@use "earmark" with (
-  $earmark-offset: defs.$small-margin,
-  $stripe-width: defs.$wide-margin
-);
+@use "earmark";
 
 @mixin styles($bg-color: navy,
               $bg-color-highlight: cornflowerblue,
