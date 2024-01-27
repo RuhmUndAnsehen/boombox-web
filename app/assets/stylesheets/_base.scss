@@ -113,7 +113,9 @@
                    $stripe: $accent-color $small-margin);
 
   p {
-    + p, + h6 {
+    padding: 0 $small-margin $wide-margin $small-margin;
+
+    + h6 {
       margin-top: $small-margin;
     }
   }
