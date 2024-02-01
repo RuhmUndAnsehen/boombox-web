@@ -14,6 +14,7 @@
 @use "base";
 @use "header";
 @use "navigation";
+@use "model-output" as models;
 @use "footer";
 
 @import "functions/import-unscoped";
@@ -46,5 +47,11 @@
   $color: vars.$palette-color-4,
   $color-active: vars.$palette-color-3,
   $color-visited: vars.$palette-color-4
+);
+@include models.styles(
+  variables-from(defs, small-margin)...,
+  $row-color-odd: vars.$palette-color-2,
+  $row-color-even: vars.$palette-color-1,
+  $highlight-color: vars.$palette-color-3
 );
 @include footer.styles($bg-color: vars.$palette-color-2);
