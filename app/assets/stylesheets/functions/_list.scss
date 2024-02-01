@@ -17,3 +17,32 @@
 
   @return true;
 }
+
+/// Returns a list with all elements from and including the start index to and
+/// excluding the end index.
+///
+/// @param {list} $list
+///   The input list.
+/// @param {integer} $start
+///   The start index (element included in the output list).
+/// @param {integer} $end
+///   The end index (element excluded from the output list).
+@function slice($list, $start: 1, $end: 0) {
+  $length: list.length($list);
+
+  $start: _normalize-index($start, $length);
+  $end: _normalize-index($end, $length);
+
+
+  $result: ();
+  @for $index from $start to $end {
+    $element: list.nth($list, $index);
+    $result: list.append($result, $element);
+  }
+
+  @return $result;
+}
+
+@function _normalize-index($index, $length) {
+  @return if($index > 0, $index, $length + $index + 1);
+}
