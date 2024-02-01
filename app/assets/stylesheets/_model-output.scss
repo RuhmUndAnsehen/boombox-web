@@ -1,0 +1,70 @@
+@use "earmark";
+@use "nth";
+
+@mixin styles($small-margin: 0.5em, $highlight-color: paleturquoise,
+              $row-color-even: azure, $row-color-odd: white) {
+  .model-contents {
+    margin-bottom: $small-margin;
+  }
+
+  .model-attributes-list {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+
+    .model-contents & {
+      border: 1px solid $row-color-odd;
+    }
+
+    .model-contents:nth-of-type(2n) & {
+      border-color: $row-color-even;
+    }
+  }
+
+  .model-association, .model-attribute {
+    &:not(h1, h2, h3, h4, h5, h6) {
+      padding: $small-margin;
+    }
+  }
+
+  .name_tag {
+    &:first-child {
+      background: earmark.gradient($earmark: transparent 0px,
+                                   $stripe: $highlight-color,
+                                   $background: transparent,
+                                   $box-height: calc(1em + 2 * $small-margin));
+    }
+
+    @include nth.of-type($row-color-even, $row-color-odd, $start: 2)
+             using ($even, $odd) {
+      $hover: ":hover, :focus, :focus-within";
+
+      &,
+      & + :is(#{$hover}),
+      &:is(#{$hover}) + * {
+        @include alternating-row-color($even, $odd);
+      }
+    }
+  }
+
+  .value_tag {
+    .string {
+      text-align: center;
+
+      &.unlimited {
+        text-align: left;
+      }
+    }
+
+    &.boolean, &.decimal, &.float, &.integer {
+      text-align: right;
+    }
+  }
+}
+
+@mixin alternating-row-color($main, $alt) {
+  color: $main;
+
+  .model-contents:nth-of-type(2n) & {
+    color: $alt;
+  }
+}
