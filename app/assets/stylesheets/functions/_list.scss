@@ -4,6 +4,10 @@
 @use "sass:map";
 @use "sass:meta";
 
+/// Returns true if the list has zero length and no keywords, false otherwise.
+///
+/// @param {list} $list
+///   The list.
 @function is-empty($list) {
   @if meta.type-of($list) == arglist {
     @if list.length(map.keys(meta.keywords($list))) > 0 {
