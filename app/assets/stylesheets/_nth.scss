@@ -1,0 +1,64 @@
+@use "sass:meta";
+
+@use "functions/list";
+@use "functions/map";
+
+@mixin _nth($selector, $type, $items,
+            $start: 0, $addendum: null) {
+  $m: list.length($items);
+
+  @for $i from 0 to $m {
+    #{$selector}:nth-#{$type}(#{$m}n + #{$start + $i} #{$addendum}) {
+      $params: list.join(list.slice($items, $i + 1),
+                         list.slice($items, 1, $i + 1));
+      @content($params...);
+    }
+  }
+}
+
+/// Generates *a* `:nth-of-type(an + b)` selectors and yields the content for
+/// styling. The number of selectors *a* is equivalent to the number of $items
+/// passed, while the offset parameter *b* can be set through the parameter
+/// $start.
+///
+/// The $items are passed to the @content block in order, but passing the *n*th
+/// item to the *n*th invocation first. Elements appearing before the *n*th
+/// position are appended at the end.
+///
+/// **Example**
+/// ```
+/// .table-row {
+///   @include nth.of-type(#222, #444, #666, $start: 1)
+///            using ($color, $border-color, $other) {
+///     color: $color;
+///     border-color: $border-color;
+///   }
+/// }
+/// // Generates
+/// .table-row:nth-of-type(3n+1) {
+///   color: #222222;
+///   border-color: #444444;
+/// }
+/// .table-row:nth-of-type(3n+2) {
+///   color: #444444;
+///   border-color: #666666;
+/// }
+/// .table-row:nth-of-type(3n+3) {
+///   color: #666666;
+///   border-color: #222222;
+/// }
+/// ```
+///
+/// @param {arglist} $items
+///   Passed to the content block in a cycled manner. The number of $items
+///   determines the number of block invocations.
+/// @param {integer} $start
+///   An optional parameter that determines the initial counting index.
+@mixin of-type($items...) {
+  $named-params: meta.keywords($items);
+  $start: map.get($named-params, start) or 0;
+
+  @include _nth("&", "of-type", $items, $start: $start) using ($items...) {
+    @content($items...);
+  }
+}
