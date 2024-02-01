@@ -41,8 +41,8 @@
   main {
     background-color: $base-bg-color;
 
-    // Prevent margin collapse between header and the first child.
-    &::before {
+    // Prevent margin collapse around the content.
+    &::before, &::after {
       content: ' ';
 
       display: block;
