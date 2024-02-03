@@ -31,7 +31,7 @@ module RationalColumn
           numerator =   __send__(self.class.__rational_nreader__(name))
           denominator = __send__(self.class.__rational_dreader__(name))
 
-          return Rational(numerator, denominator) if numerator && denominator
+          Rational(numerator, denominator) if numerator && denominator
         end
       end
 

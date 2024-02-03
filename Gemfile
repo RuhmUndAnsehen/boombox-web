@@ -85,4 +85,4 @@ group :test do
   gem 'webdrivers'
 end
 
-gem "dartsass-rails", "~> 0.5.0"
+gem 'dartsass-rails', '~> 0.5.0'

@@ -7,8 +7,13 @@ inherit_mode:
 AllCops:
   Exclude:
     - 'bin/*'
+    - 'config/environments/*'
+    - 'config/initializers/*'
     - 'Rakefile'
     - '**/*.rake'
+    - 'db/migrate/20240202172559_add_service_name_to_active_storage_blobs.active_storage.rb'
+    - 'db/migrate/20240202172560_create_active_storage_variant_records.active_storage.rb'
+    - 'db/migrate/20240202172561_remove_not_null_on_active_storage_blobs_checksum.active_storage.rb'
   SuggestExtensions: false
   TargetRubyVersion: 3.2
 
