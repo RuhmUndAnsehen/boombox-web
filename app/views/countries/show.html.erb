@@ -1,4 +1,4 @@
-<p style="color: green"><%= notice %></p>
+<% title_tag! @country.name %>
 
 <%= show @country do |s| %>
   <%= s.attribute 'name' do |s| %>
@@ -10,7 +10,3 @@
     <%= s.attribute except: 'name' %>
   <% end %>
 <% end %>
-
-<div>
-  <%= link_to "Back to countries", countries_path %>
-</div>

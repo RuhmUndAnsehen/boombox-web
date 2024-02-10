@@ -1,3 +1,5 @@
+<% title_tag! @exchange.name %>
+
 <%= show @exchange, associations: :country do |s| %>
   <%= s.attribute :name do |s| %>
     <%= s.content_tag :h1, s.value %>

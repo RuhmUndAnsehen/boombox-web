@@ -1,3 +1,5 @@
+<% title_tag! @currency.currency %>
+
 <%= show @currency do |s| %>
   <%= s.attribute 'currency' do |s| %>
     <% s.content_tag :h1, s.value %>
