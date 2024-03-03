@@ -11,7 +11,7 @@ class Helpers::ModelOutput::AssociationOutputBuilder
 
   delegate :loaded?, to: :@association
 
-  tag_names :container, name: :dt, values: :dd
+  tag_names :container, name: :dt, values: :dd, children: :div
 
   def initialize(*, association:, **, &block)
     super(*, **)
@@ -35,7 +35,7 @@ class Helpers::ModelOutput::AssociationOutputBuilder
     return capture(&@block) if @block
 
     if many?
-      show_many(value, dom_id_tag_name: :li)
+      show_many(value)
     else
       show(value,
            dom_id_tag_name: container_tag_name, embed: !container_tag_name)
@@ -56,9 +56,9 @@ class Helpers::ModelOutput::AssociationOutputBuilder
   end
 
   def show_many(values, **)
-    value = safe_join(values.map { |val| show(val, dom_id_tag_name: :li) })
+    values = values.map { |val| show(val, dom_id_tag_name: children_tag_name) }
     content = safe_join([content_tag(name_tag_name, name),
-                         content_tag(values_tag_name, content_tag(:ul, value))])
+                         content_tag(values_tag_name, safe_join(values))])
 
     content_tag_if_name(container_tag_name, content)
   end
