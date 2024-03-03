@@ -37,9 +37,9 @@ class Helpers::ModelOutput::ModelOutputBuilder
   # Generates HTML for the associations matching +config+.
   #
   # @see #attribute_filter
-  def association(config = nil, &block)
+  def association(config = nil, **, &)
     safe_join(
-      associations(config).map { |assoc| association_builder(assoc, &block) }
+      associations(config).map { |assoc| association_builder(assoc, **, &) }
     )
   end
 
