@@ -22,15 +22,19 @@ class Helpers::ModelOutput::AssociationOutputBuilder
   end
 
   def component_options(options)
+    options = add_class('many', to: options) if many?
+
     add_class('model-association', to: options)
   end
+
+  def many? = value.is_a?(ActiveRecord::Associations::CollectionProxy)
 
   ##
   # Returns a HTML representation of this association.
   def to_s
     return capture(&@block) if @block
 
-    if value.is_a?(ActiveRecord::Associations::CollectionProxy)
+    if many?
       show_many(value, dom_id_tag_name: :li)
     else
       show(value,
