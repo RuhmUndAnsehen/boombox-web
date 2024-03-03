@@ -1,6 +1,6 @@
 <% title_tag! @exchange.name %>
 
-<%= show @exchange, associations: :country do |s| %>
+<%= show @exchange, associations: %i[country equities] do |s| %>
   <%= s.attribute :name do |s| %>
     <%= s.content_tag :h1, s.value %>
   <% end %>
@@ -14,4 +14,9 @@
     <% end %>
     <%= s.attribute :timezone %>
   <% end %>
+
+  <h2 id="security_listings"><%= t '.security_listings',
+                                   default: 'Listed Securities' %></h2>
+  <%= s.association :equities, name_tag_name: :h3, values_tag_name: :ul,
+                    children_tag_name: :li %>
 <% end %>
