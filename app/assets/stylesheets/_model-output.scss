@@ -57,6 +57,21 @@
       text-align: right;
     }
   }
+
+  .values_tag {
+    .values_wrapper_tag {
+      padding: 0;
+    }
+
+    .model-contents:where(li) {
+      display: inline-block;
+      margin-right: $small-margin;
+
+      &:not(:last-child)::after {
+        content: ', '
+      }
+    }
+  }
 }
 
 @mixin alternating-row-color($main, $alt) {

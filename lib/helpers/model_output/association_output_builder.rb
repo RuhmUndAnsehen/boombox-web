@@ -11,7 +11,7 @@ class Helpers::ModelOutput::AssociationOutputBuilder
 
   delegate :loaded?, to: :@association
 
-  tag_names :container, name: :dt, values: :dd, children: :div
+  tag_names :container, name: :dt, values: :dd, values_wrapper: :ul
 
   def initialize(*, association:, **, &block)
     super(*, **)
@@ -56,9 +56,9 @@ class Helpers::ModelOutput::AssociationOutputBuilder
   end
 
   def show_many(values, **)
-    values = values.map { |val| show(val, dom_id_tag_name: children_tag_name) }
-    content = safe_join([content_tag(name_tag_name, name),
-                         content_tag(values_tag_name, safe_join(values))])
+    values = safe_join(values.map { |val| show_concise(val) })
+    content = safe_join([name_tag(name),
+                         values_tag(values_wrapper_tag(values))])
 
     content_tag_if_name(container_tag_name, content)
   end

@@ -26,8 +26,12 @@ module Helpers::ModelOutput::SpawnHelper
   end
 
   builder_spawners :association, :attribute, :model
+  builder_spawner :concise_model, param: :model,
+                                  class_name: 'Helpers::ModelOutput'\
+                                              '::ModelOutputBuilder::Concise'
 
   def show(...) = model_builder(...).to_s
+  def show_concise(...) = concise_model_builder(...).to_s
 
   def spawn_as(*, **opts, &)
     opts = spawn_options(opts) if respond_to?(:spawn_options)
