@@ -1,6 +1,6 @@
 <% title_tag! @currency.currency %>
 
-<%= show @currency do |s| %>
+<%= show @currency, associations: :countries do |s| %>
   <%= s.attribute 'currency' do |s| %>
     <% s.content_tag :h1, s.value %>
   <% end %>
@@ -8,5 +8,6 @@
   <%= s.content_tag_if_name s.attribute_list_tag_name,
                             class: 'model-attributes-list' do |s| %>
     <%= s.attribute except: 'currency' %>
+    <%= s.association :countries %>
   <% end %>
 <% end %>
